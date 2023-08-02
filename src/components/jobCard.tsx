@@ -1,9 +1,16 @@
 import { Button, Card, CardActions, Typography } from '@mui/material';
 import { Job } from '../types/types';
+import { useNavigate } from 'react-router-dom'; 
 
 interface IJobCard { jobInfo: Job }
 
+
 const JobCard = ({jobInfo}:IJobCard) => {
+  const navigate = useNavigate()
+  const handleMatching = () => {
+    navigate('job-matches', { state: jobInfo })
+  } 
+
   return (
     <>
       <Card sx={{ minWidth: 275}}>
@@ -11,7 +18,7 @@ const JobCard = ({jobInfo}:IJobCard) => {
         <Typography variant="h4" gutterBottom>{jobInfo.employer.name}</Typography>
         <Typography variant="body1" gutterBottom>{jobInfo.description.text_formatted}</Typography>
         <CardActions>
-          <Button size="small">More Info</Button>
+          <Button size="small" onClick={handleMatching}>Match developers</Button>
         </CardActions>
       </Card>
     </>

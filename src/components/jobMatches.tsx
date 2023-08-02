@@ -1,6 +1,7 @@
 import { Button } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 type JobData = {
     id: string
@@ -17,6 +18,7 @@ const fetchJobById = async (id: string) => {
 }
 
 const JobMatches = (id: string) => {
+    const {state: jobInfo} = useLocation()
     const {
         isLoading,
         error,
@@ -27,7 +29,13 @@ const JobMatches = (id: string) => {
 
       if (error) return 'An error has occurred: ' + error.message
 
-    return <><div>Hello! You can match developers to a job here. {data.id}</div><Button variant="contained">Testing MUI and it works!</Button></>
+      console.log('state: ', jobInfo)
+
+    return <>
+    <div>Hello! You can match developers to a job here. {data.id}</div>
+    <p>{jobInfo.headline}</p>
+    <Button variant="contained">Testing MUI and it works!</Button>
+    </>
 }
 
 export default JobMatches;
