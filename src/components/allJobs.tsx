@@ -1,31 +1,32 @@
 import { useQuery } from '@tanstack/react-query';
 import JobCard from './jobCard'
-import { HitJobFrom_jobtechdev, ResponseFrom_jobtechdev } from '../types/types';
+import { Job, SearchResult,  } from '../types/types';
+import { CircularProgress } from '@mui/material';
 
-const fetchJobs = async () : Promise<ResponseFrom_jobtechdev> => {
+const fetchJobs = async () : Promise<SearchResult> => {
   const res = await fetch('https://jobsearch.api.jobtechdev.se/search?offset=0&limit=10')
   return res.json()
 }
 
 const AllJobs = () => {
   const { isLoading, error, data } = useQuery(['jobs'], fetchJobs, {
-    // to prevent the page from fetching data too much times
+    // to prevent the page from fetching data too many times
     staleTime: Infinity,
     cacheTime: Infinity
   })
 
-  if (isLoading) return 'Loading...'
+  if (isLoading) return <CircularProgress />
 
   if (error) {
-    console.log('error: ', error)
+    console.log('❗️error: ', error)
     return 'An error has occurred: '}
   
   if (data) {
-    console.log('data: ', data)
+    console.log('⭐️data: ', data)
     return (
     <>
       <div>Hello! You can list the jobs here.</div>
-      { data.hits.map((item:HitJobFrom_jobtechdev) => (<JobCard description={item.description.text} />))}
+      { data.hits.map((job:Job) => (<JobCard jobInfo={job} />))}
     </>
     )
   }
