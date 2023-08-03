@@ -1,5 +1,9 @@
 import JobMatches from '../components/jobMatches';
 
 export default function JobMatchesRoute() {
-  return <JobMatches />;
+  return (
+    <div className='p-10'>
+      <JobMatches />
+      </div>
+  );
 }

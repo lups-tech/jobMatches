@@ -1,41 +1,58 @@
-import { Button } from '@mui/material';
+import { Button, Paper } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import { Matches } from '../types/scraperTypes';
+import { Job } from '../types/jobTechApiTypes';
 
-type JobData = {
-    id: string
-    description:  {
-        text: string
-    }
-}
+type LocationState = {
+  state: Job;
+};
 
-const hardCodedId = '27894030'
+const fetchMatches = async (job: Job) => {
+  const res = await axios.get(
+    `http://localhost:5092/scraper?text=${encodeURIComponent(
+      job.description.text
+    )}`
+  );
+  return res.data;
+};
 
-const fetchJobById = async (id: string) => {
-    const res = await axios.get(`https://jobsearch.api.jobtechdev.se/ad/${id}`);
-    return res.data;
-}
+const JobMatches = () => {
+  const { state: jobInfo } = useLocation() as LocationState;
+  const {
+    isLoading,
+    error,
+    data: matches,
+  } = useQuery<Matches, Error>({
+    queryKey: ['developers'],
+    queryFn: () => fetchMatches(jobInfo),
+  });
 
-const JobMatches = (id: string) => {
-    const {state: jobInfo} = useLocation()
-    const {
-        isLoading,
-        error,
-        data
-      } = useQuery<JobData, Error>( ['job'], () => fetchJobById(hardCodedId));
+  if (isLoading) return 'Loading...';
 
-      if (isLoading) return 'Loading...'
+  if (error) return 'An error has occurred: ' + error.message;
 
-      if (error) return 'An error has occurred: ' + error.message
-
-      console.log('state: ', jobInfo)
-
-    return <>
-    <div>Hello! You can match developers to a job here. {data.id}</div>
-    <p>{jobInfo.headline}</p>
-    <Button variant="contained">Testing MUI and it works!</Button>
-    </>
-}
+  return (
+    <div className='flex flex-col sm:flex-row gap-4 justify-center'>
+      <Paper elevation={1} sx={{ maxWidth: 640, padding: 1 }}>
+        <p>{jobInfo.headline}</p>
+        <p>{jobInfo.description.text}</p>
+        <Button variant="contained">Save Job</Button>
+      </Paper>
+      <div className='max-w-md flex-grow'>
+      {matches.developers.map(dev =>
+        (
+          <Paper elevation={1} sx={{padding: 1, marginBottom: 1 }}>
+            <p>{dev.name}</p>
+            <p>{dev.email}</p>
+            {dev.skills.map(skill => <p>{skill.title}</p>)}
+          </Paper>
+        )
+      )}
+      </div>
+    </div>
+  );
+};
 
 export default JobMatches;
