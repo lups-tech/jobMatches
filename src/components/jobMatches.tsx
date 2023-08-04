@@ -1,9 +1,20 @@
-import { Button, Paper } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  Chip,
+  Paper,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { Matches } from '../types/scraperTypes';
 import { Job } from '../types/jobTechApiTypes';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import EmailIcon from '@mui/icons-material/Email';
 
 type LocationState = {
   state: Job;
@@ -34,22 +45,55 @@ const JobMatches = () => {
   if (error) return 'An error has occurred: ' + error.message;
 
   return (
-    <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-      <Paper elevation={1} sx={{ maxWidth: 640, padding: 1 }}>
-        <p>{jobInfo.headline}</p>
-        <p>{jobInfo.description.text}</p>
+    <div className="flex flex-col sm:flex-row gap-5 justify-center items-start">
+      <div className="flex flex-col gap-5">
+        <Accordion
+          defaultExpanded
+          elevation={1}
+          sx={{ maxWidth: 700, padding: 4 }}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="job-content"
+            id="job-header"
+          >
+            <div>
+              <Typography variant="h3">{jobInfo.headline}</Typography>
+              <Typography variant="h6">{jobInfo.employer.name}</Typography>
+            </div>
+            {jobInfo.application_details.url && (
+              <Typography variant="body1">
+                {jobInfo.application_details.url}
+              </Typography>
+            )}
+          </AccordionSummary>
+          <AccordionDetails>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: jobInfo.description.text_formatted,
+              }}
+            ></div>
+          </AccordionDetails>
+        </Accordion>
         <Button variant="contained">Save Job</Button>
-      </Paper>
-      <div className='max-w-md flex-grow'>
-      {matches.developers.map(dev =>
-        (
-          <Paper elevation={1} sx={{padding: 1, marginBottom: 1 }}>
-            <p>{dev.name}</p>
-            <p>{dev.email}</p>
-            {dev.skills.map(skill => <p>{skill.title}</p>)}
+      </div>
+      <div className="max-w-md flex-grow">
+        <Typography variant="h2">Best Matches</Typography>
+        {matches.developers.map((dev) => (
+          <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
+            <Typography variant="h5">{dev.name}</Typography>
+            <Typography variant="body1"><EmailIcon fontSize='small' sx={{marginRight: 1}}/>{dev.email}</Typography>
+            <Stack spacing={1} direction="row">
+              {dev.skills
+                .filter((skill) =>
+                  matches.jobSkills.some((jobSkill) => jobSkill.id === skill.id)
+                )
+                .map((skill) => (
+                  <Chip label={skill.title} size="small" />
+                ))}
+            </Stack>
           </Paper>
-        )
-      )}
+        ))}
       </div>
     </div>
   );
