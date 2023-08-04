@@ -12,12 +12,7 @@ interface IJobFilters { setSearchKeyword: Dispatch<SetStateAction<string>> }
 
 const JobFilters = ({setSearchKeyword}: IJobFilters) => {
   const { isLoading, error, data } = useQuery<Skill[]>(['skills'], fetchSkills)
-  const [value, setValue] = useState<string|null>('JavaScript')
   const [inputValue, setInputValue] = useState('')
-  
-  useEffect(() => {
-    setSearchKeyword(value)
-  }, [value])
 
   if (isLoading) return <CircularProgress />
   
@@ -25,12 +20,8 @@ const JobFilters = ({setSearchKeyword}: IJobFilters) => {
     console.log('❗️error: ', error)
     return 'An error has occurred, check console for more info' }
     
-      
-  
   return (
-    <>jobs filter here
-    <p>Selected Value: {value}</p>
-    <p>Typein Value: {inputValue}</p>
+    <>
     {data && 
       <Autocomplete 
         id="skill-selection" freeSolo 
@@ -41,7 +32,7 @@ const JobFilters = ({setSearchKeyword}: IJobFilters) => {
           setInputValue(newInputValue);
         }} 
         onChange={(event, newValue: string | null) => {
-          setValue(newValue);
+          setSearchKeyword(newValue);
         }}
       />
     }
