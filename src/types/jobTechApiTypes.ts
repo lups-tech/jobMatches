@@ -74,8 +74,6 @@ type ApplicationContacts = {
 
 export type Job = {
   id: string;
-  external_id: string;
-  original_id: string;
   webpage_url: NonNullable<unknown>;
   logo_url: string;
   headline: string;

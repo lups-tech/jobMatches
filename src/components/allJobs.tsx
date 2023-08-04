@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import JobCard from './jobCard'
-import { Job, SearchResult,  } from '../types/types';
+import { Job, SearchResult,  } from '../types/jobTechApiTypes';
 import { CircularProgress } from '@mui/material';
 
 const fetchJobs = async () : Promise<SearchResult> => {
-  const res = await fetch('https://jobsearch.api.jobtechdev.se/search?offset=0&limit=10')
+  const res = await fetch('https://jobsearch.api.jobtechdev.se/search?q=javascript&offset=0&limit=10')
   return res.json()
 }
 

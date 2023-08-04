@@ -1,9 +1,9 @@
 import { Button, Card, CardActions, Typography } from '@mui/material';
-import { Job } from '../types/types';
+import { Job } from '../types/jobTechApiTypes';
 import { useNavigate } from 'react-router-dom'; 
+import axios from 'axios';
 
 interface IJobCard { jobInfo: Job }
-
 
 const JobCard = ({jobInfo}:IJobCard) => {
   const navigate = useNavigate()

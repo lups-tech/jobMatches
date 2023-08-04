@@ -5,6 +5,7 @@ import Root from './routes/root.tsx';
 import AllJobsRoute from './routes/all-jobs.tsx';
 import JobMatchesRoute from './routes/job-matches.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import './index.css'
 
 const router = createBrowserRouter([
   {
