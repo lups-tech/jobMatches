@@ -80,7 +80,7 @@ const JobMatches = () => {
       <div className="max-w-md flex-grow">
         <Typography variant="h2">Best Matches</Typography>
         {matches.developers.map((dev) => (
-          <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
+          <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }} key={dev.id}>
             <Typography variant="h5">{dev.name}</Typography>
             <Typography variant="body1"><EmailIcon fontSize='small' sx={{marginRight: 1}}/>{dev.email}</Typography>
             <Stack spacing={1} direction="row">
@@ -89,7 +89,7 @@ const JobMatches = () => {
                   matches.jobSkills.some((jobSkill) => jobSkill.id === skill.id)
                 )
                 .map((skill) => (
-                  <Chip label={skill.title} size="small" />
+                  <Chip label={skill.title} size="small" key={skill.id} />
                 ))}
             </Stack>
           </Paper>
