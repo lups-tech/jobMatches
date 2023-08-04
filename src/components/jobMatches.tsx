@@ -1,41 +1,102 @@
-import { Button } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  Chip,
+  Paper,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import { Matches } from '../types/scraperTypes';
+import { Job } from '../types/jobTechApiTypes';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import EmailIcon from '@mui/icons-material/Email';
 
-type JobData = {
-    id: string
-    description:  {
-        text: string
-    }
-}
+type LocationState = {
+  state: Job;
+};
 
-const hardCodedId = '27894030'
+const fetchMatches = async (job: Job) => {
+  const res = await axios.get(
+    `http://localhost:5092/scraper?text=${encodeURIComponent(
+      job.description.text
+    )}`
+  );
+  return res.data;
+};
 
-const fetchJobById = async (id: string) => {
-    const res = await axios.get(`https://jobsearch.api.jobtechdev.se/ad/${id}`);
-    return res.data;
-}
+const JobMatches = () => {
+  const { state: jobInfo } = useLocation() as LocationState;
+  const {
+    isLoading,
+    error,
+    data: matches,
+  } = useQuery<Matches, Error>({
+    queryKey: ['developers'],
+    queryFn: () => fetchMatches(jobInfo),
+  });
 
-const JobMatches = (id: string) => {
-    const {state: jobInfo} = useLocation()
-    const {
-        isLoading,
-        error,
-        data
-      } = useQuery<JobData, Error>( ['job'], () => fetchJobById(hardCodedId));
+  if (isLoading) return 'Loading...';
 
-      if (isLoading) return 'Loading...'
+  if (error) return 'An error has occurred: ' + error.message;
 
-      if (error) return 'An error has occurred: ' + error.message
-
-      console.log('state: ', jobInfo)
-
-    return <>
-    <div>Hello! You can match developers to a job here. {data.id}</div>
-    <p>{jobInfo.headline}</p>
-    <Button variant="contained">Testing MUI and it works!</Button>
-    </>
-}
+  return (
+    <div className="flex flex-col sm:flex-row gap-5 justify-center items-start">
+      <div className="flex flex-col gap-5">
+        <Accordion
+          defaultExpanded
+          elevation={1}
+          sx={{ maxWidth: 700, padding: 4 }}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="job-content"
+            id="job-header"
+          >
+            <div>
+              <Typography variant="h3">{jobInfo.headline}</Typography>
+              <Typography variant="h6">{jobInfo.employer.name}</Typography>
+            </div>
+            {jobInfo.application_details.url && (
+              <Typography variant="body1">
+                {jobInfo.application_details.url}
+              </Typography>
+            )}
+          </AccordionSummary>
+          <AccordionDetails>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: jobInfo.description.text_formatted,
+              }}
+            ></div>
+          </AccordionDetails>
+        </Accordion>
+        <Button variant="contained">Save Job</Button>
+      </div>
+      <div className="max-w-md flex-grow">
+        <Typography variant="h2">Best Matches</Typography>
+        {matches.developers.map((dev) => (
+          <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
+            <Typography variant="h5">{dev.name}</Typography>
+            <Typography variant="body1"><EmailIcon fontSize='small' sx={{marginRight: 1}}/>{dev.email}</Typography>
+            <Stack spacing={1} direction="row">
+              {dev.skills
+                .filter((skill) =>
+                  matches.jobSkills.some((jobSkill) => jobSkill.id === skill.id)
+                )
+                .map((skill) => (
+                  <Chip label={skill.title} size="small" />
+                ))}
+            </Stack>
+          </Paper>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export default JobMatches;

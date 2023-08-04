@@ -6,6 +6,7 @@ import { Job } from '../types/externalTypes';
 import { useNavigate } from 'react-router-dom'; 
 import { useState } from 'react';
 
+
 interface IJobCard { jobInfo: Job }
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -21,7 +22,6 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
     duration: theme.transitions.duration.shortest,
   }),
 }));
-
 
 const JobCard = ({jobInfo}:IJobCard) => {
   const [expanded, setExpanded] = useState(false);
