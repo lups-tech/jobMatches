@@ -23,11 +23,8 @@ type LocationState = {
 };
 
 const fetchMatches = async (job: Job) => {
-  const res = await axios.get(
-    `${backendServer}scraper?text=${encodeURIComponent(
-      job.description.text
-    )}`
-  );
+  const jobDescription = job.description.text
+  const res = await axios.post(`${backendServer}scraper`, jobDescription);
   return res.data;
 };
 
