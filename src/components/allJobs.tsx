@@ -36,7 +36,6 @@ const AllJobs = () => {
     return 'An error has occurred, check console for more info' }
   
   if (data) {
-    console.log('⭐️data: ', data)
     return (
     <>
       <JobFilters setSearchKeyword={setSearchKeyword}/>

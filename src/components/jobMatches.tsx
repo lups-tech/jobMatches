@@ -16,13 +16,15 @@ import { Job } from '../types/jobTechApiTypes';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EmailIcon from '@mui/icons-material/Email';
 
+const backendServer = import.meta.env.VITE_BE_SERVER
+
 type LocationState = {
   state: Job;
 };
 
 const fetchMatches = async (job: Job) => {
   const res = await axios.get(
-    `http://localhost:5092/scraper?text=${encodeURIComponent(
+    `${backendServer}?text=${encodeURIComponent(
       job.description.text
     )}`
   );
