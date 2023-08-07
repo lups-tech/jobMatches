@@ -3,8 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 import { Skill } from "../types/innerTypes";
 import { Dispatch, SetStateAction, useState } from "react";
 
+const backendServer = import.meta.env.VITE_BE_SERVER
+
 const fetchSkills = async () : Promise<Skill[]> => {
-  const res = await fetch('http://localhost:5092/api/Skills')
+  const res = await fetch(`${backendServer}api/Skills`)
   return res.json()
 }
 
