@@ -23,7 +23,7 @@ type LocationState = {
 };
 
 const fetchMatches = async (job: Job) => {
-  const jobDescription = job.description.text
+  const jobDescription = { description: job.description.text }
   const res = await axios.post(`${backendServer}scraper`, jobDescription);
   return res.data;
 };
