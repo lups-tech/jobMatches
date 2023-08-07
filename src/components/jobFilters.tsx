@@ -1,7 +1,7 @@
 import { Autocomplete, CircularProgress, TextField } from "@mui/material"
 import { useQuery } from '@tanstack/react-query';
 import { Skill } from "../types/innerTypes";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 const fetchSkills = async () : Promise<Skill[]> => {
   const res = await fetch('http://localhost:5092/api/Skills')
@@ -28,11 +28,13 @@ const JobFilters = ({setSearchKeyword}: IJobFilters) => {
         options={data?.map((skill) => skill.title)} 
         renderInput={(params) => <TextField {...params} label="Search skills" />}
         inputValue={inputValue}
-        onInputChange={(event, newInputValue) => {
+        onInputChange={(_event, newInputValue) => {
           setInputValue(newInputValue);
         }} 
-        onChange={(event, newValue: string | null) => {
-          setSearchKeyword(newValue);
+        onChange={(_event, newValue) => {
+          if (newValue) {
+            setSearchKeyword(newValue);
+          }
         }}
       />
     }

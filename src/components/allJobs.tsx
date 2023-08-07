@@ -20,7 +20,7 @@ const AllJobs = () => {
     cacheTime: Infinity
   })
 
-  const pageChangeHandler = (event: ChangeEvent<unknown>, value: number) => {
+  const pageChangeHandler = (_event: ChangeEvent<unknown>, value: number) => {
     value = value - 1
     setCurrentPage(value)
   }
