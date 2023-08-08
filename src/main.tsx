@@ -6,6 +6,7 @@ import AllJobsRoute from './routes/all-jobs.tsx';
 import JobMatchesRoute from './routes/job-matches.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css'
+import SkillFormRoute from './routes/skill-form.tsx';
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: 'job-matches',
         element: <JobMatchesRoute/>
+      },
+      {
+        path: 'skill-form',
+        element: <SkillFormRoute/>
       },
     ]
   },
