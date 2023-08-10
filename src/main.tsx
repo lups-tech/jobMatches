@@ -42,7 +42,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <Navbar/>
-      <div className='mt-24'>
+      <div className='mt-36'>
         <RouterProvider router={router}/>
       </div>
     </QueryClientProvider>
