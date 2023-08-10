@@ -5,13 +5,11 @@ import { Controller, useForm } from "react-hook-form";
 import * as z from 'zod';
 import { DevFormSchema } from "../types/validationTypes";
 import axios from "axios";
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
 
-const backendServer = import.meta.env.VITE_BE_SERVER
-
+const backendServer = import.meta.env.VITE_BE_SERVER;
 
 export default function DevForm(){
   const [loading, setLoading] = useState<boolean>(false)
@@ -26,35 +24,16 @@ export default function DevForm(){
     },
   });
 
-  const mutation = useMutation(
-    async(postData : z.infer<typeof DevFormSchema>) => {
-      const response = await axios.post(`${backendServer}api/developers`, postData);
-      if(response.status != 201){
-        throw new Error("201 error")
-      }
-      return response.data;
-    }
-  )
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   const onSubmit = async (data: z.infer<typeof DevFormSchema>) => {
-    mutation.mutateAsync(data);
-    // if(res.status == 201){
-    //   navigate('devs/skills', { state: res.data })
-    // } else {
-    //   setSendError(true)
-    //   setTimeout(() => setSendError(false), 2000)
-    //   setLoading(false)
-    // }
-    if(mutation.isLoading){
-      setLoading(true)
-    }
-    if(mutation.isError){
+    setLoading(true);
+    try {
+      const res = await axios.post(`${backendServer}api/developers`, data);
+      navigate('skills', { state: res.data })
+    } catch(error) {
       setSendError(true)
       setTimeout(() => setSendError(false), 2000)
       setLoading(false)
-    }
-    if(mutation.isSuccess){
-      
     }
   }
 

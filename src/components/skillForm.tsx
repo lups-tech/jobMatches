@@ -7,7 +7,7 @@ import { Button, Checkbox, FormControl, FormControlLabel, FormLabel} from '@mui/
 import { AddSkillToDev, Skill } from '../types/innerTypes';
 import { FormEvent, useState } from 'react';
 import ComboBox from './ComboBox';
-//import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 // const formSchema = z.object({
 // selectedSkillIds: z
@@ -23,11 +23,10 @@ const fetchSkills = async () => {
   };
 
 export default function SkillForm() {
-    //const { state: developerInfo } = useLocation();
+    const { state: developerInfo } = useLocation();
     const [skillValue] = useState<string>("");
     const [formValues, setFormValues] = useState<AddSkillToDev>({
-        //developerId: developerInfo.id,
-        developerId : "5",
+        developerId: developerInfo.id,
         selectedSkillIds : [],
     });
 
