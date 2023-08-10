@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom/client'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Root from './routes/root.tsx';
 import AllJobsRoute from './routes/all-jobs.tsx';
+import SkillFormRoute from './routes/skill-form.tsx';
+import DevFormRoute from './routes/dev-form.tsx';
 import JobMatchesRoute from './routes/job-matches.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css'
-import SkillFormRoute from './routes/skill-form.tsx';
+
 
 const router = createBrowserRouter([
   {
@@ -22,7 +24,11 @@ const router = createBrowserRouter([
         element: <JobMatchesRoute/>
       },
       {
-        path: 'skill-form',
+        path: 'devs',
+        element: <DevFormRoute/>
+      },
+      {
+        path: 'devs/skills',
         element: <SkillFormRoute/>
       },
     ]
