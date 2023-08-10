@@ -24,7 +24,7 @@ export default function DevForm(){
   const onSubmit = async (data: z.infer<typeof DevFormSchema>) => {
     const res = await axios.post(`${backendServer}api/developers`, data);
     if(res.status == 201){
-      navigate('skill-form', { state: res.data })
+      navigate('devs/skills', { state: res.data })
     }
     
   }
