@@ -4,7 +4,7 @@ export default function Navbar() {
   return (
     <AppBar>
         <Toolbar className="flex justify-between">
-            <div>Logo</div>
+            <div>TalentHub</div>
             <div className="flex flex-row gap-4">
                 <Typography>Developers</Typography>
                 <Typography>Jobs</Typography>
