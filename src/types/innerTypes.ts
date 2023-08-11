@@ -3,3 +3,8 @@ export type Skill = {
   title: string,
   type: string
 }
+
+export type AddSkillToDev = {
+  developerId: string
+  selectedSkillIds: string[]
+};
