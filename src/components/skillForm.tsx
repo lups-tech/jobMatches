@@ -58,7 +58,7 @@ export default function SkillForm() {
         setLoading(true)
         try{
             console.log(formValues);
-            const res = await axios.patch('http://localhost:5092/developerSkills', formValues,{
+            const res = await axios.patch(`${backendServer}developerSkills`, formValues,{
             headers: {
             'Content-Type': 'application/json'
           }})
