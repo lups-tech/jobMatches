@@ -12,14 +12,14 @@ export default function ComboBox({skills, filter, formValueSetter, formValues, s
     const skillList : Skill[]= skills?.filter(skill => skill.type == filter).map(skill => {return {title: skill.title, id: skill.id, type: skill.type}});
     return (
     <>
-        <p>{filter}</p>
         <Autocomplete
+            className=""
             multiple
             id={filter}
             options={skillList}
             getOptionLabel={skill => skill.title}
             isOptionEqualToValue={(option, value) => option.id === value.id}
-            renderInput={(params) => <TextField {...params} label="Search skills" />}
+            renderInput={(params) => <TextField {...params} label={`Select ${filter}`} />}
             inputValue={skillValue}
             onChange={(_event, newValue) => {
                     const newState = formValues.selectedSkillIds.filter(skillToDelete => !skillList.map(skill => skill.id).includes(skillToDelete));

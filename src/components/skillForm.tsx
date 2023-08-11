@@ -2,11 +2,12 @@ import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 // import * as z from 'zod';
 // import { useForm } from 'react-hook-form';
-import { Button, Checkbox, FormControl, FormControlLabel, FormLabel} from '@mui/material';
+import { Checkbox, FormControl, FormControlLabel, FormLabel, Snackbar, Typography} from '@mui/material';
 // import { zodResolver } from '@hookform/resolvers/zod';
 import { AddSkillToDev, Skill } from '../types/innerTypes';
 import { FormEvent, useState } from 'react';
 import ComboBox from './ComboBox';
+import { LoadingButton } from '@mui/lab';
 import { useLocation } from 'react-router-dom';
 
 // const formSchema = z.object({
@@ -17,13 +18,18 @@ import { useLocation } from 'react-router-dom';
 //     }),
 // });
 
+const backendServer = import.meta.env.VITE_BE_SERVER;
+
 const fetchSkills = async () => {
-    const res = await axios.get('http://localhost:5092/api/skills');
+    const res = await axios.get(`${backendServer}api/skills`);
     return res.data;
   };
 
 export default function SkillForm() {
     const { state: developerInfo } = useLocation();
+    const [loading, setLoading] = useState<boolean>(false);
+    const [sendError, setSendError] = useState<boolean>(false);
+    const [sendSuccess, setSendSuccess] = useState<boolean>(false);
     const [skillValue] = useState<string>("");
     const [formValues, setFormValues] = useState<AddSkillToDev>({
         developerId: developerInfo.id,
@@ -47,23 +53,25 @@ export default function SkillForm() {
     if (error || skills === undefined)
     return 'An error has occurred: ' + error?.message;
 
-    //Developer Id to come from created developer - navigate with state
-    // const onSubmit = async (formData: z.infer<typeof formSchema>) => {
-    //     const skillsToAdd: AddSkillToDev = {
-    //       developerId: "3fa85f64-5717-4562-b3fc-2c963f66afe4",
-    //       selectedSkillIds: formData.selectedSkillIds,
-    //     }
-    //     console.log(skillsToAdd);
-        
-    //     const res = await axios.patch('http://localhost:5092/developerSkills', skillsToAdd,{
-    //       headers: {
-    //         'Content-Type': 'application/json'
-    //       }})
-    //     return res.data;
-    //   };
-    const onSubmit = (e : FormEvent) => {
+    const onSubmit = async (e : FormEvent) => {
         e.preventDefault();
-        console.log(formValues);
+        setLoading(true)
+        try{
+            console.log(formValues);
+            const res = await axios.patch('http://localhost:5092/developerSkills', formValues,{
+            headers: {
+            'Content-Type': 'application/json'
+          }})
+          setLoading(false);
+          setSendSuccess(true);
+          setTimeout(() => setSendSuccess(false), 2000)
+        return res.data;
+        } catch(error){
+            setSendError(true)
+            setTimeout(() => setSendError(false), 2000)
+            setLoading(false)
+        }
+        
     }
 
     const handleCheckboxChange = (event : React.ChangeEvent<HTMLInputElement>, skill : string) => {
@@ -84,35 +92,46 @@ export default function SkillForm() {
     }
 
   return (
-    <form onSubmit={(e) => onSubmit(e)}>
-        <FormControl>
-            <FormLabel>Programming Language</FormLabel>
-            {skills.length != 0 && skills.map(skill => {
-                if(skill.type == "Programming Language"){
-                    return(
-                    <FormControlLabel
-                    key={skill.id}
-                    control={<Checkbox checked={formValues.selectedSkillIds.includes(skill.id)} onChange={(e) => handleCheckboxChange(e, skill.id)}/>}
-                    label={skill.title}/>)
-                }
-            })
-            }
-            {skills.length != 0 && skillTypes().map(type => {
-                if(type != "Programming Language"){
-                    return(
-                        <ComboBox
-                            key={type}
-                            skills={skills} 
-                            filter={type} 
-                            formValueSetter={setFormValues} 
-                            skillValue={skillValue}
-                            formValues={formValues}
-                        />
-                    )
-                }
-            })}
-            <Button type="submit">Submit</Button>
-        </FormControl>
-    </form>
+      <>
+        <form onSubmit={(e) => onSubmit(e)}
+        className="flex flex-col items-center gap-4 mx-auto min-w-fit max-w-md px-4">
+            <Typography variant="h4" className="mb-10 md:pb-12">{`Add Skills to ${developerInfo.name}`}</Typography>
+            <FormControl className='flex flex-col mb-2 self-start w-full'>
+                <FormLabel>Programming Language</FormLabel>
+                <div className='pl-2 w-full flex flex-col'>
+                    {skills.length != 0 && skills.map(skill => {
+                        if(skill.type == "Programming Language"){
+                            return(
+                            <FormControlLabel
+                            key={skill.id}
+                            control={<Checkbox checked={formValues.selectedSkillIds.includes(skill.id)} onChange={(e) => handleCheckboxChange(e, skill.id)}/>}
+                            label={skill.title}/>)
+                        }
+                    })}
+                </div>
+                </FormControl>
+                <FormControl className='flex flex-col mb-2 self-start w-full gap-4'>
+                <FormLabel>Add Specialist Skills</FormLabel>
+                <div className='w-full px-2 flex flex-col gap-4'>
+                    {skills.length != 0 && skillTypes().map(type => {
+                        if(type != "Programming Language"){
+                            return(
+                                <ComboBox
+                                    key={type}
+                                    skills={skills} 
+                                    filter={type} 
+                                    formValueSetter={setFormValues} 
+                                    skillValue={skillValue}
+                                    formValues={formValues}
+                                />
+                            )
+                        }})}
+                </div>
+                <LoadingButton loading={loading} variant="outlined" type="submit" className="w-[60%] max-w-xs self-center">Submit</LoadingButton>
+            </FormControl>
+        </form>
+        <Snackbar open={sendSuccess} autoHideDuration={3000} message={`Skills added to ${developerInfo.name}`}/>
+        <Snackbar open={sendError} autoHideDuration={3000} message="Loading failed, please try again"/>
+    </>
   )
 }
