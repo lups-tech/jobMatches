@@ -26,11 +26,18 @@ const fetchSkills = async () => {
   };
 
 export default function SkillForm() {
-    const { state: developerInfo } = useLocation();
+    //change to const after testing and remove 31 to 37
+    let { state: developerInfo } = useLocation();
+    if(!developerInfo) {
+        developerInfo = {
+            id: "5",
+            name: "test",
+            email: "test"
+        }
+    }
     const [loading, setLoading] = useState<boolean>(false);
     const [sendError, setSendError] = useState<boolean>(false);
     const [sendSuccess, setSendSuccess] = useState<boolean>(false);
-    const [skillValue] = useState<string>("");
     const [formValues, setFormValues] = useState<AddSkillToDev>({
         developerId: developerInfo.id,
         selectedSkillIds : [],
@@ -58,14 +65,14 @@ export default function SkillForm() {
         setLoading(true)
         try{
             console.log(formValues);
-            const res = await axios.patch(`${backendServer}developerSkills`, formValues,{
-            headers: {
-            'Content-Type': 'application/json'
-          }})
-          setLoading(false);
-          setSendSuccess(true);
-          setTimeout(() => setSendSuccess(false), 2000)
-        return res.data;
+        //     const res = await axios.patch(`${backendServer}developerSkills`, formValues,{
+        //     headers: {
+        //     'Content-Type': 'application/json'
+        //   }})
+        //   setLoading(false);
+        //   setSendSuccess(true);
+        //   setTimeout(() => setSendSuccess(false), 2000)
+        //return res.data;
         } catch(error){
             setSendError(true)
             setTimeout(() => setSendError(false), 2000)
@@ -121,7 +128,6 @@ export default function SkillForm() {
                                     skills={skills} 
                                     filter={type} 
                                     formValueSetter={setFormValues} 
-                                    skillValue={skillValue}
                                     formValues={formValues}
                                 />
                             )
