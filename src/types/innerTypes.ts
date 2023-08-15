@@ -8,3 +8,10 @@ export type AddSkillToDev = {
   developerId: string
   selectedSkillIds: string[]
 };
+
+export type ComboBoxProps = {
+  skills : Skill[],
+  filter: string,
+  formValueSetter: React.Dispatch<React.SetStateAction<AddSkillToDev>>,
+  formValues: AddSkillToDev
+};

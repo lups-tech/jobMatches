@@ -26,15 +26,7 @@ const fetchSkills = async () => {
   };
 
 export default function SkillForm() {
-    //change to const after testing and remove 31 to 37
-    let { state: developerInfo } = useLocation();
-    if(!developerInfo) {
-        developerInfo = {
-            id: "5",
-            name: "test",
-            email: "test"
-        }
-    }
+    const { state: developerInfo } = useLocation();
     const [loading, setLoading] = useState<boolean>(false);
     const [sendError, setSendError] = useState<boolean>(false);
     const [sendSuccess, setSendSuccess] = useState<boolean>(false);
@@ -64,7 +56,11 @@ export default function SkillForm() {
         e.preventDefault();
         setLoading(true)
         try{
-            console.log(formValues);
+            const response = await axios.patch(`${backendServer}api/developerSkills`, formValues)
+            console.log(response.data)
+            setSendSuccess(true);
+            setLoading(false);
+            setTimeout(() => setSendSuccess(false), 2000);
         } catch(error){
             setSendError(true)
             setTimeout(() => setSendError(false), 2000)
