@@ -30,7 +30,6 @@ export default function SkillForm() {
     const [loading, setLoading] = useState<boolean>(false);
     const [sendError, setSendError] = useState<boolean>(false);
     const [sendSuccess, setSendSuccess] = useState<boolean>(false);
-    const [skillValue] = useState<string>("");
     const [formValues, setFormValues] = useState<AddSkillToDev>({
         developerId: developerInfo.id,
         selectedSkillIds : [],
@@ -57,15 +56,11 @@ export default function SkillForm() {
         e.preventDefault();
         setLoading(true)
         try{
-            console.log(formValues);
-            const res = await axios.patch(`${backendServer}developerSkills`, formValues,{
-            headers: {
-            'Content-Type': 'application/json'
-          }})
-          setLoading(false);
-          setSendSuccess(true);
-          setTimeout(() => setSendSuccess(false), 2000)
-        return res.data;
+            const response = await axios.patch(`${backendServer}api/developerSkills`, formValues)
+            console.log(response.data)
+            setSendSuccess(true);
+            setLoading(false);
+            setTimeout(() => setSendSuccess(false), 2000);
         } catch(error){
             setSendError(true)
             setTimeout(() => setSendError(false), 2000)
@@ -121,7 +116,6 @@ export default function SkillForm() {
                                     skills={skills} 
                                     filter={type} 
                                     formValueSetter={setFormValues} 
-                                    skillValue={skillValue}
                                     formValues={formValues}
                                 />
                             )
