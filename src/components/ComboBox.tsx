@@ -1,9 +1,13 @@
-import { Autocomplete, Box, Button, TextField } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 import { AddSkillToDev, Skill } from "../types/innerTypes";
 import { useState } from "react";
 import axios from "axios";
+import { createFilterOptions } from '@mui/material/Autocomplete';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
+
+
+const filterFromMUI = createFilterOptions<string>();
 
 type ComboBoxProps = {
     skills : Skill[],
@@ -16,7 +20,7 @@ export default function ComboBox({skills, filter, formValueSetter, formValues}: 
     const [inputValue, setInputValue] = useState<string>("");
     const [addedSkill, setAddedSkill] = useState<string>("");
     const skillList : Skill[]= skills?.filter(skill => skill.type == filter).map(skill => {return {title: skill.title, id: skill.id, type: skill.type}});
-    const stringList : string[] = skillList.map(skill => skill.title);
+    const skillTitleList : string[] = skillList.map(skill => skill.title);
 
     const handleAddSkill = async (newSkillName : string) => {
        const response = await axios.post(`${backendServer}api/skills`, {
@@ -35,29 +39,31 @@ export default function ComboBox({skills, filter, formValueSetter, formValues}: 
             className="w-96"
             multiple
             id={filter}
-            options={stringList}
+            options={skillTitleList}
             getOptionLabel={skill => skill}
+            filterOptions={(options, params) => {
+                const filtered = filterFromMUI(options, params);
+        
+                const { inputValue } = params;
+                // Suggest the creation of a new value
+                const isExisting = options.some((option) => inputValue === option);
+                if (inputValue !== '' && !isExisting) {
+                  filtered.push( `Add "${inputValue}"`);
+                }
+        
+                return filtered;
+              }}
             inputValue={inputValue}
             onInputChange={(_e, newInputValue) => setInputValue(newInputValue)}
-            noOptionsText={
-                <Box className="flex justify-between">
-                    <p className="pt-1">No skill found</p>
-                    <Button variant="outlined" onClick={() => handleAddSkill(inputValue)}>Add skill to options</Button>
-                </Box>
-            }
             renderInput={(params) => <TextField {...params} label={`Select ${filter}`}/>}
             onChange={(_event, newValue) => {
-                if(!addedSkill){
-                    setValue([...newValue])
-                } else {
-                    setValue([...newValue, addedSkill])
-                }
+                setValue([...newValue])
                 const idList = skillList.filter(skill => value.includes(skill.title));
                 const newState = formValues.selectedSkillIds
                     .filter(skillToDelete => !skillList.map(skill => skill.id).includes(skillToDelete));
                 const newSelected = idList.map(skill => skill.id);
                 formValueSetter({...formValues, selectedSkillIds : [...newState, ...newSelected]});
-            }}           
+            }}         
         />
     </>
   )
