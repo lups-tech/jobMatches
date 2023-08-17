@@ -28,7 +28,7 @@ const JobCard = ({jobInfo}:IJobCard) => {
 
   const navigate = useNavigate()
   const handleMatching = () => {
-    navigate('job-matches', { state: jobInfo })
+    navigate('matches', { state: jobInfo })
   } 
 
   const handleExpandClick = () => {

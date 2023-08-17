@@ -1,13 +1,14 @@
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, Toolbar } from "@mui/material";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
     <AppBar>
         <Toolbar className="flex justify-between">
-            <div>TalentHub</div>
+            <Link to="/" color="#ffffff">TalentHub</Link>
             <div className="flex flex-row gap-4">
-                <Typography>Developers</Typography>
-                <Typography>Jobs</Typography>
+                <Link to="/developers" color="#ffffff">Developers</Link>
+                <Link to="/jobs" color="#ffffff">Jobs</Link>
             </div>
         </Toolbar>
     </AppBar>

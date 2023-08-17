@@ -8,7 +8,7 @@ import DevFormRoute from './routes/dev-form.tsx';
 import JobMatchesRoute from './routes/job-matches.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css'
-import Navbar from './components/Navbar.tsx';
+import HomeRoute from './routes/home.tsx';
 
 
 const router = createBrowserRouter([
@@ -18,18 +18,22 @@ const router = createBrowserRouter([
     children: [
       {
         path: '',
+        element: <HomeRoute/>,
+      },
+      {
+        path: 'jobs',
         element: <AllJobsRoute />,
       },
       {
-        path: 'job-matches',
+        path: 'jobs/matches',
         element: <JobMatchesRoute/>
       },
       {
-        path: 'devs',
+        path: 'developers',
         element: <DevFormRoute/>
       },
       {
-        path: 'devs/skills',
+        path: 'developers/:id/skills',
         element: <SkillFormRoute/>
       },
     ]
@@ -41,10 +45,7 @@ const queryClient = new QueryClient()
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <Navbar/>
-      <div className='mt-24'>
         <RouterProvider router={router}/>
-      </div>
     </QueryClientProvider>
   </React.StrictMode>,
 )

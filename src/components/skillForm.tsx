@@ -56,8 +56,7 @@ export default function SkillForm() {
         e.preventDefault();
         setLoading(true)
         try{
-            const response = await axios.patch(`${backendServer}api/developerSkills`, formValues)
-            console.log(response.data)
+            await axios.patch(`${backendServer}api/developerSkills`, formValues)
             setSendSuccess(true);
             setLoading(false);
             setTimeout(() => setSendSuccess(false), 2000);

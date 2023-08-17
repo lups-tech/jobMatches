@@ -29,7 +29,7 @@ export default function DevForm(){
     setLoading(true);
     try {
       const res = await axios.post(`${backendServer}api/developers`, data);
-      navigate('skills', { state: res.data })
+      navigate(`${res.data.id}/skills`, { state: res.data })
     } catch(error) {
       setSendError(true)
       setTimeout(() => setSendError(false), 2000)
