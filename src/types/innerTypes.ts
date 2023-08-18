@@ -4,14 +4,9 @@ export type Skill = {
   type: string
 }
 
-export type AddSkillToDev = {
-  developerId: string
-  selectedSkillIds: string[]
-};
-
 export type ComboBoxProps = {
   skills : Skill[],
-  filter: string,
-  formValueSetter: React.Dispatch<React.SetStateAction<AddSkillToDev>>,
-  formValues: AddSkillToDev
+  skillType: string,
+  refetchSkills: () => void
+  isRequired: boolean
 };

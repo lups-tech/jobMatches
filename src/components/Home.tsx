@@ -1,6 +1,6 @@
 import { Stack, Button } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import logo from '../assets/logo.png';
+import logo from '../assets/logo.svg';
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
@@ -9,9 +9,9 @@ const Home = () => {
     <Stack
       direction="column"
       spacing={3}
-      sx={{ justifyContent: 'center', alignItems: 'center', marginTop: '150px'}}
+      sx={{ justifyContent: 'center', alignItems: 'center', marginTop: '100px'}}
     >
-      <img src={logo} className='md:w-1/3 w-1/2'/>
+      <img src={logo} className='md:w-1/4 w-1/3'/>
       <Stack
         direction="row"
         spacing={3}

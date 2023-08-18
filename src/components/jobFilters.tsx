@@ -1,31 +1,17 @@
-import { Autocomplete, CircularProgress, TextField } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { Autocomplete, TextField } from '@mui/material';
 import { Skill } from '../types/innerTypes';
 import { Dispatch, SetStateAction, useState } from 'react';
 
-const backendServer = import.meta.env.VITE_BE_SERVER;
-
-const fetchSkills = async (): Promise<Skill[]> => {
-  const res = await fetch(`${backendServer}api/Skills`);
-  return res.json();
-};
 
 interface IJobFilters {
   setSearchKeyword: Dispatch<SetStateAction<string>>;
+  skills: Skill[]
 }
 
-const JobFilters = ({ setSearchKeyword }: IJobFilters) => {
-  const { isLoading, error, data } = useQuery<Skill[]>(['skills'], fetchSkills);
+const JobFilters = ({ setSearchKeyword, skills }: IJobFilters) => {
   const [inputValue, setInputValue] = useState('');
 
-  if (isLoading) return <CircularProgress />;
-
-  if (error) {
-    console.log('❗️error: ', error);
-    return 'An error has occurred, check console for more info';
-  }
-
-  if (!data) {
+  if (!skills) {
     return;
   }
 
@@ -33,7 +19,8 @@ const JobFilters = ({ setSearchKeyword }: IJobFilters) => {
     <Autocomplete
       id="skill-selection"
       freeSolo
-      options={data?.map((skill) => skill.title)}
+      sx={{background: '#ffffff'}}
+      options={skills.map((skill) => skill.title)}
       renderInput={(params) => <TextField {...params} label="Search skills" />}
       inputValue={inputValue}
       onInputChange={(_event, newInputValue) => {

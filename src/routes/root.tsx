@@ -3,11 +3,9 @@ import Navbar from '../components/Navbar';
 
 export default function Root() {
     return (
-      <main>
+      <main className="bg-slate-50 min-h-[100svh] pt-24">
         <Navbar/>
-        <div className='mt-24'>
          <Outlet />
-        </div>
       </main>
     );
   }

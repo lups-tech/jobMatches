@@ -38,11 +38,11 @@ const DevForm = () => {
   }
 
   return (
-      <>
+      <div className='flex justify-center'>
         <form 
         noValidate 
         onSubmit={handleSubmit(onSubmit)} 
-        className="flex flex-col items-center gap-4 mx-auto min-w-fit max-w-xl px-4">
+        className="flex flex-col items-center gap-4 mx-auto min-w-fit max-w-xl px-4 w-1/3">
           <Typography variant="h4" className="mb-10 md:pb-12">Add a Developer</Typography>
           <Controller
           
@@ -97,7 +97,7 @@ const DevForm = () => {
           <LoadingButton loading={loading} variant="outlined" type="submit" className="w-[60%] max-w-xs">Now add Skills</LoadingButton>
         </form>
         <Snackbar open={sendError} autoHideDuration={3000} message="Loading failed, please try again"/>
-      </>
+      </div>
     )
 }
 

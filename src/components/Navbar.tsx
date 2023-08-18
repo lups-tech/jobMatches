@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
-    <AppBar>
+    <AppBar className='h-16 fixed'>
         <Toolbar className="flex justify-between">
             <Link to="/" color="#ffffff">TalentHub</Link>
             <div className="flex flex-row gap-4">

@@ -1,74 +1,94 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { Autocomplete, TextField } from "@mui/material";
-import { ComboBoxProps, Skill } from "../types/innerTypes";
-import { useState } from "react";
-import axios from "axios";
+import { Autocomplete, TextField } from '@mui/material';
+import { ComboBoxProps, Skill } from '../types/innerTypes';
+import axios from 'axios';
 import { createFilterOptions } from '@mui/material/Autocomplete';
+import { Controller } from 'react-hook-form';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 const filterFromMUI = createFilterOptions<string>();
 
-const ComboBox = ({skills, filter, formValueSetter, formValues}: ComboBoxProps) => {
-    const [inputValue, setInputValue] = useState<string>("");
-    const skillList : Skill[]= skills?.filter(skill => skill.type == filter).map(skill => {return {title: skill.title, id: skill.id, type: skill.type}});
-    const skillTitleList : string[] = skillList.map(skill => skill.title);
+const ComboBox = ({
+  skills,
+  skillType,
+  refetchSkills,
+  isRequired,
+}: ComboBoxProps) => {
+  const filteredSkills: Skill[] = skills.filter(
+    (skill) => skill.type === skillType
+  );
+  const skillTitleList: string[] = filteredSkills.map((skill) => skill.title);
 
-    const handleAddSkill = async (newSkillName : string, value: string[]) => {
-       const response = await axios.post(`${backendServer}api/skills`, {
-            title: newSkillName,
-            type: filter
-        })
-        skillList.push(response.data);
-        setForm(value);
-    }
+  const handleAddSkill = async (newSkillName: string) => {
+    const response = await axios.post(`${backendServer}api/skills`, {
+      title: newSkillName,
+      type: skillType,
+    });
 
-    const setForm = (value: string []) => {
-        const otherSkillTypes = formValues.selectedSkillIds
-            .filter(skillToDelete => !skillList.map(skill => skill.id).includes(skillToDelete));
-        const newSelected = skillList
-            .filter(skill => value.includes(skill.title))
-            .map(skill => skill.id);
-        formValueSetter({...formValues, selectedSkillIds : [...otherSkillTypes, ...newSelected]});
-    }
+    const skill: Skill = response.data;
+    return skill;
+  };
 
-    return (
-    <Autocomplete
-        className="w-96"
-        freeSolo
-        multiple
-        id={filter}
-        options={skillTitleList}
-        getOptionLabel={skill => skill}
-        renderInput={(params) => <TextField {...params} label={`Select ${filter}`}/>}
-        filterOptions={(options, params) => {
+  return (
+    <Controller
+      defaultValue={[]}
+      name={`selectedSkillIds.${skillType}`}
+      rules={{
+        validate: (value) => !isRequired || value.length > 0,
+      }}
+      render={({ field: { onChange, onBlur } }) => (
+        <Autocomplete
+          className="w-96"
+          freeSolo
+          multiple
+          id={skillType}
+          options={skillTitleList}
+          getOptionLabel={(option) => option}
+          renderInput={(params) => (
+            <TextField {...params} label={`Select ${skillType}`} />
+          )}
+          filterOptions={(options, params) => {
             const filtered = filterFromMUI(options, params);
-    
+
             const { inputValue } = params;
             const isExisting = options.some((option) => inputValue === option);
             if (inputValue !== '' && !isExisting) {
-                filtered.push(`${inputValue}`);
+              filtered.push(`${inputValue}`);
             }
             return filtered;
-            }}
-        renderOption={(props, option) => {
-            if(skillTitleList.includes(option)){
-                return(<li key={option} {...props}>{option}</li>)
-            } else {
-                return(<li key={option} {...props}>Add "{option}"</li>)
-            }
-        }}
-        inputValue={inputValue}
-        onInputChange={(_e, newInputValue) => setInputValue(newInputValue)}
-        onChange={async (_event, newValue) => {
-            const newSkillArray = newValue.filter(element => !skillTitleList.includes(element));
-            if(newSkillArray.length){
-                newSkillArray.forEach(element => {handleAddSkill(element, newValue)});
-            } else {
-                setForm(newValue);
-            }
-        }}         
-    />
-  )
-}
+          }}
+          renderOption={(props, option) => {
+            return (
+              <li key={option} {...props}>
+                {skillTitleList.includes(option) ? option : `Add "${option}"`}
+              </li>
+            );
+          }}
+          onBlur={onBlur}
+          onChange={async (_event, value) => {
+            const skillsToCreate = value.filter(
+              (skillTitle) =>
+                !filteredSkills.some((skill) => skill.title === skillTitle)
+            );
 
-export default ComboBox
+            const newSkills = await Promise.all(
+              skillsToCreate.map((skillTitle) => handleAddSkill(skillTitle))
+            );
+
+            onChange(
+              value.map(
+                (skillTitle) =>
+                  [...filteredSkills, ...newSkills].find(
+                    (skill) => skill.title === skillTitle
+                  )?.id
+              )
+            );
+
+            refetchSkills();
+          }}
+        />
+      )}
+    />
+  );
+};
+
+export default ComboBox;

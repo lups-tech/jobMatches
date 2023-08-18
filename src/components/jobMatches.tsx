@@ -4,6 +4,7 @@ import {
   AccordionSummary,
   Button,
   Chip,
+  Link,
   Paper,
   Stack,
   Typography,
@@ -59,12 +60,12 @@ const JobMatches = () => {
             <div>
               <Typography variant="h3">{jobInfo.headline}</Typography>
               <Typography variant="h6">{jobInfo.employer.name}</Typography>
-            </div>
             {jobInfo.application_details.url && (
-              <Typography variant="body1">
-                {jobInfo.application_details.url}
-              </Typography>
+              <Button variant="outlined" sx={{ marginTop: 2 }} onClick={() => window.open(jobInfo.application_details.url)}>
+                Click here to apply
+              </Button>
             )}
+            </div>
           </AccordionSummary>
           <AccordionDetails>
             <div

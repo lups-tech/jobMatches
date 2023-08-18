@@ -1,5 +1,5 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Root from './routes/root.tsx';
 import AllJobsRoute from './routes/all-jobs.tsx';
@@ -7,18 +7,17 @@ import SkillFormRoute from './routes/skill-form.tsx';
 import DevFormRoute from './routes/dev-form.tsx';
 import JobMatchesRoute from './routes/job-matches.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import './index.css'
+import './index.css';
 import HomeRoute from './routes/home.tsx';
-
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Root />,
     children: [
       {
         path: '',
-        element: <HomeRoute/>,
+        element: <HomeRoute />,
       },
       {
         path: 'jobs',
@@ -26,26 +25,26 @@ const router = createBrowserRouter([
       },
       {
         path: 'jobs/matches',
-        element: <JobMatchesRoute/>
+        element: <JobMatchesRoute />,
       },
       {
         path: 'developers',
-        element: <DevFormRoute/>
+        element: <DevFormRoute />,
       },
       {
         path: 'developers/:id/skills',
-        element: <SkillFormRoute/>
+        element: <SkillFormRoute />,
       },
-    ]
+    ],
   },
 ]);
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router}/>
-    </QueryClientProvider>
-  </React.StrictMode>,
-)
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+  </React.StrictMode>
+);
