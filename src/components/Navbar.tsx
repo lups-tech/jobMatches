@@ -1,7 +1,7 @@
 import { AppBar, Toolbar } from "@mui/material";
 import { Link } from "react-router-dom";
 
-export default function Navbar() {
+const Navbar = () => {
   return (
     <AppBar>
         <Toolbar className="flex justify-between">
@@ -14,3 +14,5 @@ export default function Navbar() {
     </AppBar>
   )
 }
+
+export default Navbar

@@ -1,9 +1,10 @@
-import JobMatches from '../components/jobMatches';
+import JobMatches from '../components/JobMatches';
 
-export default function JobMatchesRoute() {
+ const JobMatchesRoute = () => {
   return (
     <div className='p-10 bg-zinc-100 min-h-screen'>
       <JobMatches />
       </div>
   );
 }
+export default JobMatchesRoute

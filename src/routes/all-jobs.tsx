@@ -1,6 +1,7 @@
-import AllJobs from '../components/allJobs';
+import AllJobs from '../components/AllJobs';
 
-export default function AllJobsRoute () {
+const AllJobsRoute = () =>{
 
     return <AllJobs />
 }
+export default AllJobsRoute

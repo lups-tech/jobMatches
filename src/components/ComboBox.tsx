@@ -8,7 +8,7 @@ import { createFilterOptions } from '@mui/material/Autocomplete';
 const backendServer = import.meta.env.VITE_BE_SERVER;
 const filterFromMUI = createFilterOptions<string>();
 
-export default function ComboBox({skills, filter, formValueSetter, formValues}: ComboBoxProps){
+const ComboBox = ({skills, filter, formValueSetter, formValues}: ComboBoxProps) => {
     const [inputValue, setInputValue] = useState<string>("");
     const skillList : Skill[]= skills?.filter(skill => skill.type == filter).map(skill => {return {title: skill.title, id: skill.id, type: skill.type}});
     const skillTitleList : string[] = skillList.map(skill => skill.title);
@@ -70,3 +70,5 @@ export default function ComboBox({skills, filter, formValueSetter, formValues}: 
     />
   )
 }
+
+export default ComboBox

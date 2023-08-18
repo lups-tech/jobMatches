@@ -25,7 +25,7 @@ const fetchSkills = async () => {
     return res.data;
   };
 
-export default function SkillForm() {
+const SkillForm = () => {
     const { state: developerInfo } = useLocation();
     const [loading, setLoading] = useState<boolean>(false);
     const [sendError, setSendError] = useState<boolean>(false);
@@ -128,3 +128,5 @@ export default function SkillForm() {
     </>
   )
 }
+
+export default SkillForm

@@ -1,5 +1,7 @@
 import DevForm from "../components/DevForm";
 
-export default function DevFormRoute () {
+const DevFormRoute = () => {
     return <DevForm />
 }
+
+export default DevFormRoute

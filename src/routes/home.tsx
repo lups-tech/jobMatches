@@ -1,5 +1,7 @@
-export default function HomeRoute() {
-  return (
-    <div>home</div>
-  )
+import Home from '../components/Home';
+
+const HomeRoute = () => {
+  return <Home />;
 }
+
+export default HomeRoute

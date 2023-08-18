@@ -11,7 +11,7 @@ import { useState } from "react";
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
-export default function DevForm(){
+const DevForm = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [sendError, setSendError] = useState<boolean>(false)
   const { control, handleSubmit } = useForm<z.infer<typeof DevFormSchema>>({
@@ -100,3 +100,5 @@ export default function DevForm(){
       </>
     )
 }
+
+export default DevForm
