@@ -1,4 +1,4 @@
-import JobMatches from '../components/JobMatches';
+import JobMatches from '../components/JjobMatches';
 
  const JobMatchesRoute = () => {
   return (
