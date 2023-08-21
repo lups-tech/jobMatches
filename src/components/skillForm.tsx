@@ -45,7 +45,6 @@ const SkillForm = () => {
   const formMethods = useForm<FormValues>({
     reValidateMode: 'onChange',
     defaultValues: {
-      developerId: developerInfo.id,
       selectedSkillIds: {
         ['Programming Language']: [],
       },
@@ -66,7 +65,10 @@ const SkillForm = () => {
 
   const onSubmit = async (formValues: FormValues) => {
     try {
-      await axios.patch(`${backendServer}api/developerSkills`, formValues);
+      await axios.patch(`${backendServer}api/developerSkills`, {
+        developerId: developerInfo.id,
+        selectedSkillIds: Object.values(formValues.selectedSkillIds).flat(),
+      });
       setSendSuccess(true);
       setTimeout(() => setSendSuccess(false), 2000);
     } catch (error) {
