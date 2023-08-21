@@ -3,8 +3,8 @@ import { Job, SearchResult } from '../types/externalTypes';
 import { CircularProgress, Pagination } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { Skill } from '../types/innerTypes';
-import JobFilters from './JjobFilters';
-import JobCard from './JjobCard';
+import JobFilters from './JobFilters';
+import JobCard from './JobCard';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
