@@ -1,4 +1,4 @@
-import AllJobs from '../components/AallJobs';
+import AllJobs from '../components/AllJobs';
 
 const AllJobsRoute = () => {
   return <AllJobs />;

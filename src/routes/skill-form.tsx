@@ -1,4 +1,4 @@
-import SkillForm from "../components/SskillForm";
+import SkillForm from "../components/SkillForm";
 
 const SkillFormRoute = () => {
     return <SkillForm />
