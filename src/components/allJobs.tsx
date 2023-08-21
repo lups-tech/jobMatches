@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import JobCard from './JobCard';
 import { Job, SearchResult } from '../types/externalTypes';
 import { CircularProgress, Pagination } from '@mui/material';
-import JobFilters from './JobFilters';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { Skill } from '../types/innerTypes';
+import JobFilters from './JobFilters';
+import JobCard from './JobCard';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 

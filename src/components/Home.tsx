@@ -20,7 +20,7 @@ const Home = () => {
         <Button variant="outlined" onClick={() => navigate('/jobs')}>Jobs</Button>
         <Button variant="outlined"onClick={() => window.open('https://github.com/lups-tech')} >
           <GitHubIcon sx={{ paddingRight: 1 }} />
-          GitHub
+          GitHub!
         </Button>
       </Stack>
     </Stack>
