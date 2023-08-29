@@ -111,9 +111,8 @@ const JobCard = ({ jobInfo }: IJobCard) => {
         <CardContent>
           <div
             dangerouslySetInnerHTML={{
-              __html: JSON.stringify(
-                jobInfo.description.text_formatted
-              ).replace(/[\n\r]/g, '<br/>'),
+              __html: 
+                jobInfo.description.text_formatted,
             }}
           ></div>
         </CardContent>

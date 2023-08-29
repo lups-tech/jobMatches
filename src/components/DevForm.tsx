@@ -94,7 +94,7 @@ const DevForm = () => {
                 </FormHelperText>
               </FormControl>
             )}/>
-          <LoadingButton loading={loading} variant="outlined" type="submit" className="w-[60%] max-w-xs">Now add Skills</LoadingButton>
+          <LoadingButton loading={loading} variant="outlined" type="submit" className="w-[60%] max-w-xs">Create Developer</LoadingButton>
         </form>
         <Snackbar open={sendError} autoHideDuration={3000} message="Loading failed, please try again"/>
       </div>

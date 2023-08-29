@@ -15,6 +15,7 @@ import { Matches } from '../types/scraperTypes';
 import { Job } from '../types/jobTechApiTypes';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EmailIcon from '@mui/icons-material/Email';
+import { useState } from 'react';
 
 const backendServer = import.meta.env.VITE_BE_SERVER
 
@@ -30,6 +31,7 @@ const fetchMatches = async (job: Job) => {
 
 const JobMatches = () => {
   const { state: jobInfo } = useLocation() as LocationState;
+  const [isSaved, setIsSaved] = useState(false)
   const {
     isLoading,
     error,
@@ -42,6 +44,24 @@ const JobMatches = () => {
   if (isLoading) return 'Loading...';
 
   if (error) return 'An error has occurred: ' + error.message;
+
+  console.log(jobInfo.description.text_formatted)
+
+
+  const saveJobHandle = async () => {
+      const createJobReq = { 
+        jobTechId: jobInfo.id,
+        url: jobInfo.application_details.url, 
+        jobText: jobInfo.description.text, 
+        SelectedSkillIds: matches.jobSkills.map(jobSkill => jobSkill.id)
+      }
+      try {
+        await axios.post(`${backendServer}api/jobs`, createJobReq)
+        setIsSaved(true)
+      } catch(error) {
+        console.log('Error:', (error as Error).message)
+      }
+  }
 
   return (
     <div className="flex flex-col sm:flex-row gap-5 justify-center items-start">
@@ -71,10 +91,16 @@ const JobMatches = () => {
               dangerouslySetInnerHTML={{
                 __html: jobInfo.description.text_formatted,
               }}
-            ></div>
+              style={{ all:'inherit'}}
+            >
+            </div>
           </AccordionDetails>
         </Accordion>
-        <Button variant="contained">Save Job</Button>
+        {!isSaved ? 
+        <Button variant="contained" onClick={saveJobHandle}>Save Job</Button>
+        :
+        <Button variant="contained" disabled>Saved</Button>
+        }
       </div>
       <div className="max-w-md flex-grow">
         <Typography variant="h2">Best Matches</Typography>

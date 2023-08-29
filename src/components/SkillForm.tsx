@@ -137,7 +137,7 @@ const SkillForm = () => {
               type="submit"
               className="w-[60%] max-w-xs self-center"
             >
-              Submit
+              Add skills
             </LoadingButton>
           </FormControl>
         </form>
