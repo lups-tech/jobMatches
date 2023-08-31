@@ -1,5 +1,6 @@
 import { AppBar, Toolbar } from "@mui/material";
 import { Link } from "react-router-dom";
+import { NavBarButtons } from './buttons/nav-bar-buttons';
 
 const Navbar = () => {
   return (
@@ -10,6 +11,7 @@ const Navbar = () => {
                 <Link to="/developers" color="#ffffff">Developers</Link>
                 <Link to="/jobs" color="#ffffff">Jobs</Link>
             </div>
+            <NavBarButtons />
         </Toolbar>
     </AppBar>
   )
