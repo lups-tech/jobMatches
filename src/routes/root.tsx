@@ -1,7 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { Auth0ProviderWithNavigate } from '../auth0-provider-with-navigate';
-import { useAuth0 } from '@auth0/auth0-react';
 
 export default function Root() {
   
