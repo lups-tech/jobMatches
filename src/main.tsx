@@ -9,7 +9,7 @@ import JobMatchesRoute from './routes/job-matches.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
 import HomeRoute from './routes/home.tsx';
-import { Auth0ProviderWithNavigate } from './auth0-provider-with-navigate.tsx';
+import { AuthenticationGuard } from './components/AuthenticationGuard.tsx';
 
 const router = createBrowserRouter([
   {
@@ -22,19 +22,19 @@ const router = createBrowserRouter([
       },
       {
         path: 'jobs',
-        element: <AllJobsRoute />,
+        element: <AuthenticationGuard component={AllJobsRoute} />,
       },
       {
         path: 'jobs/matches',
-        element: <JobMatchesRoute />,
+        element: <AuthenticationGuard component={JobMatchesRoute} />,
       },
       {
         path: 'developers',
-        element: <DevFormRoute />,
+        element: <AuthenticationGuard component={DevFormRoute} />,
       },
       {
         path: 'developers/:id/skills',
-        element: <SkillFormRoute />,
+        element: <AuthenticationGuard component={SkillFormRoute} />,
       },
     ],
   },
