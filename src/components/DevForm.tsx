@@ -8,6 +8,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
+import AllDevs from "./AllDevs";
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
@@ -39,6 +40,7 @@ const DevForm = () => {
 
   return (
       <div className='flex justify-center'>
+        <AllDevs />
         <form 
         noValidate 
         onSubmit={handleSubmit(onSubmit)} 
