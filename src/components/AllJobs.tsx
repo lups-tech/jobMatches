@@ -3,7 +3,7 @@ import { Job, SearchResult } from '../types/externalTypes';
 import { CircularProgress, Pagination } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { Skill } from '../types/innerTypes';
-import JobFilters from './JobFilters';
+import JobFilters, { FilterFormValues } from './JobFilters';
 import JobCard from './JobCard';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
@@ -14,19 +14,28 @@ const fetchSkills = async (): Promise<Skill[]> => {
 };
 
 const fetchJobs = async (
-  keyword: string,
   page: number
 ): Promise<SearchResult> => {
   const res = await fetch(
-    `https://jobsearch.api.jobtechdev.se/search?q=${keyword.toLowerCase()}&offset=${
+    `https://jobsearch.api.jobtechdev.se/search?q=javascript&offset=${
       page * 10
     }&limit=10`
   );
   return res.json();
 };
 
+// export type searchParams = {
+//   searchKeyword: string,
+//   isRemote: boolean | null,
+//   isExperienced: boolean | null
+// }
+
 const AllJobs = () => {
-  const [searchKeyword, setSearchKeyword] = useState('JavaScript');
+  const [searchKeyword, setSearchKeyword] = useState<FilterFormValues>({
+    searchKeyword: '',
+  isRemote: false,
+  isExperienced: false,
+  });
   const [currentPage, setCurrentPage] = useState(0);
 
   const {
@@ -37,7 +46,7 @@ const AllJobs = () => {
 
   const { isLoading, error, data } = useQuery<SearchResult>(
     ['jobs', searchKeyword, currentPage],
-    () => fetchJobs(searchKeyword, currentPage),
+    () => fetchJobs(currentPage),
     {
       // to prevent the page from fetching data too many times
       staleTime: Infinity,
