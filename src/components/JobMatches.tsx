@@ -16,6 +16,7 @@ import { Job } from '../types/jobTechApiTypes';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EmailIcon from '@mui/icons-material/Email';
 import { useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const backendServer = import.meta.env.VITE_BE_SERVER
 
@@ -23,22 +24,30 @@ type LocationState = {
   state: Job;
 };
 
-const fetchMatches = async (job: Job) => {
+const fetchMatches = async (job: Job, accessToken: string) => {
   const jobDescription = { description: job.description.text }
-  const res = await axios.post(`${backendServer}scraper`, jobDescription);
+  const res = await axios.post(`${backendServer}scraper`, jobDescription, {
+    headers: {
+    "Authorization": `Bearer ${accessToken}`,
+  }});
   return res.data;
 };
 
 const JobMatches = () => {
   const { state: jobInfo } = useLocation() as LocationState;
-  const [isSaved, setIsSaved] = useState(false)
+  const [isSaved, setIsSaved] = useState(false);
+  const { getAccessTokenSilently } = useAuth0();
+
   const {
     isLoading,
     error,
     data: matches,
   } = useQuery<Matches, Error>({
     queryKey: ['developers'],
-    queryFn: () => fetchMatches(jobInfo),
+    queryFn: async () => {
+      const accessToken = await getAccessTokenSilently();
+      return fetchMatches(jobInfo, accessToken);
+    },
   });
 
   if (isLoading) return 'Loading...';
@@ -49,18 +58,23 @@ const JobMatches = () => {
 
 
   const saveJobHandle = async () => {
-      const createJobReq = { 
-        jobTechId: jobInfo.id,
-        url: jobInfo.application_details.url, 
-        jobText: jobInfo.description.text, 
-        SelectedSkillIds: matches.jobSkills.map(jobSkill => jobSkill.id)
-      }
-      try {
-        await axios.post(`${backendServer}api/jobs`, createJobReq)
-        setIsSaved(true)
-      } catch(error) {
-        console.log('Error:', (error as Error).message)
-      }
+    const accessToken = await getAccessTokenSilently(); 
+    const createJobReq = { 
+      jobTechId: jobInfo.id,
+      url: jobInfo.application_details.url, 
+      jobText: jobInfo.description.text, 
+      SelectedSkillIds: matches.jobSkills.map(jobSkill => jobSkill.id)
+    }
+    try {
+      await axios.post(`${backendServer}api/jobs`, createJobReq, {
+        headers : {
+          "Authorization": `Bearer ${accessToken}`,
+        }
+      })
+      setIsSaved(true)
+    } catch(error) {
+      console.log('Error:', (error as Error).message)
+    }
   }
 
   return (
