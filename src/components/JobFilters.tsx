@@ -20,7 +20,7 @@ export type FilterFormValues = {
 };
 
 const JobFilters = ({ setSearchKeyword, skills }: IJobFilters) => {
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, control } = useForm({
     defaultValues: {
       searchKeyword: 'JavaScript',
       isRemote: false,
@@ -40,24 +40,27 @@ const JobFilters = ({ setSearchKeyword, skills }: IJobFilters) => {
 
   return (
     <form onSubmit={handleSubmit(processingData)}>
-      <Controller name="searchKeyword"
-      render={({field: {onChange, value}}) =>  <FormControlLabel
-        label=""
-        control={
+      <Controller
+        control={control}
+        name="searchKeyword"
+        render={({ field: { onChange } }) => (
           <Autocomplete
+            {...register('searchKeyword')}
             id="skill-selection"
             freeSolo
             sx={{ background: '#ffffff' }}
             options={skills.map((skill) => skill.title)}
-            value={value}
             renderInput={(params) => (
               <TextField {...params} label="Search skills" />
             )}
-            onChange={onChange}
+            onInputChange={onChange}
+            onChange={(_event, newValue) => {
+              if (newValue) {
+                onChange(newValue);
+              }}}
           />
-        }
-      />}/>
-     
+        )}
+      />
 
       <FormControlLabel
         {...register('isRemote')}
