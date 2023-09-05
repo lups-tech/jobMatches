@@ -1,12 +1,20 @@
 import {
   Autocomplete,
-  Checkbox,
+  Button,
+  FormControl,
   FormControlLabel,
   TextField,
 } from '@mui/material';
 import { Skill } from '../types/innerTypes';
 import { Dispatch, SetStateAction } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+
+import ListItemText from '@mui/material/ListItemText';
+import Select from '@mui/material/Select';
+import Checkbox from '@mui/material/Checkbox';
 
 interface IJobFilters {
   setSearchKeyword: Dispatch<SetStateAction<FilterFormValues>>;
@@ -15,19 +23,20 @@ interface IJobFilters {
 
 export type FilterFormValues = {
   searchKeyword: string;
+  skillsFilter: string[];
   isRemote: boolean;
   isExperienced?: boolean;
 };
 
 const JobFilters = ({ setSearchKeyword, skills }: IJobFilters) => {
-  const { register, handleSubmit, control } = useForm({
+  const { register, handleSubmit, control } = useForm<FilterFormValues>({
     defaultValues: {
       searchKeyword: 'JavaScript',
+      skillsFilter: [],
       isRemote: false,
       isExperienced: false,
     },
   });
-  // const [inputFilterValue, setInputFilterValue] = useState();
 
   const processingData = (data: FilterFormValues) => {
     setSearchKeyword(data);
@@ -57,11 +66,12 @@ const JobFilters = ({ setSearchKeyword, skills }: IJobFilters) => {
             onChange={(_event, newValue) => {
               if (newValue) {
                 onChange(newValue);
-              }}}
+              }
+            }}
           />
         )}
       />
-
+ <div className='flex flex-row flex-wrap items-center'>
       <FormControlLabel
         {...register('isRemote')}
         control={<Checkbox />}
@@ -72,15 +82,43 @@ const JobFilters = ({ setSearchKeyword, skills }: IJobFilters) => {
         control={<Checkbox />}
         label="isExperienced"
       />
-      <button type="submit">Search</button>
+    
+        <Controller
+          control={control}
+          name="skillsFilter"
+          render={({ field: { onChange, value } }) => (
+            <FormControl sx={{ m: 1, minWidth: 250 }} size="small">
+              <InputLabel id="programming-languages-multiple-checkbox-label">Programming Language</InputLabel>
+              <Select
+                labelId="programming-languages-multiple-checkbox-label"
+                id="demo-multiple-checkbox"
+                label="Programming Language"
+                multiple
+                value={value}
+                onChange={onChange}
+                input={<OutlinedInput label="Programming Language" />}
+                renderValue={(selected) => selected.join(', ')}
+              >
+                {skills.filter(skill => skill.type === 'Programming Language').map((skill) => (
+                  <MenuItem key={skill.id} value={skill.title}>
+                    <Checkbox checked={value.indexOf(skill.title) > -1}/>
+                    <ListItemText primary={skill.title} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+        />
+      <Button variant="outlined" type="submit">
+        Search
+      </Button>
+      </div>
     </form>
   );
 };
 
 export default JobFilters;
 
-// add filtering REMOTE
 // add filtering EXPERIENCE
-
 // add filtering REGION
 // add filtering PROGRAMMING LANGUAGES

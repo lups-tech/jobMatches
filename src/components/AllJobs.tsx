@@ -9,41 +9,38 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
-const fetchSkills = async (accessToken : string): Promise<Skill[]> => {
+const fetchSkills = async (accessToken: string): Promise<Skill[]> => {
   const res = await fetch(`${backendServer}api/Skills`, {
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
-    }
+      Authorization: `Bearer ${accessToken}`,
+    },
   });
   return res.json();
 };
 
 const fetchJobs = async (
+  searchFilter: FilterFormValues,
   page: number
 ): Promise<SearchResult> => {
   const res = await fetch(
-    `https://jobsearch.api.jobtechdev.se/search?q=javascript&offset=${
+    `https://jobsearch.api.jobtechdev.se/search?experience=${
+      searchFilter.isExperienced
+    }&remote=${searchFilter.isRemote}&q=${searchFilter.searchKeyword}&offset=${
       page * 10
     }&limit=10`
   );
   return res.json();
 };
 
-// export type searchParams = {
-//   searchKeyword: string,
-//   isRemote: boolean | null,
-//   isExperienced: boolean | null
-// }
-
 const AllJobs = () => {
   const [searchKeyword, setSearchKeyword] = useState<FilterFormValues>({
     searchKeyword: '',
-  isRemote: false,
-  isExperienced: false,
+    skillsFilter: [],
+    isRemote: false,
+    isExperienced: false,
   });
   const [currentPage, setCurrentPage] = useState(0);
   const { getAccessTokenSilently } = useAuth0();
-
 
   const {
     isLoading: isSkillsLoading,
@@ -51,11 +48,12 @@ const AllJobs = () => {
     data: skills,
   } = useQuery<Skill[]>(['skills'], async () => {
     const accessToken = await getAccessTokenSilently();
-    return fetchSkills(accessToken)});
+    return fetchSkills(accessToken);
+  });
 
   const { isLoading, error, data } = useQuery<SearchResult>(
     ['jobs', searchKeyword, currentPage],
-    () => fetchJobs(currentPage),
+    () => fetchJobs(searchKeyword, currentPage),
     {
       // to prevent the page from fetching data too many times
       staleTime: Infinity,
