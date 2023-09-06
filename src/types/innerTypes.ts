@@ -1,3 +1,5 @@
+import { Region } from "./externalTypes";
+
 export type Skill = {
   id: string,
   title: string,
