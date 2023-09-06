@@ -41,6 +41,7 @@ const DevCard = ({ developer }: { developer: Developer }) => {
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const saveDeveloper = () => {
+    // need to add logic to save developer to favorites for user
     setFavorite(!favorite);
   };
 
@@ -101,8 +102,8 @@ const DevCard = ({ developer }: { developer: Developer }) => {
 
       <CardActions disableSpacing sx={{ paddingBottom: 3 }}>
         
-        <IconButton aria-label="add to favorites">
-          {favorite ? <FavoriteIcon onClick={saveDeveloper}/> : <FavoriteBorderIcon onClick={saveDeveloper}/>}
+        <IconButton aria-label="add to favorites" onClick={saveDeveloper}>
+          {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon/>}
         </IconButton>
         <ExpandMore
           expand={expanded}
