@@ -101,11 +101,9 @@ const DevCard = ({ developer }: { developer: Developer }) => {
       </CardContent>
 
       <CardActions disableSpacing sx={{ paddingBottom: 3 }}>
-        <Button size="small" variant="outlined" onClick={saveDeveloper}>
-          {favorite ? "Saved" : "Save"}
-        </Button>
+        
         <IconButton aria-label="add to favorites">
-          {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+          {favorite ? <FavoriteIcon onClick={saveDeveloper}/> : <FavoriteBorderIcon onClick={saveDeveloper}/>}
         </IconButton>
         <ExpandMore
           expand={expanded}
