@@ -5,11 +5,16 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { Skill } from '../types/innerTypes';
 import JobFilters from './JobFilters';
 import JobCard from './JobCard';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
-const fetchSkills = async (): Promise<Skill[]> => {
-  const res = await fetch(`${backendServer}api/Skills`);
+const fetchSkills = async (accessToken : string): Promise<Skill[]> => {
+  const res = await fetch(`${backendServer}api/Skills`, {
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+    }
+  });
   return res.json();
 };
 
@@ -28,12 +33,16 @@ const fetchJobs = async (
 const AllJobs = () => {
   const [searchKeyword, setSearchKeyword] = useState('JavaScript');
   const [currentPage, setCurrentPage] = useState(0);
+  const { getAccessTokenSilently } = useAuth0();
+
 
   const {
     isLoading: isSkillsLoading,
     error: skillsError,
     data: skills,
-  } = useQuery<Skill[]>(['skills'], fetchSkills);
+  } = useQuery<Skill[]>(['skills'], async () => {
+    const accessToken = await getAccessTokenSilently();
+    return fetchSkills(accessToken)});
 
   const { isLoading, error, data } = useQuery<SearchResult>(
     ['jobs', searchKeyword, currentPage],

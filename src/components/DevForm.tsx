@@ -8,12 +8,15 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
+import { useAuth0 } from '@auth0/auth0-react';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
 const DevForm = () => {
-  const [loading, setLoading] = useState<boolean>(false);
+
+  const [loading, setLoading] = useState<boolean>(false)
   const [sendError, setSendError] = useState<boolean>(false);
+  const { getAccessTokenSilently } = useAuth0();
   const { control, handleSubmit } = useForm<z.infer<typeof DevFormSchema>>({
     mode: "onBlur",
     reValidateMode: "onBlur",
@@ -27,13 +30,18 @@ const DevForm = () => {
   const navigate = useNavigate();
   const onSubmit = async (data: z.infer<typeof DevFormSchema>) => {
     setLoading(true);
+    const accessToken = await getAccessTokenSilently();
     try {
-      const res = await axios.post(`${backendServer}api/developers`, data);
-      navigate(`${res.data.id}/skills`, { state: res.data });
-    } catch (error) {
-      setSendError(true);
-      setTimeout(() => setSendError(false), 2000);
-      setLoading(false);
+      const res = await axios.post(`${backendServer}api/developers`, data, {
+        headers : {
+          "Authorization" : `Bearer ${accessToken}`
+        }
+      });
+      navigate(`${res.data.id}/skills`, { state: res.data })
+    } catch(error) {
+      setSendError(true)
+      setTimeout(() => setSendError(false), 2000)
+      setLoading(false)
     }
   };
 

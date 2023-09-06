@@ -15,6 +15,7 @@ import { useState } from 'react';
 import ComboBox from './ComboBox';
 import { LoadingButton } from '@mui/lab';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 
 type FormValues = {
   developerId: string;
@@ -25,8 +26,12 @@ type FormValues = {
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
-const fetchSkills = async () => {
-  const res = await axios.get(`${backendServer}api/skills`);
+const fetchSkills = async (accessToken: string) => {
+  const res = await axios.get(`${backendServer}api/skills`, {
+    headers : {
+      "Authorization" : `Bearer ${accessToken}`
+    }
+  });
   return res.data;
 };
 
@@ -35,13 +40,16 @@ const SkillForm = () => {
   const { state: developerInfo } = useLocation();
   const [sendError, setSendError] = useState<boolean>(false);
   const [sendSuccess, setSendSuccess] = useState<boolean>(false);
+  const { getAccessTokenSilently } = useAuth0();
 
   const {
     isLoading: isSkillsLoading,
     error: skillsError,
     data: skills,
     refetch: refetchSkills,
-  } = useQuery<Skill[], Error>(['skills'], fetchSkills);
+  } = useQuery<Skill[], Error>(['skills'], async () => {
+    const accessToken = await getAccessTokenSilently();
+    return fetchSkills(accessToken)});
 
   const formMethods = useForm<FormValues>({
     reValidateMode: 'onChange',
@@ -65,10 +73,15 @@ const SkillForm = () => {
   const skillTypes = Array.from(new Set(skills.map((skill) => skill.type)));
 
   const onSubmit = async (formValues: FormValues) => {
+    const accessToken = await getAccessTokenSilently();
     try {
       await axios.patch(`${backendServer}api/developerSkills`, {
         developerId: developerInfo.id,
         selectedSkillIds: Object.values(formValues.selectedSkillIds).flat(),
+      }, {
+        headers : {
+          "Authorization" : `Bearer ${accessToken}`
+        }
       });
       setSendSuccess(true);
       setTimeout(() => setSendSuccess(false), 2000);
