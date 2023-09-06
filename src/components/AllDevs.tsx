@@ -27,7 +27,7 @@ const fetchDevelopers = async (accessToken: String) => {
 const AllDevs = () => {
   const { getAccessTokenSilently } = useAuth0();
   const [currentPage, setCurrentPage] = useState(0);
-  const pageSize = 10;
+  const pageSize = 7;
 
   const {
     isLoading,
@@ -73,19 +73,19 @@ const AllDevs = () => {
     <div className="flex justify-center">
       <div className="max-w-[800px] mx-10">
         {/* <JobFilters setSearchKeyword={setSearchKeyword} skills={skills} /> */}
-          <Pagination
-            count={Math.floor(allDevelopers.length / 10) + 1}
-            variant="outlined"
-            shape="rounded"
-            onChange={pageChangeHandler}
-            page={currentPage + 1}
-          />
         <div className="jobcards">
           {displayedDevelopers &&
             displayedDevelopers.map((dev) => (
               <DevCard key={dev.id} developer={dev} />
-            ))}
+              ))}
         </div>
+              <Pagination 
+                count={Math.floor(allDevelopers.length / pageSize) + 1}
+                variant="outlined"
+                shape="rounded"
+                onChange={pageChangeHandler}
+                page={currentPage + 1}
+              />
       </div>
     </div>
   );
