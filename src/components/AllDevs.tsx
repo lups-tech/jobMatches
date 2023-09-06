@@ -1,25 +1,18 @@
-import axios, { all } from "axios";
+import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import { CircularProgress, Pagination } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { Developer } from "../types/innerTypes";
 import { ChangeEvent, useEffect, useState } from "react";
 import DevCard from "./DevCard";
-// import { Skill } from '../types/innerTypes';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
-// const fetchSkills = async (): Promise<Skill[]> => {
-//     const res = await fetch(`${backendServer}api/Skills`);
-//     return res.json();
-//   };
+
 
 const fetchDevelopers = async (accessToken: String) => {
   const res = await axios.get(`${backendServer}api/developers`, {
     headers: { Authorization: `Bearer ${accessToken}` },
-    // params: { 
-    //   offset,
-    //   limit: pageNumber },
   });
   return res.data;
 };
@@ -41,13 +34,19 @@ const AllDevs = () => {
     },
   });
 
- const displayedDevelopers = allDevelopers?.slice(
+const orderedDevelopers = allDevelopers?.sort((a, b) => {
+  if (a.name < b.name) {
+    return -1;
+  }
+  if (a.name > b.name) {
+    return 1;
+  }
+  return 0;})
+
+ const displayedDevelopers = orderedDevelopers?.slice(
     currentPage * pageSize,
     currentPage * pageSize + pageSize
   );
-
-  console.log(displayedDevelopers);
-
 
 
   const pageChangeHandler = (_event: ChangeEvent<unknown>, value: number) => {
@@ -62,8 +61,7 @@ const AllDevs = () => {
   if (isLoading)
     return (
       <div className="flex justify-center mt-16">
-        Loading
-        {/* <CircularProgress /> */}
+        <CircularProgress />
       </div>
     );
 

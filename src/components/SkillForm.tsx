@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
-import { useForm, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider, set } from 'react-hook-form';
 import {
   Checkbox,
   FormControl,
@@ -14,7 +14,7 @@ import { Skill } from '../types/innerTypes';
 import { useState } from 'react';
 import ComboBox from './ComboBox';
 import { LoadingButton } from '@mui/lab';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type FormValues = {
   developerId: string;
@@ -31,6 +31,7 @@ const fetchSkills = async () => {
 };
 
 const SkillForm = () => {
+  const navigate = useNavigate();
   const { state: developerInfo } = useLocation();
   const [sendError, setSendError] = useState<boolean>(false);
   const [sendSuccess, setSendSuccess] = useState<boolean>(false);
@@ -71,6 +72,7 @@ const SkillForm = () => {
       });
       setSendSuccess(true);
       setTimeout(() => setSendSuccess(false), 2000);
+      setTimeout(() => navigate('/developers'), 2500);
     } catch (error) {
       setSendError(true);
       setTimeout(() => setSendError(false), 2000);
