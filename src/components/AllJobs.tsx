@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { Job, SearchResult } from '../types/externalTypes';
 import { CircularProgress, Pagination } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { Skill } from '../types/innerTypes';
-import JobFilters, { FilterFormValues } from './JobFilters';
+import { FilterFormValues, Skill } from '../types/innerTypes';
+import JobFilters from './JobFilters';
 import JobCard from './JobCard';
 import { useAuth0 } from '@auth0/auth0-react';
 
@@ -23,12 +23,17 @@ const fetchJobs = async (
   page: number
 ): Promise<SearchResult> => {
   const res = await fetch(
-    `https://jobsearch.api.jobtechdev.se/search?experience=${
+    `https://jobsearch.api.jobtechdev.se/search?${searchFilter.regionFilter.map(region => `region=${region["taxonomy/national-nuts-level-3-code-2019"]}`).join('&')}&experience=${
       searchFilter.isExperienced
-    }&remote=${searchFilter.isRemote}&q=${searchFilter.searchKeyword}&offset=${
+    }&q=${searchFilter.searchKeyword}&offset=${
       page * 10
     }&limit=10`
   );
+  console.log(`https://jobsearch.api.jobtechdev.se/search?${searchFilter.regionFilter.map(region => `region=${region["taxonomy/national-nuts-level-3-code-2019"]}`).join('&')}&experience=${
+    searchFilter.isExperienced
+  }&q=${searchFilter.searchKeyword}&offset=${
+    page * 10
+  }&limit=10`)
   return res.json();
 };
 
@@ -36,7 +41,7 @@ const AllJobs = () => {
   const [searchKeyword, setSearchKeyword] = useState<FilterFormValues>({
     searchKeyword: '',
     skillsFilter: [],
-    isRemote: false,
+    regionFilter: [],
     isExperienced: false,
   });
   const [currentPage, setCurrentPage] = useState(0);

@@ -148,3 +148,23 @@ export type SearchResult = {
   freetext_concepts: FreetextConcepts;
   hits: Job[];
 };
+
+export type Region = {
+  "taxonomy/replaced-by": {
+      "taxonomy/id": string;
+      "taxonomy/type": string;
+      "taxonomy/preferred-label": string;
+      "taxonomy/definition": string;
+      "taxonomy/deprecated": boolean;
+      "taxonomy/alternative-labels": string[];
+      "taxonomy/hidden-labels": string[];
+  }[];
+  "taxonomy/id": string;
+  "taxonomy/definition": string;
+  "taxonomy/national-nuts-level-3-code-2019": string;
+  "taxonomy/deprecated-legacy-id": string;
+  "taxonomy/nuts-level-3-code-2013": string;
+  "taxonomy/preferred-label": string;
+  "taxonomy/deprecated": boolean;
+  "taxonomy/type": string;
+}

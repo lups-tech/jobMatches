@@ -10,3 +10,10 @@ export type ComboBoxProps = {
   refetchSkills: () => void
   isRequired: boolean
 };
+
+export type FilterFormValues = {
+  searchKeyword: string;
+  skillsFilter: string[];
+  regionFilter: Region[];
+  isExperienced?: boolean;
+};
