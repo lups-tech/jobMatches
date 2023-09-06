@@ -4,7 +4,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Root from './routes/root.tsx';
 import AllJobsRoute from './routes/all-jobs.tsx';
 import SkillFormRoute from './routes/skill-form.tsx';
-import DevFormRoute from './routes/dev-form.tsx';
+import DevelopersMainRoute from './routes/developers-main.tsx';
 import JobMatchesRoute from './routes/job-matches.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
@@ -30,7 +30,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'developers',
-        element: <AuthenticationGuard component={DevFormRoute} />,
+        element: <AuthenticationGuard component={DevelopersMainRoute} />,
       },
       {
         path: 'developers/:id/skills',
