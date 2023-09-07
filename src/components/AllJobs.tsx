@@ -25,13 +25,13 @@ const fetchJobs = async (
   const res = await fetch(
     `https://jobsearch.api.jobtechdev.se/search?${searchFilter.regionFilter.map(region => `region=${region["taxonomy/national-nuts-level-3-code-2019"]}`).join('&')}&experience=${
       searchFilter.isExperienced
-    }&q=${searchFilter.searchKeyword}&offset=${
+    }&q=${encodeURIComponent(searchFilter.skillsFilter.join(' ') + ' ' + searchFilter.searchKeyword)}&offset=${
       page * 10
     }&limit=10`
   );
   console.log(`https://jobsearch.api.jobtechdev.se/search?${searchFilter.regionFilter.map(region => `region=${region["taxonomy/national-nuts-level-3-code-2019"]}`).join('&')}&experience=${
     searchFilter.isExperienced
-  }&q=${searchFilter.searchKeyword}&offset=${
+  }&q=${encodeURIComponent(searchFilter.skillsFilter.join(' ') + ' ' + searchFilter.searchKeyword)}&offset=${
     page * 10
   }&limit=10`)
   return res.json();
