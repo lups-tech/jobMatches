@@ -18,4 +18,11 @@ export type FilterFormValues = {
   skillsFilter: string[];
   regionFilter: Region[];
   isExperienced?: boolean;
+
+export type Developer = {
+  id: string;
+  name: string;
+  email: string;
+  skills: Skill[];
+  skillMatch: number;
 };
