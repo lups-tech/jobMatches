@@ -1,3 +1,5 @@
+import { Region } from "./externalTypes";
+
 export type Skill = {
   id: string,
   title: string,
@@ -11,16 +13,16 @@ export type ComboBoxProps = {
   isRequired: boolean
 };
 
-type Skills = {
-  id: string;
-  title: string;
-  type: string;
-};
+export type FilterFormValues = {
+  searchKeyword: string;
+  skillsFilter: string[];
+  regionFilter: Region[];
+  isExperienced?: boolean;
 
 export type Developer = {
   id: string;
   name: string;
   email: string;
-  skills: Skills[];
+  skills: Skill[];
   skillMatch: number;
 };

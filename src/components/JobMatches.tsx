@@ -54,9 +54,6 @@ const JobMatches = () => {
 
   if (error) return 'An error has occurred: ' + error.message;
 
-  console.log(jobInfo.description.text_formatted)
-
-
   const saveJobHandle = async () => {
     const accessToken = await getAccessTokenSilently(); 
     const createJobReq = { 

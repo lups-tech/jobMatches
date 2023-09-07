@@ -2,39 +2,50 @@ import { useQuery } from '@tanstack/react-query';
 import { Job, SearchResult } from '../types/externalTypes';
 import { CircularProgress, Pagination } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { Skill } from '../types/innerTypes';
+import { FilterFormValues, Skill } from '../types/innerTypes';
 import JobFilters from './JobFilters';
 import JobCard from './JobCard';
 import { useAuth0 } from '@auth0/auth0-react';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
-const fetchSkills = async (accessToken : string): Promise<Skill[]> => {
+const fetchSkills = async (accessToken: string): Promise<Skill[]> => {
   const res = await fetch(`${backendServer}api/Skills`, {
     headers: {
-      "Authorization": `Bearer ${accessToken}`,
-    }
+      Authorization: `Bearer ${accessToken}`,
+    },
   });
   return res.json();
 };
 
 const fetchJobs = async (
-  keyword: string,
+  searchFilter: FilterFormValues,
   page: number
 ): Promise<SearchResult> => {
   const res = await fetch(
-    `https://jobsearch.api.jobtechdev.se/search?q=${keyword.toLowerCase()}&offset=${
+    `https://jobsearch.api.jobtechdev.se/search?${searchFilter.regionFilter.map(region => `region=${region["taxonomy/national-nuts-level-3-code-2019"]}`).join('&')}&experience=${
+      searchFilter.isExperienced
+    }&q=${encodeURIComponent(searchFilter.skillsFilter.join(' ') + ' ' + searchFilter.searchKeyword)}&offset=${
       page * 10
     }&limit=10`
   );
+  console.log(`https://jobsearch.api.jobtechdev.se/search?${searchFilter.regionFilter.map(region => `region=${region["taxonomy/national-nuts-level-3-code-2019"]}`).join('&')}&experience=${
+    searchFilter.isExperienced
+  }&q=${encodeURIComponent(searchFilter.skillsFilter.join(' ') + ' ' + searchFilter.searchKeyword)}&offset=${
+    page * 10
+  }&limit=10`)
   return res.json();
 };
 
 const AllJobs = () => {
-  const [searchKeyword, setSearchKeyword] = useState('JavaScript');
+  const [searchKeyword, setSearchKeyword] = useState<FilterFormValues>({
+    searchKeyword: '',
+    skillsFilter: [],
+    regionFilter: [],
+    isExperienced: false,
+  });
   const [currentPage, setCurrentPage] = useState(0);
   const { getAccessTokenSilently } = useAuth0();
-
 
   const {
     isLoading: isSkillsLoading,
@@ -42,7 +53,8 @@ const AllJobs = () => {
     data: skills,
   } = useQuery<Skill[]>(['skills'], async () => {
     const accessToken = await getAccessTokenSilently();
-    return fetchSkills(accessToken)});
+    return fetchSkills(accessToken);
+  });
 
   const { isLoading, error, data } = useQuery<SearchResult>(
     ['jobs', searchKeyword, currentPage],

@@ -22,7 +22,7 @@ const ComboBox = ({
     const response = await axios.post(`${backendServer}api/skills`, {
       title: newSkillName,
       type: skillType,
-    });
+    })
 
     const skill: Skill = response.data;
     return skill;
