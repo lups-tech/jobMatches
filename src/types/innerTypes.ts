@@ -9,20 +9,21 @@ export type Skill = {
 export type ComboBoxProps = {
   skills : Skill[],
   skillType: string,
-  refetchSkills: () => void
+  refetchSkills: () => void,
   isRequired: boolean
 };
 
 export type FilterFormValues = {
-  searchKeyword: string;
-  skillsFilter: string[];
-  regionFilter: Region[];
-  isExperienced?: boolean;
+  searchKeyword: string,
+  skillsFilter: string[],
+  regionFilter: Region[],
+  isExperienced?: boolean
+};
 
 export type Developer = {
-  id: string;
-  name: string;
-  email: string;
-  skills: Skill[];
-  skillMatch: number;
+  id: string,
+  name: string,
+  email: string,
+  skills: Skill[],
+  skillMatch: number
 };
