@@ -94,7 +94,7 @@ if (regionsError) {
           />
         )}
       />
- <div className='flex flex-row flex-wrap items-center'>
+ <div className='flex flex-row flex-wrap items-center justify-between'>
       {/* <FormControlLabel
         {...register('isRemote')}
         control={<Checkbox />}
@@ -103,7 +103,7 @@ if (regionsError) {
       <FormControlLabel
         {...register('isExperienced')}
         control={<Checkbox />}
-        label="isExperienced"
+        label="Experience Required"
       />
     
         <Controller
@@ -138,7 +138,7 @@ if (regionsError) {
         control={control}
         render={({ field: { onChange, onBlur } }) => (
           <Autocomplete
-            className="w-96"
+            className="w-72"
             id='regionFilters'
             multiple
             size="small"
@@ -157,7 +157,7 @@ if (regionsError) {
         )}
       />
         
-      <Button variant="outlined" type="submit">
+      <Button variant="outlined" type="submit" className='w-full'>
         Search
       </Button>
       </div>
