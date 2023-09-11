@@ -2,25 +2,56 @@ import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import { CircularProgress, Pagination } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { Developer } from "../types/innerTypes";
+import {
+  Developer,
+  Skill,
+  DeveloperFilterFormValues,
+} from "../types/innerTypes";
 import { ChangeEvent, useEffect, useState } from "react";
 import DevCard from "./DevCard";
+import DevFilters from "./DevFilters";
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
-
+const fetchSkills = async (accessToken: string): Promise<Skill[]> => {
+  const res = await fetch(`${backendServer}api/Skills`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  return res.json();
+};
 
 const fetchDevelopers = async (accessToken: String) => {
   const res = await axios.get(`${backendServer}api/developers`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
+  console.log("all devs", res.data);
+
   return res.data;
 };
 
 const AllDevs = () => {
-  const { getAccessTokenSilently } = useAuth0();
+  const [searchFilter, setSearchFilter] = useState<DeveloperFilterFormValues>({
+    searchKeyword: "",
+    skillsFilter: [],
+  });
+  const [displayedDevelopers, setDisplayedDevelopers] = useState<Developer[]>();
+  const [numberOfPages, setNumberOfPages] = useState(0);
+
   const [currentPage, setCurrentPage] = useState(0);
+  const { getAccessTokenSilently } = useAuth0();
+
   const pageSize = 7;
+
+  const {
+    isLoading: isSkillsLoading,
+    error: skillsError,
+    data: skills,
+  } = useQuery<Skill[]>(["skills"], async () => {
+    const accessToken = await getAccessTokenSilently();
+    return fetchSkills(accessToken);
+  });
 
   const {
     isLoading,
@@ -34,56 +65,87 @@ const AllDevs = () => {
     },
   });
 
-const orderedDevelopers = allDevelopers?.sort((a, b) => {
-  if (a.name < b.name) {
-    return -1;
-  }
-  if (a.name > b.name) {
-    return 1;
-  }
-  return 0;})
+  useEffect(() => {
+    const filteredDevelopers = allDevelopers?.filter((dev: Developer) => {
+      const devSkills = dev.skills.map((skill: Skill) => skill.title);
+      const matchingSkills = devSkills.includes(searchFilter.searchKeyword);
+      const matchingProgrammingLanguages = devSkills.includes(
+        searchFilter.searchKeyword
+      );
+      if (matchingSkills && matchingProgrammingLanguages) {
+        return true;
+      }
+      if (
+        dev.name
+          .toLowerCase()
+          .includes(searchFilter.searchKeyword.toLowerCase())
+      ) {
+        return true;
+      }
+      return false;
+    });
+    const orderedDevelopers = filteredDevelopers?.sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
 
- const displayedDevelopers = orderedDevelopers?.slice(
-    currentPage * pageSize,
-    currentPage * pageSize + pageSize
-  );
+    const sliceDevelopers = orderedDevelopers?.slice(
+      currentPage * pageSize,
+      currentPage * pageSize + pageSize
+    );
 
+    setDisplayedDevelopers(sliceDevelopers);
+    setNumberOfPages(Math.floor(orderedDevelopers?.length ?? 0 / pageSize) + 1);
+    setCurrentPage(0);
+  }, [searchFilter]);
 
   const pageChangeHandler = (_event: ChangeEvent<unknown>, value: number) => {
-      value = value - 1;
-      setCurrentPage(value);
+    value = value - 1;
+    setCurrentPage(value);
   };
 
-    useEffect(() => {
-      setCurrentPage(0);
-    }, []);
-
-  if (isLoading)
+  if (isLoading || isSkillsLoading)
     return (
       <div className="flex justify-center mt-16">
         <CircularProgress />
       </div>
     );
 
-  if (error) return <div>Error: {error.message}</div>;
+  if (error || skillsError) {
+    console.log("❗️error: ", error);
+    return (
+      <div className="flex justify-center mt-16">
+        An error has occurred, check console for more info
+      </div>
+    );
+  }
+
+  if (!skills) {
+    return;
+  }
 
   return (
     <div className="flex justify-center">
       <div className="max-w-[800px] mx-10">
-        {/* <JobFilters setSearchKeyword={setSearchKeyword} skills={skills} /> */}
+        <DevFilters setSearchFilter={setSearchFilter} skills={skills} />
         <div className="jobcards">
           {displayedDevelopers &&
             displayedDevelopers.map((dev) => (
               <DevCard key={dev.id} developer={dev} />
-              ))}
+            ))}
         </div>
-              <Pagination 
-                count={Math.floor(allDevelopers.length / pageSize) + 1}
-                variant="outlined"
-                shape="rounded"
-                onChange={pageChangeHandler}
-                page={currentPage + 1}
-              />
+        <Pagination
+          count={numberOfPages}
+          variant="outlined"
+          shape="rounded"
+          onChange={pageChangeHandler}
+          page={currentPage + 1}
+        />
       </div>
     </div>
   );

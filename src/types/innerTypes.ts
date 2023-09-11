@@ -20,6 +20,11 @@ export type FilterFormValues = {
   isExperienced?: boolean
 };
 
+export type DeveloperFilterFormValues = {
+  searchKeyword: string,
+  skillsFilter: string[],
+}
+
 export type Developer = {
   id: string,
   name: string,

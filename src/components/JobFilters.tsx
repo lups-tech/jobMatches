@@ -49,7 +49,6 @@ const JobFilters = ({ setSearchKeyword, skills }: IJobFilters) => {
 
   const processingData = (data: FilterFormValues) => {
     setSearchKeyword(data);
-    console.log('hellew', data);
   };
   if (isRegionsLoading)
   return (
