@@ -38,36 +38,10 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
       },
     });
 
-  // const {
-  //   isLoading: isRegionsLoading,
-  //   error: regionsError,
-  //   data: regions,
-  // } = useQuery<Region[]>(['regions'], async () => {
-  //   return fetchRegions();
-  // });
-
   const processingData = (filterData: DeveloperFilterFormValues) => {
     console.log("clicked search", filterData)
     setSearchFilter(filterData);
   };
-  // if (isRegionsLoading)
-  // return (
-  //   <div className="flex justify-center mt-16">
-  //     <CircularProgress />
-  //   </div>
-  // );
-
-  //   if (regionsError) {
-  //     console.log('❗️error: ', Error);
-  //     return (
-  //       <div className="flex justify-center mt-16">
-  //         An error has occurred, check console for more info
-  //       </div>
-  //     );
-  //   }
-  //     if (!regions) {
-  //       return;
-  //     }
 
   return (
     <form onSubmit={handleSubmit(processingData)}>
@@ -94,17 +68,6 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
         )}
       />
       <div className="flex flex-row flex-wrap items-center justify-between">
-        {/* <FormControlLabel
-          {...register('isRemote')}
-          control={<Checkbox />}
-          label="isRemote"
-        /> */}
-        {/* <FormControlLabel
-          {...register("isExperienced")}
-          control={<Checkbox />}
-          label="Experience Required"
-        /> */}
-
         <Controller
           control={control}
           name="skillsFilter"
@@ -136,39 +99,6 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
           )}
         />
 
-        {/* <Controller
-          name="regionFilter"
-          control={control}
-          render={({ field: { onChange, onBlur } }) => (
-            <Autocomplete
-              className="w-72"
-              id="regionFilters"
-              multiple
-              size="small"
-              options={regions.filter((region) =>
-                region["taxonomy/preferred-label"].includes("län")
-              )}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  key={params.id}
-                  label={`Select regions`}
-                />
-              )}
-              getOptionLabel={(option) => option["taxonomy/preferred-label"]}
-              onBlur={onBlur}
-              onChange={(_event, values) => {
-                if (values && regions) {
-                  const regionMatched = values.map((regionMatched) =>
-                    regions.find((region) => regionMatched === region)
-                  );
-                  onChange(regionMatched);
-                }
-              }}
-            />
-          )}
-        /> */}
-
         <Button variant="outlined" type="submit" className="w-full">
           Search
         </Button>
@@ -179,6 +109,4 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
 
 export default DevFilters;
 
-// add filtering EXPERIENCE
-// add filtering REGION
-// add filtering PROGRAMMING LANGUAGES
+// add filtering speaksSwedish

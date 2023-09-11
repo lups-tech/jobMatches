@@ -66,7 +66,29 @@ const AllDevs = () => {
   });
 
   useEffect(() => {
-    const filteredDevelopers = allDevelopers?.filter((dev: Developer) => {
+    const orderedDevelopers = allDevelopers?.sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
+
+    if (
+      searchFilter.searchKeyword === "" &&
+      searchFilter.skillsFilter.length === 0
+    ) {
+      setDisplayedDevelopers(orderedDevelopers);
+      setNumberOfPages(
+        Math.floor(orderedDevelopers?.length ?? 0 / pageSize) + 1
+      );
+      setCurrentPage(0);
+      return;
+    }
+
+    const filteredDevelopers = orderedDevelopers?.filter((dev: Developer) => {
       const devSkills = dev.skills.map((skill: Skill) => skill.title);
       const matchingSkills = devSkills.includes(searchFilter.searchKeyword);
       const matchingProgrammingLanguages = devSkills.includes(
@@ -84,22 +106,12 @@ const AllDevs = () => {
       }
       return false;
     });
-    const orderedDevelopers = filteredDevelopers?.sort((a, b) => {
-      if (a.name < b.name) {
-        return -1;
-      }
-      if (a.name > b.name) {
-        return 1;
-      }
-      return 0;
-    });
 
-    const sliceDevelopers = orderedDevelopers?.slice(
+    const slicedDevelopers = filteredDevelopers?.slice(
       currentPage * pageSize,
       currentPage * pageSize + pageSize
     );
-
-    setDisplayedDevelopers(sliceDevelopers);
+    setDisplayedDevelopers(slicedDevelopers);
     setNumberOfPages(Math.floor(orderedDevelopers?.length ?? 0 / pageSize) + 1);
     setCurrentPage(0);
   }, [searchFilter]);
