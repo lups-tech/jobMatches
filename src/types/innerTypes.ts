@@ -23,6 +23,7 @@ export type FilterFormValues = {
 export type DeveloperFilterFormValues = {
   searchKeyword: string,
   skillsFilter: string[],
+  speaksSwedish: boolean,
 }
 
 export type Developer = {

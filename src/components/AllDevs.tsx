@@ -35,6 +35,7 @@ const AllDevs = () => {
   const [searchFilter, setSearchFilter] = useState<DeveloperFilterFormValues>({
     searchKeyword: "",
     skillsFilter: [],
+    speaksSwedish: false,
   });
   const [displayedDevelopers, setDisplayedDevelopers] = useState<Developer[]>();
   const [numberOfPages, setNumberOfPages] = useState(0);

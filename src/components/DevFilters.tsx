@@ -35,11 +35,12 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
       defaultValues: {
         searchKeyword: "",
         skillsFilter: [],
+        speaksSwedish: false,
       },
     });
 
   const processingData = (filterData: DeveloperFilterFormValues) => {
-    console.log("clicked search", filterData)
+    console.log("clicked search", filterData);
     setSearchFilter(filterData);
   };
 
@@ -67,6 +68,12 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
           />
         )}
       />
+      <FormControlLabel
+        {...register("speaksSwedish")}
+        control={<Checkbox />}
+        label="Speaks Swedish"
+      />
+
       <div className="flex flex-row flex-wrap items-center justify-between">
         <Controller
           control={control}
@@ -108,5 +115,3 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
 };
 
 export default DevFilters;
-
-// add filtering speaksSwedish
