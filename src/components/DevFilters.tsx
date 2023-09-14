@@ -24,11 +24,6 @@ interface IDevFilters {
   skills: Skill[];
 }
 
-//   const fetchRegions =  async () => {
-//     const res = await fetch('https://taxonomy.api.jobtechdev.se/v1/taxonomy/specific/concepts/region')
-//     return res.json()
-//   }
-
 const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
   const { register, handleSubmit, control } =
     useForm<DeveloperFilterFormValues>({
@@ -68,18 +63,14 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
           />
         )}
       />
-      <FormControlLabel
-        {...register("speaksSwedish")}
-        control={<Checkbox />}
-        label="Speaks Swedish"
-      />
 
       <div className="flex flex-row flex-wrap items-center justify-between">
         <Controller
+        
           control={control}
           name="skillsFilter"
           render={({ field: { onChange, value } }) => (
-            <FormControl sx={{ m: 1, minWidth: 250 }} size="small">
+            <FormControl sx={{ marginInlineStart: 0, marginBlock: 2, minWidth: 250 }} size="small">
               <InputLabel id="programming-languages-multiple-checkbox-label">
                 Programming Language
               </InputLabel>
@@ -104,6 +95,11 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
               </Select>
             </FormControl>
           )}
+        />
+        <FormControlLabel
+          {...register("speaksSwedish")}
+          control={<Checkbox />}
+          label="Speaks Swedish"
         />
 
         <Button variant="outlined" type="submit" className="w-full">

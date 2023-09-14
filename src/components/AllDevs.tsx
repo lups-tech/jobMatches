@@ -7,7 +7,7 @@ import {
   Skill,
   DeveloperFilterFormValues,
 } from "../types/innerTypes";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState, useMemo } from "react";
 import DevCard from "./DevCard";
 import DevFilters from "./DevFilters";
 
@@ -26,23 +26,20 @@ const fetchDevelopers = async (accessToken: String) => {
   const res = await axios.get(`${backendServer}api/developers`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
-  console.log("all devs", res.data);
-
   return res.data;
 };
 
 const AllDevs = () => {
+  const { getAccessTokenSilently } = useAuth0();
+
   const [searchFilter, setSearchFilter] = useState<DeveloperFilterFormValues>({
     searchKeyword: "",
     skillsFilter: [],
     speaksSwedish: false,
   });
-  const [displayedDevelopers, setDisplayedDevelopers] = useState<Developer[]>();
+
   const [numberOfPages, setNumberOfPages] = useState(0);
-
   const [currentPage, setCurrentPage] = useState(0);
-  const { getAccessTokenSilently } = useAuth0();
-
   const pageSize = 7;
 
   const {
@@ -66,56 +63,82 @@ const AllDevs = () => {
     },
   });
 
-  useEffect(() => {
-    const orderedDevelopers = allDevelopers?.sort((a, b) => {
-      if (a.name < b.name) {
-        return -1;
-      }
-      if (a.name > b.name) {
-        return 1;
-      }
-      return 0;
-    });
+  const orderedDevelopers = useMemo(() => {
+    if (allDevelopers) {
+      return allDevelopers.slice().sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
+    }
+    return [];
+  }, [allDevelopers]);
 
-    if (
-      searchFilter.searchKeyword === "" &&
-      searchFilter.skillsFilter.length === 0
-    ) {
+  const [displayedDevelopers, setDisplayedDevelopers] = useState<Developer[]>([]);
+
+  useEffect(() => {
+    if (!isLoading && orderedDevelopers) {
       setDisplayedDevelopers(orderedDevelopers);
       setNumberOfPages(
         Math.floor(orderedDevelopers?.length ?? 0 / pageSize) + 1
       );
       setCurrentPage(0);
-      return;
     }
+  }, [isLoading, orderedDevelopers]);
 
-    const filteredDevelopers = orderedDevelopers?.filter((dev: Developer) => {
+  useEffect(() => {
+    if (!orderedDevelopers) {
+      return; // No developers to filter
+    }
+  
+    const filteredDevelopers = orderedDevelopers.filter((dev: Developer) => {
       const devSkills = dev.skills.map((skill: Skill) => skill.title);
+      const devName = dev.name.toLowerCase();
+      const speaksSwedish = devSkills.includes("Swedish");
       const matchingSkills = devSkills.includes(searchFilter.searchKeyword);
-      const matchingProgrammingLanguages = devSkills.includes(
-        searchFilter.searchKeyword
+      const matchingName = devName.includes(searchFilter.searchKeyword);
+      const matchingProgrammingLanguages = searchFilter.skillsFilter.every(
+        (skill) => devSkills.includes(skill)
       );
-      if (matchingSkills && matchingProgrammingLanguages) {
+  
+      if (searchFilter.speaksSwedish && !speaksSwedish) {
+        return false;
+      }
+
+      if (searchFilter.speaksSwedish && speaksSwedish && searchFilter.searchKeyword === "" && searchFilter.skillsFilter.length === 0) {
         return true;
       }
+  
       if (
-        dev.name
-          .toLowerCase()
-          .includes(searchFilter.searchKeyword.toLowerCase())
+        searchFilter.speaksSwedish &&
+        speaksSwedish &&
+        matchingProgrammingLanguages &&
+        (matchingSkills || matchingName)
       ) {
         return true;
       }
+  
+      if (matchingProgrammingLanguages && (matchingSkills || matchingName)) {
+        return true;
+      }
+  
       return false;
     });
-
-    const slicedDevelopers = filteredDevelopers?.slice(
+  
+    const slicedDevelopers = filteredDevelopers.slice(
       currentPage * pageSize,
       currentPage * pageSize + pageSize
     );
+  
     setDisplayedDevelopers(slicedDevelopers);
-    setNumberOfPages(Math.floor(orderedDevelopers?.length ?? 0 / pageSize) + 1);
+    setNumberOfPages(Math.floor(filteredDevelopers.length / pageSize) + 1);
     setCurrentPage(0);
-  }, [searchFilter]);
+  }, [searchFilter, orderedDevelopers]);
+  
 
   const pageChangeHandler = (_event: ChangeEvent<unknown>, value: number) => {
     value = value - 1;
