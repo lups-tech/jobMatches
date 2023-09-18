@@ -80,6 +80,8 @@ const AllDevs = () => {
 
   const [displayedDevelopers, setDisplayedDevelopers] = useState<Developer[]>([]);
 
+
+
   useEffect(() => {
     if (!isLoading && orderedDevelopers) {
       setDisplayedDevelopers(orderedDevelopers);
@@ -89,6 +91,9 @@ const AllDevs = () => {
       setCurrentPage(0);
     }
   }, [isLoading, orderedDevelopers]);
+
+
+
 
   useEffect(() => {
     if (!orderedDevelopers) {
@@ -135,15 +140,22 @@ const AllDevs = () => {
     );
   
     setDisplayedDevelopers(slicedDevelopers);
-    setNumberOfPages(Math.floor(filteredDevelopers.length / pageSize) + 1);
-    setCurrentPage(0);
-  }, [searchFilter, orderedDevelopers]);
+    setNumberOfPages(Math.floor(filteredDevelopers.length / pageSize))
+    setCurrentPage(currentPage);
+  }, [searchFilter, orderedDevelopers, currentPage]);
   
 
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [searchFilter]);
+
+ 
   const pageChangeHandler = (_event: ChangeEvent<unknown>, value: number) => {
     value = value - 1;
     setCurrentPage(value);
   };
+
+  
 
   if (isLoading || isSkillsLoading)
     return (
