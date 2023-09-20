@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
 import HomeRoute from './routes/home.tsx';
 import { AuthenticationGuard } from './components/AuthenticationGuard.tsx';
+import UserProfileRoute from './routes/user-profile.tsx';
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: 'developers/:id/skills',
         element: <AuthenticationGuard component={SkillFormRoute} />,
+      },
+      {
+        path: 'userprofile/:id',
+        element: <AuthenticationGuard component={UserProfileRoute} />,
       },
     ],
   },

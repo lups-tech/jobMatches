@@ -2,6 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { SignupButton } from './signup-button';
 import { LoginButton } from './login-button';
 import { LogoutButton } from './logout-button';
+import UserProfileButton from "./user-profile-button";
 
 export const NavBarButtons = () => {
   const { isAuthenticated } = useAuth0();
@@ -16,7 +17,9 @@ export const NavBarButtons = () => {
       )}
       {isAuthenticated && (
         <>
-          <LogoutButton />
+        <UserProfileButton/>
+        <LogoutButton />
+          
         </>
       )}
     </div>
