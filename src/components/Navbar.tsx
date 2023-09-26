@@ -1,6 +1,7 @@
-import { AppBar, Toolbar } from "@mui/material";
+import { AppBar, CircularProgress, Toolbar } from "@mui/material";
 import { Link } from "react-router-dom";
 import { NavBarButtons } from './buttons/nav-bar-buttons';
+import { useAuth0 } from "@auth0/auth0-react";
 
 const Navbar = () => {
   return (
