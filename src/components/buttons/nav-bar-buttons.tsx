@@ -2,10 +2,10 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { SignupButton } from './signup-button';
 import { LoginButton } from './login-button';
 import { LogoutButton } from './logout-button';
-import UserProfileButton from "./user-profile-button";
+import UserBadgeButton from "./user-bagde-button";
 
 export const NavBarButtons = () => {
-  const { isAuthenticated } = useAuth0();
+  const { user: userInfo, isLoading: isUserLoading, isAuthenticated } = useAuth0();
 
   return (
     <div className="nav-bar__buttons">
@@ -17,7 +17,7 @@ export const NavBarButtons = () => {
       )}
       {isAuthenticated && (
         <>
-        <UserProfileButton/>
+        <UserBadgeButton loading={isUserLoading} user={userInfo!}/>
         <LogoutButton />
           
         </>

@@ -11,8 +11,6 @@ import './index.css';
 import HomeRoute from './routes/home.tsx';
 import { AuthenticationGuard } from './components/AuthenticationGuard.tsx';
 import UserProfileRoute from './routes/user-profile.tsx';
-import {UserContextProvider } from './context/UserContext.tsx'
-
 
 const router = createBrowserRouter([
   {
@@ -40,7 +38,7 @@ const router = createBrowserRouter([
         element: <AuthenticationGuard component={SkillFormRoute} />,
       },
       {
-        path: 'userprofile/:id',
+        path: 'user-profile',
         element: <AuthenticationGuard component={UserProfileRoute} />,
       },
     ],
@@ -51,10 +49,8 @@ const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <UserContextProvider>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
     </QueryClientProvider> 
-    </UserContextProvider>
   </React.StrictMode>
 );
