@@ -11,8 +11,8 @@ import './index.css';
 import HomeRoute from './routes/home.tsx';
 import { AuthenticationGuard } from './components/AuthenticationGuard.tsx';
 import UserProfileRoute from './routes/user-profile.tsx';
-import {UserContextProvider } from './context/UserContext.tsx'
-
+import { UserContextProvider } from './context/UserContext.tsx';
+import GlobalThemeOverride from './theme.tsx';
 
 const router = createBrowserRouter([
   {
@@ -51,10 +51,12 @@ const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <UserContextProvider>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider> 
-    </UserContextProvider>
+    <GlobalThemeOverride>
+      <UserContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </UserContextProvider>
+    </GlobalThemeOverride>
   </React.StrictMode>
 );

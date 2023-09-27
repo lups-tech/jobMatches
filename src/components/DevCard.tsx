@@ -8,6 +8,8 @@ import {
   IconButton,
   IconButtonProps,
   styled,
+  Avatar,
+  Grid,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useState } from "react";
@@ -71,34 +73,40 @@ const DevCard = ({ developer }: { developer: Developer }) => {
         paddingInline: 5,
         display: "flex",
         flexDirection: "column",
-        minWidth: "600px",
-
+        minWidth: "500px",
+        borderRadius: 6,
       }}
     >
       <CardHeader />
-      <CardContent>
-        <Typography variant="h5" gutterBottom>
-          {developer.name}
-        </Typography>
-        <Typography variant="body1">
-          <EmailIcon fontSize="small" sx={{ marginRight: 1 }} />
-          {developer.email}
-        </Typography>
-        <div>
-          {groupedSkills["Technical Skills"] && (
-            <Typography>
-              Technical Skills: {groupedSkills["Technical Skills"].join(", ")}
+      <Grid container spacing={2} alignItems={'center'}>
+        <Grid item xs={2}>
+          <Avatar alt={developer.name} src={`https://i.pravatar.cc/300?img=${developer.id.slice(0,1)}`} sx={{ width: 72, height: 72 }}/>
+        </Grid>
+        <Grid item xs={10}>
+          <CardContent>
+            <Typography variant="h5" gutterBottom>
+              {developer.name}
             </Typography>
-          )}
-
-          {groupedSkills["Programming Language"] && (
-            <Typography>
-              Programming Language:{" "}
-              {groupedSkills["Programming Language"].join(", ")}
+            <Typography variant="body1">
+              <EmailIcon fontSize="small" sx={{ marginRight: 1 }} />
+              {developer.email}
             </Typography>
-          )}
-        </div>
-      </CardContent>
+            <div>
+              {groupedSkills["Programming Language"] && (
+                <Typography>
+                  Programming Language:{" "}
+                  {groupedSkills["Programming Language"].join(", ")}
+                </Typography>
+              )}
+              {groupedSkills["Technical Skills"] && (
+                <Typography>
+                  Technical Skills: {groupedSkills["Technical Skills"].join(", ")}
+                </Typography>
+              )}
+            </div>
+          </CardContent>
+        </Grid>
+      </Grid>
 
       <CardActions disableSpacing sx={{ paddingBottom: 3 }}>
         
