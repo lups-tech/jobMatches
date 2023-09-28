@@ -24,6 +24,7 @@ interface IDevFilters {
   skills: Skill[];
 }
 
+// Following two components are custmized from MUI component so they can have a radiused border
 const StyledAutocomplete = styled(Autocomplete)({
   '& .MuiOutlinedInput-root': {
     borderRadius: '24px',
