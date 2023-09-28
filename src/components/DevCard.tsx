@@ -10,13 +10,14 @@ import {
   styled,
   Avatar,
   Grid,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useState } from "react";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import EmailIcon from "@mui/icons-material/Email";
-import { Developer } from "../types/innerTypes";
+  Divider,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useState } from 'react';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import EmailIcon from '@mui/icons-material/Email';
+import { Developer } from '../types/innerTypes';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -28,13 +29,15 @@ type Skill = {
   type: string;
 };
 
+const cardColorLogic = { JavaScript: '#ef9f76', 'C#': '#81c8be' };
+
 const ExpandMore = styled((props: ExpandMoreProps) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
-  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
+  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
     duration: theme.transitions.duration.shortest,
   }),
 }));
@@ -54,7 +57,7 @@ const DevCard = ({ developer }: { developer: Developer }) => {
   const groupSkillsByCategory = (skills: Skill[]) => {
     const groupedSkills: { [key: string]: string[] } = {};
 
-    skills.forEach((skill) => {
+    skills.forEach(skill => {
       if (!groupedSkills[skill.type]) {
         groupedSkills[skill.type] = [];
       }
@@ -65,42 +68,71 @@ const DevCard = ({ developer }: { developer: Developer }) => {
   };
 
   const groupedSkills = groupSkillsByCategory(developer.skills);
+  console.log('Grouped Skills', groupedSkills);
 
   return (
     <Card
       sx={{
-        marginBlock: 2,
+        marginBlock: 1,
         paddingInline: 5,
-        display: "flex",
-        flexDirection: "column",
-        minWidth: "500px",
+        display: 'flex',
+        flexDirection: 'column',
+        minWidth: '500px',
         borderRadius: 6,
+        backgroundColor: `${
+          groupedSkills['Programming Language']
+            ? cardColorLogic[groupedSkills['Programming Language'][0]]
+            : ''
+        }`,
       }}
     >
       <CardHeader />
       <Grid container spacing={2} alignItems={'center'}>
         <Grid item xs={2}>
-          <Avatar alt={developer.name} src={`https://i.pravatar.cc/300?img=${developer.id.slice(0,1)}`} sx={{ width: 72, height: 72 }}/>
+          {/* should change the src to a condition that if the user has his/her profile picture, if leave src empty, avatar component will show the character of user name */}
+          <Avatar
+            alt={developer.name}
+            src={`https://i.pravatar.cc/300?img=${developer.id.slice(0, 1)}`}
+            sx={{ width: 72, height: 72 }}
+          />
         </Grid>
         <Grid item xs={10}>
-          <CardContent>
-            <Typography variant="h5" gutterBottom>
+          <CardContent style={{ marginTop: -10, marginBottom: -10 }}>
+            <Typography variant="h5" gutterBottom className="">
               {developer.name}
             </Typography>
-            <Typography variant="body1">
-              <EmailIcon fontSize="small" sx={{ marginRight: 1 }} />
-              {developer.email}
-            </Typography>
+
             <div>
-              {groupedSkills["Programming Language"] && (
+              {groupedSkills['Programming Language'] && (
                 <Typography>
-                  Programming Language:{" "}
-                  {groupedSkills["Programming Language"].join(", ")}
+                  Programming Language:{' '}
+                  <span className="font-bold">
+                    {groupedSkills['Programming Language'].join(', ')}
+                  </span>
                 </Typography>
               )}
-              {groupedSkills["Technical Skills"] && (
+              {groupedSkills['Technical Skills'] && (
                 <Typography>
-                  Technical Skills: {groupedSkills["Technical Skills"].join(", ")}
+                  Technical Skills:{' '}
+                  <span className="font-bold">
+                    {groupedSkills['Technical Skills'].join(', ')}
+                  </span>
+                </Typography>
+              )}
+              {groupedSkills['Prior Experience'] && (
+                <Typography>
+                  Prior Experience:{' '}
+                  <span className="font-bold">
+                    {groupedSkills['Prior Experience'].join(', ')}
+                  </span>
+                </Typography>
+              )}
+              {groupedSkills['Speaking Languages'] && (
+                <Typography gutterBottom>
+                  Speaking Languages:{' '}
+                  <span className="font-bold">
+                    {groupedSkills['Speaking Languages'].join(', ')}
+                  </span>
                 </Typography>
               )}
             </div>
@@ -108,10 +140,12 @@ const DevCard = ({ developer }: { developer: Developer }) => {
         </Grid>
       </Grid>
 
-      <CardActions disableSpacing sx={{ paddingBottom: 3 }}>
-        
+      <CardActions
+        disableSpacing
+        sx={{ paddingBottom: 3, marginY: 2, height: 30 }}
+      >
         <IconButton aria-label="add to favorites" onClick={saveDeveloper}>
-          {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon/>}
+          {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </IconButton>
         <ExpandMore
           expand={expanded}
@@ -124,37 +158,35 @@ const DevCard = ({ developer }: { developer: Developer }) => {
       </CardActions>
 
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent style={{ maxHeight: "100%", width: "100%" }}>
+        <CardContent
+          style={{ maxHeight: '100%', width: '100%', marginTop: -10 }}
+        >
           <div
             style={{
-              display: "flex",
-              flexDirection: "column",
-              maxHeight: "100%",
-              overflowY: "auto",
+              display: 'flex',
+              flexDirection: 'column',
+              maxHeight: '100%',
+              overflowY: 'auto',
             }}
           >
-            {groupedSkills["Prior Experience"] && (
-              <Typography>
-                Prior Experience: {groupedSkills["Prior Experience"].join(", ")}
-              </Typography>
-            )}
-            {groupedSkills["Speaking Languages"] && (
-              <Typography gutterBottom>
-                Speaking Languages:{" "}
-                {groupedSkills["Speaking Languages"].join(", ")}
-              </Typography>
-            )}
             <div>
               <Typography variant="h6" gutterBottom>
                 About Me
               </Typography>
-              <Typography variant="body1" style={{maxWidth: "400px"}}>
+              <Typography variant="body1" style={{ maxWidth: '400px' }}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
                 dapibus ante sit amet dolor tincidunt, non rutrum nibh rhoncus.
                 Aliquam at ex tellus. Nullam a dolor purus. Pellentesque vitae
                 ante ac felis congue congue tristique ac neque. Class aptent
                 taciti sociosqu ad litora torquent per conubia nostra, per
                 inceptos himenaeos.
+              </Typography>
+              <div className="my-2">
+                <Divider />
+              </div>
+              <Typography variant="body1">
+                <EmailIcon fontSize="small" sx={{ marginRight: 1 }} />
+                <span className="font-bold">{developer.email}</span>
               </Typography>
             </div>
           </div>
