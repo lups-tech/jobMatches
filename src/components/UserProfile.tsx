@@ -1,7 +1,7 @@
 import {  useAuth0 } from "@auth0/auth0-react";
-import { Avatar, Card, CardContent, CardHeader, CircularProgress, Typography } from "@mui/material";
+import { Avatar, CircularProgress, Typography } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
-import { AlignHorizontalCenter, FormatAlignJustify } from "@mui/icons-material";
+
 
 
 
