@@ -2,6 +2,7 @@ import { AppBar, Toolbar } from "@mui/material";
 import { Link } from "react-router-dom";
 import { NavBarButtons } from './buttons/nav-bar-buttons';
 
+
 const Navbar = () => {
   return (
     <AppBar className='h-16 fixed'>
