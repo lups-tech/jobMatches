@@ -29,10 +29,13 @@ type Skill = {
   type: string;
 };
 
-const cardColorLogic = { JavaScript: '#ef9f76', 'C#': '#81c8be' };
+const cardColorLogic: { [key: string]: string } = {
+  JavaScript: '#ef9f76',
+  'C#': '#81c8be',
+};
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { expand, ...other } = props;
+  const { ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
   transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
