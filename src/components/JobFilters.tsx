@@ -34,7 +34,7 @@ const fetchRegions = async () => {
 const JobFilters = ({ setSearchKeyword, skills }: IJobFilters) => {
   const { register, handleSubmit, control } = useForm<FilterFormValues>({
     defaultValues: {
-      searchKeyword: "JavaScript",
+      searchKeyword: "",
       skillsFilter: [],
       regionFilter: [],
       isExperienced: false,
