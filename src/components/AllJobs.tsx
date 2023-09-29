@@ -49,7 +49,7 @@ const fetchJobs = async (
 
 const AllJobs = () => {
   const [searchKeyword, setSearchKeyword] = useState<FilterFormValues>({
-    searchKeyword: '',
+    searchKeyword: 'JavaScript',
     skillsFilter: [],
     regionFilter: [],
     isExperienced: false,
