@@ -3,33 +3,33 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   palette: {
-      primary: {
-        main: '#8caaee',
-        light: '#8caaee',
-        dark: '#8caaee',
-        contrastText: '#ffffff',
-      } ,
-      secondary: {
-        main: '#3A3C4E',
-        light: '#E7EBFF',
-        dark: '#3A3C4E',
-        contrastText: '#ffffff',
-      },
-      error: {
-        main: '#3A3C4E',
-        light: '#E7EBFF',
-        dark: '#3A3C4E',
-        contrastText: '#ffffff',
-      },
-      // warning: {
+    primary: {
+      main: '#8caaee',
+      light: '#8caaee',
+      dark: '#8caaee',
+      contrastText: '#ffffff',
+    },
+    secondary: {
+      main: '#3A3C4E',
+      light: '#E7EBFF',
+      dark: '#3A3C4E',
+      contrastText: '#ffffff',
+    },
+    // error: {
+    //   main: '#3A3C4E',
+    //   light: '#E7EBFF',
+    //   dark: '#3A3C4E',
+    //   contrastText: '#ffffff',
+    // },
+    // warning: {
 
-      // },
-      // info: {
+    // },
+    // info: {
 
-      // },
-      // success: {
+    // },
+    // success: {
 
-      // }
+    // }
   },
 
   components: {
@@ -37,12 +37,15 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           fontSize: '1rem',
-          borderRadius: '30px',
+          borderRadius: '24px',
           background: '#3A3C4E',
           paddingInline: '30px',
           color: 'white',
           textTransform: 'capitalize',
           fontWeight: '400',
+          '&:hover': {
+            backgroundColor: '#8caaee',
+          },
         },
       },
     },
