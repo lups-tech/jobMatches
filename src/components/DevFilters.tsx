@@ -5,8 +5,6 @@ import {
   FormControlLabel,
   TextField,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
-// import { useQuery } from "@tanstack/react-query";
 import { Skill } from '../types/innerTypes';
 import { Dispatch, SetStateAction } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -23,22 +21,6 @@ interface IDevFilters {
   setSearchFilter: Dispatch<SetStateAction<DeveloperFilterFormValues>>;
   skills: Skill[];
 }
-
-// Following two components are custmized from MUI component so they can have a radiused border
-const StyledAutocomplete = styled(Autocomplete)({
-  '& .MuiOutlinedInput-root': {
-    borderRadius: '24px',
-  },
-  '& .MuiAutocomplete-listbox': {
-    borderRadius: '24px',
-  },
-});
-
-const StyledFormControl = styled(FormControl)({
-  '& .MuiOutlinedInput-root': {
-    borderRadius: '24px',
-  },
-});
 
 const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
   const { register, handleSubmit, control } =
@@ -61,11 +43,16 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
         control={control}
         name="searchKeyword"
         render={({ field: { onChange } }) => (
-          <StyledAutocomplete
+          <Autocomplete
             {...register('searchKeyword')}
             id="skill-selection"
             freeSolo
-            sx={{ background: '#fff' }}
+            sx={{
+              background: '#fff',
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '24px',
+              },
+            }}
             options={skills.map(skill => skill.title)}
             renderInput={params => (
               <TextField {...params} label="Search skills" variant="outlined" />
@@ -85,12 +72,14 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
           control={control}
           name="skillsFilter"
           render={({ field: { onChange, value } }) => (
-            <StyledFormControl
+            <FormControl
               sx={{
                 marginInlineStart: 0,
                 marginBlock: 2,
                 minWidth: 250,
-                borderRadius: 9,
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '24px',
+                },
               }}
               size="small"
             >
@@ -116,7 +105,7 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
                     </MenuItem>
                   ))}
               </Select>
-            </StyledFormControl>
+            </FormControl>
           )}
         />
         <FormControlLabel

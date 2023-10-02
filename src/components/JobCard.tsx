@@ -36,7 +36,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 const JobCard = ({ jobInfo }: IJobCard) => {
   const [expanded, setExpanded] = useState(false);
-  console.log(jobInfo)
+  console.log(jobInfo);
 
   const navigate = useNavigate();
   const handleMatching = () => {
@@ -48,7 +48,9 @@ const JobCard = ({ jobInfo }: IJobCard) => {
   };
 
   return (
-    <Card sx={{ minWidth: 30, marginBlock: 2, paddingInline: 5 }}>
+    <Card
+      sx={{ minWidth: 30, marginBlock: 2, paddingInline: 5, borderRadius: 6 }}
+    >
       <CardHeader />
       <CardContent>
         <Typography color="text.secondary" gutterBottom>
@@ -61,7 +63,7 @@ const JobCard = ({ jobInfo }: IJobCard) => {
           {jobInfo.employer.name}
         </Typography>
         <div>
-          {Object.values(jobInfo.must_have).some((arr) => arr.length > 0) && (
+          {Object.values(jobInfo.must_have).some(arr => arr.length > 0) && (
             <Typography>Must have: </Typography>
           )}
           {Object.entries(jobInfo.must_have).map(
@@ -69,33 +71,33 @@ const JobCard = ({ jobInfo }: IJobCard) => {
               values.length > 0 && (
                 <Typography key={key}>
                   <strong>{key.replace('_', ' ')}:</strong>{' '}
-                  {values.map((item) => item.label).join(', ')}
+                  {values.map(item => item.label).join(', ')}
                 </Typography>
               )
           )}
         </div>
         <div>
-          {Object.values(jobInfo.nice_to_have).some(
-            (arr) => arr.length > 0
-          ) && <p>Nice to have: </p>}
+          {Object.values(jobInfo.nice_to_have).some(arr => arr.length > 0) && (
+            <p>Nice to have: </p>
+          )}
           {Object.entries(jobInfo.nice_to_have).map(
             ([key, values]) =>
               values.length > 0 && (
                 <p key={key}>
                   <strong>{key}:</strong>{' '}
-                  {values.map((item) => item.label).join(', ')}
+                  {values.map(item => item.label).join(', ')}
                 </p>
               )
           )}
         </div>
       </CardContent>
 
-      <CardActions disableSpacing sx={{paddingBottom: 3}}>
+      <CardActions disableSpacing sx={{ paddingBottom: 3 }}>
         {/* <IconButton aria-label="add to favorites">
           show <FavoriteIcon> if this job is saved
           <FavoriteBorderIcon />
         </IconButton> */}
-        <Button size="small" variant='outlined' onClick={handleMatching}>
+        <Button size="small" variant="outlined" onClick={handleMatching}>
           Match developers
         </Button>
         <ExpandMore
@@ -112,8 +114,7 @@ const JobCard = ({ jobInfo }: IJobCard) => {
         <CardContent>
           <div
             dangerouslySetInnerHTML={{
-              __html: 
-                jobInfo.description.text_formatted,
+              __html: jobInfo.description.text_formatted,
             }}
           ></div>
         </CardContent>

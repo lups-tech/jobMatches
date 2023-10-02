@@ -18,6 +18,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import EmailIcon from '@mui/icons-material/Email';
 import { Developer } from '../types/innerTypes';
+import { cardColorLogic } from '../data/programmingLanguageColors';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -27,11 +28,6 @@ type Skill = {
   id: string;
   title: string;
   type: string;
-};
-
-const cardColorLogic: { [key: string]: string } = {
-  JavaScript: '#ef9f76',
-  'C#': '#81c8be',
 };
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
