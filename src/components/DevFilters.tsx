@@ -4,18 +4,17 @@ import {
   FormControl,
   FormControlLabel,
   TextField,
-} from "@mui/material";
-// import { useQuery } from "@tanstack/react-query";
-import { Skill } from "../types/innerTypes";
-import { Dispatch, SetStateAction } from "react";
-import { Controller, useForm } from "react-hook-form";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import { DeveloperFilterFormValues } from "../types/innerTypes";
-import ListItemText from "@mui/material/ListItemText";
-import Select from "@mui/material/Select";
-import Checkbox from "@mui/material/Checkbox";
+} from '@mui/material';
+import { Skill } from '../types/innerTypes';
+import { Dispatch, SetStateAction } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import { DeveloperFilterFormValues } from '../types/innerTypes';
+import ListItemText from '@mui/material/ListItemText';
+import Select from '@mui/material/Select';
+import Checkbox from '@mui/material/Checkbox';
 // import { Region } from "../types/externalTypes";
 
 interface IDevFilters {
@@ -27,14 +26,14 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
   const { register, handleSubmit, control } =
     useForm<DeveloperFilterFormValues>({
       defaultValues: {
-        searchKeyword: "",
+        searchKeyword: '',
         skillsFilter: [],
         speaksSwedish: false,
       },
     });
 
   const processingData = (filterData: DeveloperFilterFormValues) => {
-    console.log("clicked search", filterData);
+    console.log('clicked search', filterData);
     setSearchFilter(filterData);
   };
 
@@ -45,13 +44,18 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
         name="searchKeyword"
         render={({ field: { onChange } }) => (
           <Autocomplete
-            {...register("searchKeyword")}
+            {...register('searchKeyword')}
             id="skill-selection"
             freeSolo
-            sx={{ background: "#ffffff" }}
-            options={skills.map((skill) => skill.title)}
-            renderInput={(params) => (
-              <TextField {...params} label="Search skills" />
+            sx={{
+              background: '#fff',
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '24px',
+              },
+            }}
+            options={skills.map(skill => skill.title)}
+            renderInput={params => (
+              <TextField {...params} label="Search skills" variant="outlined" />
             )}
             onInputChange={onChange}
             onChange={(_event, newValue) => {
@@ -65,11 +69,20 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
 
       <div className="flex flex-row flex-wrap items-center justify-between">
         <Controller
-        
           control={control}
           name="skillsFilter"
           render={({ field: { onChange, value } }) => (
-            <FormControl sx={{ marginInlineStart: 0, marginBlock: 2, minWidth: 250 }} size="small">
+            <FormControl
+              sx={{
+                marginInlineStart: 0,
+                marginBlock: 2,
+                minWidth: 250,
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '24px',
+                },
+              }}
+              size="small"
+            >
               <InputLabel id="programming-languages-multiple-checkbox-label">
                 Programming Language
               </InputLabel>
@@ -81,11 +94,11 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
                 value={value}
                 onChange={onChange}
                 input={<OutlinedInput label="Programming Language" />}
-                renderValue={(selected) => selected.join(", ")}
+                renderValue={selected => selected.join(', ')}
               >
                 {skills
-                  .filter((skill) => skill.type === "Programming Language")
-                  .map((skill) => (
+                  .filter(skill => skill.type === 'Programming Language')
+                  .map(skill => (
                     <MenuItem key={skill.id} value={skill.title}>
                       <Checkbox checked={value.indexOf(skill.title) > -1} />
                       <ListItemText primary={skill.title} />
@@ -96,7 +109,7 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
           )}
         />
         <FormControlLabel
-          {...register("speaksSwedish")}
+          {...register('speaksSwedish')}
           control={<Checkbox />}
           label="Speaks Swedish"
         />

@@ -1,15 +1,15 @@
-import axios from "axios";
-import { useAuth0 } from "@auth0/auth0-react";
-import { CircularProgress, Pagination } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import axios from 'axios';
+import { useAuth0 } from '@auth0/auth0-react';
+import { CircularProgress, Pagination } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import {
   Developer,
   Skill,
   DeveloperFilterFormValues,
-} from "../types/innerTypes";
-import { ChangeEvent, useEffect, useState, useMemo } from "react";
-import DevCard from "./DevCard";
-import DevFilters from "./DevFilters";
+} from '../types/innerTypes';
+import { ChangeEvent, useEffect, useState, useMemo } from 'react';
+import DevCard from './DevCard';
+import DevFilters from './DevFilters';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
@@ -22,7 +22,7 @@ const fetchSkills = async (accessToken: string): Promise<Skill[]> => {
   return res.json();
 };
 
-const fetchDevelopers = async (accessToken: String) => {
+const fetchDevelopers = async (accessToken: string) => {
   const res = await axios.get(`${backendServer}api/developers`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
@@ -33,7 +33,7 @@ const AllDevs = () => {
   const { getAccessTokenSilently } = useAuth0();
 
   const [searchFilter, setSearchFilter] = useState<DeveloperFilterFormValues>({
-    searchKeyword: "",
+    searchKeyword: '',
     skillsFilter: [],
     speaksSwedish: false,
   });
@@ -46,7 +46,7 @@ const AllDevs = () => {
     isLoading: isSkillsLoading,
     error: skillsError,
     data: skills,
-  } = useQuery<Skill[]>(["skills"], async () => {
+  } = useQuery<Skill[]>(['skills'], async () => {
     const accessToken = await getAccessTokenSilently();
     return fetchSkills(accessToken);
   });
@@ -56,7 +56,7 @@ const AllDevs = () => {
     error,
     data: allDevelopers,
   } = useQuery<Developer[], Error>({
-    queryKey: ["allDevelopers"],
+    queryKey: ['allDevelopers'],
     queryFn: async () => {
       const accessToken = await getAccessTokenSilently();
       return fetchDevelopers(accessToken);
@@ -78,9 +78,9 @@ const AllDevs = () => {
     return [];
   }, [allDevelopers]);
 
-  const [displayedDevelopers, setDisplayedDevelopers] = useState<Developer[]>([]);
-
-
+  const [displayedDevelopers, setDisplayedDevelopers] = useState<Developer[]>(
+    []
+  );
 
   useEffect(() => {
     if (!isLoading && orderedDevelopers) {
@@ -92,32 +92,34 @@ const AllDevs = () => {
     }
   }, [isLoading, orderedDevelopers]);
 
-
-
-
   useEffect(() => {
     if (!orderedDevelopers) {
       return; // No developers to filter
     }
-  
+
     const filteredDevelopers = orderedDevelopers.filter((dev: Developer) => {
       const devSkills = dev.skills.map((skill: Skill) => skill.title);
       const devName = dev.name.toLowerCase();
-      const speaksSwedish = devSkills.includes("Swedish");
+      const speaksSwedish = devSkills.includes('Swedish');
       const matchingSkills = devSkills.includes(searchFilter.searchKeyword);
       const matchingName = devName.includes(searchFilter.searchKeyword);
       const matchingProgrammingLanguages = searchFilter.skillsFilter.every(
-        (skill) => devSkills.includes(skill)
+        skill => devSkills.includes(skill)
       );
-  
+
       if (searchFilter.speaksSwedish && !speaksSwedish) {
         return false;
       }
 
-      if (searchFilter.speaksSwedish && speaksSwedish && searchFilter.searchKeyword === "" && searchFilter.skillsFilter.length === 0) {
+      if (
+        searchFilter.speaksSwedish &&
+        speaksSwedish &&
+        searchFilter.searchKeyword === '' &&
+        searchFilter.skillsFilter.length === 0
+      ) {
         return true;
       }
-  
+
       if (
         searchFilter.speaksSwedish &&
         speaksSwedish &&
@@ -126,36 +128,32 @@ const AllDevs = () => {
       ) {
         return true;
       }
-  
+
       if (matchingProgrammingLanguages && (matchingSkills || matchingName)) {
         return true;
       }
-  
+
       return false;
     });
-  
+
     const slicedDevelopers = filteredDevelopers.slice(
       currentPage * pageSize,
       currentPage * pageSize + pageSize
     );
-  
+
     setDisplayedDevelopers(slicedDevelopers);
-    setNumberOfPages(Math.floor(filteredDevelopers.length / pageSize))
+    setNumberOfPages(Math.floor(filteredDevelopers.length / pageSize));
     setCurrentPage(currentPage);
   }, [searchFilter, orderedDevelopers, currentPage]);
-  
 
   useEffect(() => {
     setCurrentPage(0);
   }, [searchFilter]);
 
- 
   const pageChangeHandler = (_event: ChangeEvent<unknown>, value: number) => {
     value = value - 1;
     setCurrentPage(value);
   };
-
-  
 
   if (isLoading || isSkillsLoading)
     return (
@@ -165,7 +163,7 @@ const AllDevs = () => {
     );
 
   if (error || skillsError) {
-    console.log("❗️error: ", error);
+    console.log('❗️error: ', error);
     return (
       <div className="flex justify-center mt-16">
         An error has occurred, check console for more info
@@ -183,7 +181,7 @@ const AllDevs = () => {
         <DevFilters setSearchFilter={setSearchFilter} skills={skills} />
         <div className="jobcards">
           {displayedDevelopers &&
-            displayedDevelopers.map((dev) => (
+            displayedDevelopers.map(dev => (
               <DevCard key={dev.id} developer={dev} />
             ))}
         </div>

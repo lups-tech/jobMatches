@@ -1,5 +1,6 @@
-import { useAuth0 } from "@auth0/auth0-react";
-import { Button } from '@mui/material';
+import { useAuth0 } from '@auth0/auth0-react';
+import { IconButton, Tooltip } from '@mui/material';
+import LoginIcon from '@mui/icons-material/Login';
 
 export const LoginButton = () => {
   const { loginWithRedirect } = useAuth0();
@@ -7,14 +8,16 @@ export const LoginButton = () => {
   const handleLogin = async () => {
     await loginWithRedirect({
       appState: {
-        returnTo: "/",
+        returnTo: '/',
       },
     });
   };
 
   return (
-    <Button variant="contained" onClick={handleLogin}>
-      Log In
-    </Button>
+    <Tooltip title="Login">
+      <IconButton color="info" onClick={handleLogin}>
+        <LoginIcon></LoginIcon>
+      </IconButton>
+    </Tooltip>
   );
 };
