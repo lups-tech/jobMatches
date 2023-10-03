@@ -12,6 +12,7 @@ import HomeRoute from './routes/home.tsx';
 import { AuthenticationGuard } from './components/AuthenticationGuard.tsx';
 import UserProfileRoute from './routes/user-profile.tsx';
 import GlobalThemeOverride from './theme.tsx';
+import { CssBaseline } from '@mui/material';
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,7 @@ const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <GlobalThemeOverride>
+      <CssBaseline />
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
       </QueryClientProvider>
