@@ -7,7 +7,7 @@ const UserProfileButton = () => {
   return (
     <Tooltip title="Profile">
       <IconButton
-        aria-label="fingerprint"
+        aria-label="user profile"
         color="info"
         onClick={() => navigate('/userprofile/:id')}
       >
