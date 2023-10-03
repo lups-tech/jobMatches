@@ -27,7 +27,16 @@ const lightTheme = createTheme({
     },
     // success: {
 
-    // }
+    // },
+    mode: 'light',
+    background: {
+      default: '#f4f6f8', // This is the default background color for light mode
+      paper: '#ffffff', // This is the background color for components in light mode
+    },
+    // text: {
+    //   primary: '#ffffff',
+    //   secondary: '#bbbbbb',
+    // },
   },
 
   components: {
@@ -54,6 +63,15 @@ const darkTheme = createTheme({
   palette: {
     info: {
       main: '#111111',
+    },
+    mode: 'dark',
+    // text: {
+    //   primary: '#000000', // primary text color for dark mode
+    //   secondary: '#555555', // secondary text color for dark mode
+    // },
+    background: {
+      default: '#303030', // This is the default background color for dark mode
+      paper: '#424242', // This is the background color for components in dark mode
     },
   },
   components: {

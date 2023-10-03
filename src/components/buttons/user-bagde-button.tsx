@@ -29,6 +29,8 @@ const UserBadgeButton: React.FC<Props> = ({ user, loading }) => {
       }
       label={user.name}
       onClick={() => navigate('/user-profile')}
+      variant="outlined"
+      color="info"
     />
   );
 };
