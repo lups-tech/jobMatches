@@ -185,13 +185,14 @@ const AllDevs = () => {
               <DevCard key={dev.id} developer={dev} />
             ))}
         </div>
-        <Pagination
-          count={numberOfPages}
-          variant="outlined"
-          shape="rounded"
-          onChange={pageChangeHandler}
-          page={currentPage + 1}
-        />
+        <div className="flex justify-center my-10">
+          <Pagination
+            count={numberOfPages}
+            color="primary"
+            onChange={pageChangeHandler}
+            page={currentPage + 1}
+          />
+        </div>
       </div>
     </div>
   );
