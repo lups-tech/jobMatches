@@ -24,9 +24,9 @@ const theme = createTheme({
     // warning: {
 
     // },
-    // info: {
-
-    // },
+    info: {
+      main: '#ffffff',
+    },
     // success: {
 
     // }

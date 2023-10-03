@@ -23,17 +23,27 @@ const fetchJobs = async (
   page: number
 ): Promise<SearchResult> => {
   const res = await fetch(
-    `https://jobsearch.api.jobtechdev.se/search?${searchFilter.regionFilter.map(region => `region=${region["taxonomy/national-nuts-level-3-code-2019"]}`).join('&')}&experience=${
+    `https://jobsearch.api.jobtechdev.se/search?${searchFilter.regionFilter
+      .map(
+        region => `region=${region['taxonomy/national-nuts-level-3-code-2019']}`
+      )
+      .join('&')}&experience=${
       searchFilter.isExperienced
-    }&q=${encodeURIComponent(searchFilter.skillsFilter.join(' ') + ' ' + searchFilter.searchKeyword)}&offset=${
-      page * 10
-    }&limit=10`
+    }&q=${encodeURIComponent(
+      searchFilter.skillsFilter.join(' ') + ' ' + searchFilter.searchKeyword
+    )}&offset=${page * 10}&limit=10`
   );
-  console.log(`https://jobsearch.api.jobtechdev.se/search?${searchFilter.regionFilter.map(region => `region=${region["taxonomy/national-nuts-level-3-code-2019"]}`).join('&')}&experience=${
-    searchFilter.isExperienced
-  }&q=${encodeURIComponent(searchFilter.skillsFilter.join(' ') + ' ' + searchFilter.searchKeyword)}&offset=${
-    page * 10
-  }&limit=10`)
+  console.log(
+    `https://jobsearch.api.jobtechdev.se/search?${searchFilter.regionFilter
+      .map(
+        region => `region=${region['taxonomy/national-nuts-level-3-code-2019']}`
+      )
+      .join('&')}&experience=${
+      searchFilter.isExperienced
+    }&q=${encodeURIComponent(
+      searchFilter.skillsFilter.join(' ') + ' ' + searchFilter.searchKeyword
+    )}&offset=${page * 10}&limit=10`
+  );
   return res.json();
 };
 
@@ -104,13 +114,14 @@ const AllJobs = () => {
             <JobCard key={job.id} jobInfo={job} />
           ))}
         </div>
-        <Pagination
-          count={Math.floor(data.total.value / 10) + 1}
-          variant="outlined"
-          shape="rounded"
-          onChange={pageChangeHandler}
-          page={currentPage + 1}
-        />
+        <div className="flex justify-center my-10">
+          <Pagination
+            count={Math.floor(data.total.value / 10) + 1}
+            color="primary"
+            onChange={pageChangeHandler}
+            page={currentPage + 1}
+          />
+        </div>
       </div>
     </div>
   );
