@@ -8,7 +8,6 @@ import DevelopersMainRoute from './routes/developers-main.tsx';
 import JobMatchesRoute from './routes/job-matches.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
-import HomeRoute from './routes/home.tsx';
 import { AuthenticationGuard } from './components/AuthenticationGuard.tsx';
 import UserProfileRoute from './routes/user-profile.tsx';
 import GlobalThemeOverride from './theme.tsx';
@@ -22,8 +21,13 @@ const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <HomeRoute />,
+        element: <AboutUsRoute/>,
       },
+      // TO BE IMPLEMENTED: If a user is logged in, the home page should be a dashboard page
+      // {
+      //   path: '',
+      //   element: <AuthenticationGuard component={Dashboard} />,
+      // },
       {
         path: 'jobs',
         element: <AuthenticationGuard component={AllJobsRoute} />,
@@ -43,10 +47,6 @@ const router = createBrowserRouter([
       {
         path: 'user-profile',
         element: <AuthenticationGuard component={UserProfileRoute} />,
-      },
-      {
-        path: 'about-us',
-        element: <AuthenticationGuard component={AboutUsRoute} />,
       },
     ],
   },

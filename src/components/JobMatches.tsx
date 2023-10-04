@@ -7,6 +7,7 @@ import {
   Paper,
   Stack,
   Typography,
+  styled,
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -81,13 +82,12 @@ const JobMatches = () => {
       <div className="flex flex-col gap-5">
         <Accordion
           defaultExpanded
+          square={true}
           elevation={1}
           sx={{
             maxWidth: 700,
             padding: 4,
-            '& .MuiPaper-root .MuiAccordion-root': {
-              borderRadius: '24px',
-            },
+            borderRadius: '24px',
           }}
         >
           <AccordionSummary
