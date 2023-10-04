@@ -18,6 +18,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import { Region } from '../types/externalTypes';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 interface IJobFilters {
   setSearchKeyword: Dispatch<SetStateAction<FilterFormValues>>;
@@ -82,7 +84,6 @@ const JobFilters = ({ setSearchKeyword, skills }: IJobFilters) => {
             id="skill-selection"
             freeSolo
             sx={{
-              background: '#ffffff',
               '& .MuiOutlinedInput-root': {
                 borderRadius: '24px',
               },
@@ -103,7 +104,12 @@ const JobFilters = ({ setSearchKeyword, skills }: IJobFilters) => {
       <div className="flex flex-row flex-wrap items-center justify-between">
         <FormControlLabel
           {...register('isExperienced')}
-          control={<Checkbox />}
+          control={
+            <Checkbox
+              icon={<RadioButtonUncheckedIcon />}
+              checkedIcon={<CheckCircleIcon />}
+            />
+          }
           label="Experience Required"
         />
 
@@ -138,7 +144,11 @@ const JobFilters = ({ setSearchKeyword, skills }: IJobFilters) => {
                   .filter(skill => skill.type === 'Programming Language')
                   .map(skill => (
                     <MenuItem key={skill.id} value={skill.title}>
-                      <Checkbox checked={value.indexOf(skill.title) > -1} />
+                      <Checkbox
+                        checked={value.indexOf(skill.title) > -1}
+                        icon={<RadioButtonUncheckedIcon />}
+                        checkedIcon={<CheckCircleIcon />}
+                      />
                       <ListItemText primary={skill.title} />
                     </MenuItem>
                   ))}

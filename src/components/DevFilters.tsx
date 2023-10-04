@@ -16,6 +16,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 // import { Region } from "../types/externalTypes";
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 interface IDevFilters {
   setSearchFilter: Dispatch<SetStateAction<DeveloperFilterFormValues>>;
@@ -48,7 +50,6 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
             id="skill-selection"
             freeSolo
             sx={{
-              background: '#fff',
               '& .MuiOutlinedInput-root': {
                 borderRadius: '24px',
               },
@@ -100,7 +101,11 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
                   .filter(skill => skill.type === 'Programming Language')
                   .map(skill => (
                     <MenuItem key={skill.id} value={skill.title}>
-                      <Checkbox checked={value.indexOf(skill.title) > -1} />
+                      <Checkbox
+                        checked={value.indexOf(skill.title) > -1}
+                        icon={<RadioButtonUncheckedIcon />}
+                        checkedIcon={<CheckCircleIcon />}
+                      />
                       <ListItemText primary={skill.title} />
                     </MenuItem>
                   ))}
@@ -110,7 +115,12 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
         />
         <FormControlLabel
           {...register('speaksSwedish')}
-          control={<Checkbox />}
+          control={
+            <Checkbox
+              icon={<RadioButtonUncheckedIcon />}
+              checkedIcon={<CheckCircleIcon />}
+            />
+          }
           label="Speaks Swedish"
         />
 

@@ -117,7 +117,7 @@ const AllJobs = () => {
         <div className="flex justify-center my-10">
           <Pagination
             count={Math.floor(data.total.value / 10) + 1}
-            color="primary"
+            color="secondary"
             onChange={pageChangeHandler}
             page={currentPage + 1}
           />
