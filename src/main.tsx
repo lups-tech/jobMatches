@@ -13,6 +13,7 @@ import { AuthenticationGuard } from './components/AuthenticationGuard.tsx';
 import UserProfileRoute from './routes/user-profile.tsx';
 import GlobalThemeOverride from './theme.tsx';
 import { CssBaseline } from '@mui/material';
+import AboutUsRoute from './components/AboutUs.tsx'
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: 'user-profile',
         element: <AuthenticationGuard component={UserProfileRoute} />,
+      },
+      {
+        path: 'about-us',
+        element: <AuthenticationGuard component={AboutUsRoute} />,
       },
     ],
   },

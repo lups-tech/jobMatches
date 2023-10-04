@@ -41,13 +41,13 @@ const lightTheme = createTheme({
         root: {
           fontSize: '1rem',
           borderRadius: '24px',
-          background: '#3A3C4E',
+          background: '#8caaee',
           paddingInline: '30px',
           color: 'white',
           textTransform: 'capitalize',
           fontWeight: '400',
           '&:hover': {
-            backgroundColor: '#8caaee',
+            backgroundColor: '#3A3C4E',
           },
         },
       },
@@ -88,13 +88,13 @@ const darkTheme = createTheme({
         root: {
           fontSize: '1rem',
           borderRadius: '24px',
-          background: '#3A3C4E',
+          background: '#8caaee',
           paddingInline: '30px',
           color: 'white',
           textTransform: 'capitalize',
           fontWeight: '400',
           '&:hover': {
-            backgroundColor: '#8caaee',
+            backgroundColor: '#414559',
           },
         },
       },

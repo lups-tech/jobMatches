@@ -4,9 +4,9 @@ import { NavBarButtons } from './buttons/nav-bar-buttons';
 
 const Navbar = () => {
   return (
-    <AppBar className="h-16 fixed">
+    <AppBar color="primary" enableColorOnDark className="h-16 fixed">
       <Toolbar>
-        <div className="w-full grid grid-cols-3">
+        < div className="w-full grid grid-cols-3">
           <div className="flex flex-row justify-start align-middle items-center">
             <Link to="/" color="#ffffff">
               TalentHub
@@ -20,6 +20,7 @@ const Navbar = () => {
               Jobs
             </Link>
           </div>
+          
           <div className="flex flex-row justify-end items-center">
             <NavBarButtons />
           </div>
