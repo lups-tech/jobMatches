@@ -188,7 +188,7 @@ const AllDevs = () => {
         <div className="flex justify-center my-10">
           <Pagination
             count={numberOfPages}
-            color="primary"
+            color="secondary"
             onChange={pageChangeHandler}
             page={currentPage + 1}
           />

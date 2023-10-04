@@ -6,14 +6,10 @@ const lightTheme = createTheme({
   palette: {
     primary: {
       main: '#8caaee',
-      light: '#8caaee',
-      dark: '#8caaee',
       contrastText: '#ffffff',
     },
     secondary: {
       main: '#3A3C4E',
-      light: '#E7EBFF',
-      dark: '#3A3C4E',
       contrastText: '#ffffff',
     },
     // error: {
@@ -61,17 +57,29 @@ const lightTheme = createTheme({
 
 const darkTheme = createTheme({
   palette: {
+    primary: {
+      main: '#8caaee',
+      light: '#8caaee',
+      dark: '#8caaee',
+      contrastText: '#ffffff',
+    },
+    secondary: {
+      main: '#3A3C4E',
+      light: '#E7EBFF',
+      dark: '#25262d',
+      contrastText: '#ffffff',
+    },
     info: {
-      main: '#111111',
+      main: '#ffffff',
     },
     mode: 'dark',
-    // text: {
-    //   primary: '#000000', // primary text color for dark mode
-    //   secondary: '#555555', // secondary text color for dark mode
-    // },
+    text: {
+      primary: '#ffffff', // primary text color for dark mode
+      secondary: '#dbdbdb', // secondary text color for dark mode
+    },
     background: {
-      default: '#303030', // This is the default background color for dark mode
-      paper: '#424242', // This is the background color for components in dark mode
+      default: '#202020', // This is the default background color for dark mode
+      paper: '#414559', // This is the background color for components in dark mode
     },
   },
   components: {
