@@ -23,11 +23,7 @@ const router = createBrowserRouter([
         path: '',
         element: <AboutUsRoute/>,
       },
-      // TO BE IMPLEMENTED: If a user is logged in, the home page should be a dashboard page
-      // {
-      //   path: '',
-      //   element: <AuthenticationGuard component={Dashboard} />,
-      // },
+      //TODO add dashboard component route
       {
         path: 'jobs',
         element: <AuthenticationGuard component={AllJobsRoute} />,

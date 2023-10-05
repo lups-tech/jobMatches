@@ -14,7 +14,7 @@ export default {
     },
     animation: {
       customSpin: 'customSpin 20s linear infinite'  
-    }},
+    },
     colors: {
       Rosewater: '#f2d5cf',
       Flamingo: '#eebebe',
@@ -43,6 +43,8 @@ export default {
       Mantle: '#292c3c',
       Crust: '#232634'
     },
+  },
+    
   },
   plugins: [],
 }
