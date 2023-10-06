@@ -1,5 +1,7 @@
 import logo from '../assets/logo.svg';
-import { Button, Card, CardContent, Typography } from '@mui/material';
+import { Button } from '@mui/material';
+import TeamMember from './TeamMember';
+import { teamMemberInfos } from '../data/teamMemberInfos';
 
 interface PointProp {
   imgUrl: string;
@@ -50,19 +52,19 @@ const AboutUs = () => {
       <div className="pt-10 pb-36 bg-Blue">
         <div className="grid md:grid-cols-3 grid-flow-row gap-3 text-white w-4/5 m-auto">
           <Point
-            imgUrl="https://picsum.photos/200"
+            imgUrl="src/assets/illu_board.svg"
             alt="Point 1"
             header="Point 1"
             text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Itaque corporis mollitia, commodi iste quae, expedita, ipsa totam ab laborum laboriosam perferendis blanditiis quod in impedit. Quidem cum possimus animi eveniet!"
           />
           <Point
-            imgUrl="https://picsum.photos/200"
+            imgUrl="src/assets/illu_board.svg"
             alt="Point 2"
             header="Point 2"
             text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Itaque corporis mollitia, commodi iste quae, expedita, ipsa totam ab laborum laboriosam perferendis blanditiis quod in impedit. Quidem cum possimus animi eveniet!"
           />
           <Point
-            imgUrl="https://picsum.photos/200"
+            imgUrl="src/assets/illu_board.svg"
             alt="Point 3"
             header="Point 3"
             text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Itaque corporis mollitia, commodi iste quae, expedita, ipsa totam ab laborum laboriosam perferendis blanditiis quod in impedit. Quidem cum possimus animi eveniet!"
@@ -84,12 +86,10 @@ const AboutUs = () => {
             </p>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-3">
-          <Card>
-            <CardContent>
-              <Typography>Hello</Typography>
-            </CardContent>
-          </Card>
+        <div className="max-w-[1000px] grid md:grid-cols-3 gap-14 justify-items-center m-auto my-20">
+          {teamMemberInfos.map(info => (
+            <TeamMember memberInfo={info} />
+          ))}
         </div>
       </div>
     </div>
