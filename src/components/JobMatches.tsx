@@ -7,7 +7,6 @@ import {
   Paper,
   Stack,
   Typography,
-  styled,
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
