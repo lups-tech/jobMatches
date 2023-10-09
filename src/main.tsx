@@ -12,7 +12,7 @@ import { AuthenticationGuard } from './components/AuthenticationGuard.tsx';
 import UserProfileRoute from './routes/user-profile.tsx';
 import GlobalThemeOverride from './theme.tsx';
 import { CssBaseline } from '@mui/material';
-import AboutUsRoute from './components/AboutUs.tsx'
+import AboutUsRoute from './components/AboutUs.tsx';
 
 const router = createBrowserRouter([
   {
@@ -21,9 +21,14 @@ const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <AboutUsRoute/>,
+        element: <AboutUsRoute />,
       },
       //TODO add dashboard component route
+      //TODO allow visit /jobs page withou login
+      // {
+      //   path: 'jobs',
+      //   element: <AllJobsRoute />,
+      // },
       {
         path: 'jobs',
         element: <AuthenticationGuard component={AllJobsRoute} />,

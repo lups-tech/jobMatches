@@ -9,6 +9,7 @@ const ToggleMode = () => {
   return (
     <Tooltip title={`${darkMode ? 'light mode' : 'dark mode'}`}>
       <IconButton
+        sx={{ '&:hover': { backgroundColor: '#3A3C4E' } }}
         aria-label="dark mode toggle button"
         color="info"
         onClick={toggleDarkMode}
