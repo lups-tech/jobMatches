@@ -28,6 +28,10 @@ const router = createBrowserRouter([
         element: <AuthenticationGuard component={AllJobsRoute} />,
       },
       {
+        path: 'jobs/example',
+        element: <HomeRoute />,
+      },
+      {
         path: 'jobs/matches',
         element: <AuthenticationGuard component={JobMatchesRoute} />,
       },
