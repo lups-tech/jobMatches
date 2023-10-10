@@ -1,5 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 export const LogoutButton = () => {
@@ -15,9 +15,9 @@ export const LogoutButton = () => {
 
   return (
     <Tooltip title="Logout">
-      <IconButton color="info" onClick={handleLogout}>
-        <LogoutIcon />
-      </IconButton>
+      <Button startIcon={<LogoutIcon />} onClick={handleLogout}>
+        Log Out
+      </Button>
     </Tooltip>
   );
 };

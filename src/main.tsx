@@ -8,11 +8,11 @@ import DevelopersMainRoute from './routes/developers-main.tsx';
 import JobMatchesRoute from './routes/job-matches.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
-import HomeRoute from './routes/home.tsx';
 import { AuthenticationGuard } from './components/AuthenticationGuard.tsx';
 import UserProfileRoute from './routes/user-profile.tsx';
 import GlobalThemeOverride from './theme.tsx';
 import { CssBaseline } from '@mui/material';
+import AboutUsRoute from './components/AboutUs.tsx';
 
 const router = createBrowserRouter([
   {
@@ -21,8 +21,14 @@ const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <HomeRoute />,
+        element: <AboutUsRoute />,
       },
+      //TODO add dashboard component route
+      //TODO allow visit /jobs page withou login
+      // {
+      //   path: 'jobs',
+      //   element: <AllJobsRoute />,
+      // },
       {
         path: 'jobs',
         element: <AuthenticationGuard component={AllJobsRoute} />,
