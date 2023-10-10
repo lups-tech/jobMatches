@@ -1,11 +1,16 @@
-import { AppBar, Toolbar } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { AppBar, Toolbar, useMediaQuery } from '@mui/material';
+import { Link, useLocation } from 'react-router-dom';
 import { NavBarButtons } from './buttons/NavBarButtons';
 import { useAuth0 } from '@auth0/auth0-react';
+import MobileNavbar from './MobileNavbar';
 
 const Navbar = () => {
   const { isAuthenticated } = useAuth0();
+  const location = useLocation();
+  const isMobile = useMediaQuery('(max-width: 1130px)');
+
   return (
+    isMobile ? <MobileNavbar /> :
     <AppBar
       position="relative"
       color="primary"
@@ -26,13 +31,30 @@ const Navbar = () => {
               TalentHub
             </Link>
           </div>
-          {/* should occupy a slot if not authenticated */}
           {isAuthenticated && (
-            <div className="flex flex-row gap-10 justify-center items-center">
-              <Link to="/developers" color="#ffffff">
+            <div className="flex flex-row gap-15 justify-center items-center">
+              <Link
+                to="/developers"
+                color="#ffffff"
+                className={`border-b-[6px] pt-[28px] pb-[12px] w-[120px] text-center
+                ${
+                  location.pathname === '/developers'
+                    ? 'border-slate-100 font-bold'
+                    : 'border-transparent'
+                }`}
+              >
                 Developers
               </Link>
-              <Link to="/jobs" color="#ffffff">
+              <Link
+                to="/jobs"
+                color="#ffffff"
+                className={`border-b-[6px] pt-[28px] pb-[12px] w-[120px] text-center
+                ${
+                  location.pathname === '/jobs'
+                    ? 'border-slate-100 font-bold'
+                    : 'border-transparent'
+                }`}
+              >
                 Jobs
               </Link>
             </div>

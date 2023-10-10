@@ -15,7 +15,7 @@ export const LogoutButton = () => {
 
   return (
     <Tooltip title="Logout">
-      <Button startIcon={<LogoutIcon />} onClick={handleLogout}>
+      <Button sx={{fontSize: 12, minWidth: "170px"}} startIcon={<LogoutIcon />} onClick={handleLogout}>
         Log Out
       </Button>
     </Tooltip>
