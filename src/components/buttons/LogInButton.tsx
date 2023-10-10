@@ -15,7 +15,7 @@ export const LoginButton = () => {
 
   return (
     <Tooltip title="Login">
-      <Button startIcon={<LoginIcon />} onClick={handleLogin}>
+      <Button sx={{fontSize: 12, minWidth: "170px"}} startIcon={<LoginIcon />} onClick={handleLogin}>
         Log In
       </Button>
     </Tooltip>
