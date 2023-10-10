@@ -88,7 +88,10 @@ const AboutUs = () => {
           </div>
           <div className="col-span-2">
             <p>
-              This frontend is built in Vite/React using TypeScript.{' '}
+              This frontend is built in{' '}
+              <Link href="https://vitejs.dev/">Vite</Link>/React using
+              TypeScript. Styled by <Link href="https://mui.com/">MUI</Link> and{' '}
+              <Link href="https://tailwindcss.co/">TailwindCSS</Link>.{' '}
               <Link href="https://zod.dev/">Zod</Link> is used for form
               validation and forms are handled using{' '}
               <Link href="https://www.react-hook-form.com/">
@@ -97,8 +100,10 @@ const AboutUs = () => {
               . We use <Link href="https://auth0.com/">Auth0</Link> for
               authorization and authentication via JWTs. The backend is in
               C#/.Net Core and is connected to a project hosted on Supabase. The
-              project is therefore based on a PostgreSQL database. Illustrations
-              for this page are from{' '}
+              project is therefore based on a PostgreSQL database. Jobs data is
+              from{' '}
+              <Link href="https://jobtechdev.se/sv">JobTech Development</Link>{' '}
+              Illustrations for this page are from{' '}
               <Link href="https://undraw.co/">undraw</Link>.
             </p>
           </div>
@@ -124,11 +129,7 @@ const AboutUs = () => {
         </div>
         <div className="max-w-[1000px] grid md:grid-cols-3 gap-14 justify-items-center m-auto my-20">
           {teamMemberInfos.map(info => (
-            <TeamMember
-              memberInfo={info}
-              key={Math.random()}
-              showButtons={info.githubLink.length > 0 ? true : false}
-            />
+            <TeamMember memberInfo={info} key={Math.random()} />
           ))}
         </div>
       </div>
