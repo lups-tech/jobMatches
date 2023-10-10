@@ -1,4 +1,5 @@
 import { TeamMemberInfo } from '../types/innerTypes';
+import illu_member_profile from '../assets/illu_member_profile.svg';
 
 export const teamMemberInfos: TeamMemberInfo[] = [
   {
@@ -51,7 +52,7 @@ export const teamMemberInfos: TeamMemberInfo[] = [
     linkedinLink: 'https://www.linkedin.com/in/luis-barri-a1a393ab/',
   },
   {
-    imgUrl: 'src/assets/illu_member_profile.svg',
+    imgUrl: illu_member_profile,
     memberName: 'Join Us',
     memberDescription: 'Become part of the member of our aswesome team',
     githubLink: 'https://github.com/lups-tech',

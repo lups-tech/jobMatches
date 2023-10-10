@@ -1,4 +1,7 @@
 import logo from '../assets/logo_white.svg';
+import illu_precise from '../assets/illu_precise.svg';
+import illu_data_driven from '../assets/illu_data_driven.svg';
+import illu_ideation from '../assets/illu_ideation.svg';
 import { Button, Link } from '@mui/material';
 import TeamMember from './TeamMember';
 import { teamMemberInfos } from '../data/teamMemberInfos';
@@ -61,19 +64,19 @@ const AboutUs = () => {
       <div className="pt-10 pb-96 bg-Blue">
         <div className="grid md:grid-cols-3 grid-flow-row gap-3 text-white w-4/5 m-auto">
           <Point
-            imgUrl="src/assets/illu_precise.svg"
+            imgUrl={illu_precise}
             alt="Point 1"
             header="Precise"
             text="Discover unparalleled talent swiftly and proficiently through our elite Recruiters' Hub, where exceptional talents align seamlessly with exacting demands."
           />
           <Point
-            imgUrl="src/assets/illu_data_driven.svg"
+            imgUrl={illu_data_driven}
             alt="Point 2"
             header="Data-Driven"
             text="Delve deep into intricate recruitment data and unearth invaluable insights with our interactive hub, designed for effortless navigation and comprehension."
           />
           <Point
-            imgUrl="src/assets/illu_ideation.svg"
+            imgUrl={illu_ideation}
             alt="Point 3"
             header="Innovative"
             text="Experience cutting-edge talent acquisition with our innovative Recruiters' Hub, revolutionizing and refining the talent discovery journey."
