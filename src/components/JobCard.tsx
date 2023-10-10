@@ -36,7 +36,6 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 const JobCard = ({ jobInfo }: IJobCard) => {
   const [expanded, setExpanded] = useState(false);
-  console.log(jobInfo);
 
   const navigate = useNavigate();
   const handleMatching = () => {
