@@ -10,9 +10,10 @@ import { TeamMemberInfo } from '../types/innerTypes';
 
 type Props = {
   memberInfo: TeamMemberInfo;
+  showButtons?: boolean;
 };
 
-const TeamMember = ({ memberInfo }: Props) => {
+const TeamMember = ({ memberInfo, showButtons = true }: Props) => {
   const { imgUrl, memberName, memberDescription, githubLink, linkedinLink } =
     memberInfo;
   return (
@@ -25,12 +26,16 @@ const TeamMember = ({ memberInfo }: Props) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => window.open(githubLink)}>
-          GitHub
-        </Button>
-        <Button size="small" onClick={() => window.open(linkedinLink)}>
-          LinkedIn
-        </Button>
+        {showButtons && (
+          <>
+            <Button size="small" onClick={() => window.open(githubLink)}>
+              GitHub
+            </Button>
+            <Button size="small" onClick={() => window.open(linkedinLink)}>
+              LinkedIn
+            </Button>
+          </>
+        )}
       </CardActions>
     </Card>
   );

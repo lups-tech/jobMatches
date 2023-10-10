@@ -124,7 +124,11 @@ const AboutUs = () => {
         </div>
         <div className="max-w-[1000px] grid md:grid-cols-3 gap-14 justify-items-center m-auto my-20">
           {teamMemberInfos.map(info => (
-            <TeamMember memberInfo={info} key={Math.random()} />
+            <TeamMember
+              memberInfo={info}
+              key={Math.random()}
+              showButtons={info.githubLink.length > 0 ? true : false}
+            />
           ))}
         </div>
       </div>
