@@ -14,13 +14,13 @@ export const NavBarButtons = () => {
   return (
     <div className="nav-bar__buttons">
       {!isAuthenticated && (
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-row gap-1">
           <LoginButton />
           <ToggleMode />
         </div>
       )}
       {isAuthenticated && (
-        <div className="flex flex-row items-center gap-4">
+        <div className="flex flex-row items-center gap-1">
           <UserBadgeButton loading={isUserLoading} user={userInfo!} />
           <LogoutButton />
           <ToggleMode />
