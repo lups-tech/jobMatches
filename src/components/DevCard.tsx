@@ -110,25 +110,23 @@ const DevCard = ({ developer }: { developer: Developer }) => {
                 </Typography>
               )}
               {groupedSkills['Technical Skills'] && (
-                <Typography>
-                  <span className="font-bold flex">
-                    {groupedSkills['Technical Skills'].map((skill, index) => {
-                      const chipWidth = skill.length * 8 + 20;
-                      return (
-                        <div
-                          key={index}
-                          data-te-chip-init
-                          data-te-ripple-init
-                          className="[word-wrap: break-word] my-[5px] mr-4 flex h-[32px] items-center justify-center rounded-[16px] bg-[#f2efef] bg-opacity-70 px-[12px] py-0 text-[13px] font-normal normal-case leading-loose text-[#4f4f4f] shadow-none dark:bg-neutral-600 dark:text-neutral-200"
-                          style={{ width: `${chipWidth}px` }}
-                          data-te-close="true"
-                        >
-                          {skill}
-                        </div>
-                      );
-                    })}
-                  </span>
-                </Typography>
+                <span className="font-bold flex">
+                  {groupedSkills['Technical Skills'].map((skill, index) => {
+                    const chipWidth = skill.length * 8 + 20;
+                    return (
+                      <div
+                        key={index}
+                        data-te-chip-init
+                        data-te-ripple-init
+                        className="[word-wrap: break-word] my-[5px] mr-4 flex h-[32px] items-center justify-center rounded-[16px] bg-[#f2efef] bg-opacity-70 px-[12px] py-0 text-[13px] font-normal normal-case leading-loose text-[#4f4f4f] shadow-none dark:bg-neutral-600 dark:text-neutral-200"
+                        style={{ width: `${chipWidth}px` }}
+                        data-te-close="true"
+                      >
+                        {skill}
+                      </div>
+                    );
+                  })}
+                </span>
               )}
               {groupedSkills['Prior Experience'] && (
                 <Typography>

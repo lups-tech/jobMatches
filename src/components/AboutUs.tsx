@@ -50,8 +50,8 @@ const AboutUs = () => {
   const { darkMode } = useThemeContext();
 
   const userCheck = async () => {
-    const accessToken = await getAccessTokenSilently();
     if (isAuthenticated) {
+      const accessToken = await getAccessTokenSilently();
       registerUser(accessToken);
     }
   };
