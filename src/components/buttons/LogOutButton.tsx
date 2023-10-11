@@ -15,8 +15,11 @@ export const LogoutButton = () => {
 
   return (
     <Tooltip title="Logout">
-      <IconButton color="info" onClick={handleLogout}>
-        <LogoutIcon />
+      <IconButton
+        onClick={handleLogout}
+        sx={{ '&:hover': { backgroundColor: '#3A3C4E' } }}
+      >
+        <LogoutIcon color="info" />
       </IconButton>
     </Tooltip>
   );

@@ -1,10 +1,24 @@
-import { AppBar, Toolbar } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { NavBarButtons } from './buttons/nav-bar-buttons';
+import { AppBar, Toolbar, useMediaQuery } from '@mui/material';
+import { Link, useLocation } from 'react-router-dom';
+import { NavBarButtons } from './buttons/NavBarButtons';
+import { useAuth0 } from '@auth0/auth0-react';
+import MobileNavbar from './MobileNavbar';
 
 const Navbar = () => {
-  return (
-    <AppBar className="h-16 fixed">
+  const { isAuthenticated } = useAuth0();
+  const location = useLocation();
+  const isMobile = useMediaQuery('(max-width: 1130px)');
+
+  return isMobile ? (
+    <MobileNavbar />
+  ) : (
+    <AppBar
+      position="relative"
+      color="primary"
+      enableColorOnDark
+      className="h-16"
+      sx={{ boxShadow: 0, marginBottom: 0 }}
+    >
       <Toolbar>
         <div className="w-full grid grid-cols-3">
           <div className="flex flex-row justify-start align-middle items-center">
@@ -12,14 +26,35 @@ const Navbar = () => {
               TalentHub
             </Link>
           </div>
-          <div className="flex flex-row gap-4 justify-center items-center">
-            <Link to="/developers" color="#ffffff">
-              Developers
-            </Link>
-            <Link to="/jobs" color="#ffffff">
+          <div className="flex flex-row gap-15 justify-center items-center">
+            {isAuthenticated && (
+              <Link
+                to="/developers"
+                color="#ffffff"
+                className={`border-b-[4px] pt-[24px] pb-[12px] w-[120px] text-center
+                ${
+                  location.pathname === '/developers'
+                    ? 'border-slate-100 font-bold'
+                    : 'border-transparent'
+                }`}
+              >
+                Developers
+              </Link>
+            )}
+            <Link
+              to="/jobs"
+              color="#ffffff"
+              className={`border-b-[4px] pt-[24px] pb-[12px] w-[120px] text-center
+                ${
+                  location.pathname === '/jobs'
+                    ? 'border-slate-100 font-bold'
+                    : 'border-transparent'
+                }`}
+            >
               Jobs
             </Link>
           </div>
+
           <div className="flex flex-row justify-end items-center">
             <NavBarButtons />
           </div>
