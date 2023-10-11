@@ -91,7 +91,10 @@ const JobMatches = () => {
         return fetchMatches(jobInfo, accessToken);
       }
       const matchingSkills = findMatchingSkills(jobInfo);
-      const developersSorted = sortMockDevelopers(mockDevelopers, matchingSkills);
+      const developersSorted = sortMockDevelopers(
+        mockDevelopers,
+        matchingSkills
+      );
       return {
         developers: developersSorted,
         jobSkills: matchingSkills,
@@ -131,7 +134,7 @@ const JobMatches = () => {
           sx={{
             maxWidth: 700,
             padding: 4,
-            borderRadius: '24px',
+            borderRadius: "24px",
           }}
         >
           <AccordionSummary
@@ -174,7 +177,8 @@ const JobMatches = () => {
       </div>
       <div className="max-w-md flex-grow">
         <Typography variant="h2">Best Matches</Typography>
-        {matches.developers.map((dev) => (
+        { matches.developers.length > 3 ? 
+        matches.developers.map((dev) => (
           <Paper
             elevation={1}
             sx={{
@@ -211,7 +215,23 @@ const JobMatches = () => {
                 ))}
             </Stack>
           </Paper>
-        ))}
+        ))
+                
+        : 
+        <Paper
+            elevation={1}
+            sx={{
+              padding: 2,
+              marginBottom: 2,
+              borderRadius: 6,
+              // Following logic is to color the dev card based on the first Programming Language they have
+              backgroundColor: "white"
+            }}
+            
+          >
+            <Typography variant="h5">No good matches</Typography>
+            
+          </Paper> }
       </div>
     </div>
   );
