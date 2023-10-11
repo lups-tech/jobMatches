@@ -12,18 +12,6 @@ import { useThemeContext } from '../theme';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
-const registerUser = async (accessToken: string) => {
-  try {
-    await axios.post(`${backendServer}api/users`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-  } catch (error) {
-    console.log('Error:', (error as Error).message);
-  }
-};
-
 interface PointProp {
   imgUrl: string;
   alt: string;
@@ -52,13 +40,21 @@ const AboutUs = () => {
   const userCheck = async () => {
     if (isAuthenticated) {
       const accessToken = await getAccessTokenSilently();
-      registerUser(accessToken);
+      try {
+        await axios.post(`${backendServer}api/users`, {} ,{
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+      } catch (error) {
+        console.log('Error:', (error as Error).message);
+      }
     }
   };
 
   useEffect(() => {
     userCheck();
-  }, []);
+  }, [isAuthenticated]);
 
   return (
     <div className="-mt-16 m-auto">
