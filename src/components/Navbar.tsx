@@ -9,8 +9,9 @@ const Navbar = () => {
   const location = useLocation();
   const isMobile = useMediaQuery('(max-width: 1130px)');
 
-  return (
-    isMobile ? <MobileNavbar /> :
+  return isMobile ? (
+    <MobileNavbar />
+  ) : (
     <AppBar
       position="relative"
       color="primary"
@@ -19,24 +20,18 @@ const Navbar = () => {
       sx={{ boxShadow: 0, marginBottom: 0 }}
     >
       <Toolbar>
-        <div
-          className={
-            isAuthenticated
-              ? 'w-full grid grid-cols-3'
-              : 'w-full grid grid-cols-2'
-          }
-        >
+        <div className="w-full grid grid-cols-3">
           <div className="flex flex-row justify-start align-middle items-center">
             <Link to="/" color="#ffffff">
               TalentHub
             </Link>
           </div>
-          {isAuthenticated && (
-            <div className="flex flex-row gap-15 justify-center items-center">
+          <div className="flex flex-row gap-15 justify-center items-center">
+            {isAuthenticated && (
               <Link
                 to="/developers"
                 color="#ffffff"
-                className={`border-b-[6px] pt-[28px] pb-[12px] w-[120px] text-center
+                className={`border-b-[4px] pt-[24px] pb-[12px] w-[120px] text-center
                 ${
                   location.pathname === '/developers'
                     ? 'border-slate-100 font-bold'
@@ -45,20 +40,21 @@ const Navbar = () => {
               >
                 Developers
               </Link>
-              <Link
-                to="/jobs"
-                color="#ffffff"
-                className={`border-b-[6px] pt-[28px] pb-[12px] w-[120px] text-center
+            )}
+            <Link
+              to="/jobs"
+              color="#ffffff"
+              className={`border-b-[4px] pt-[24px] pb-[12px] w-[120px] text-center
                 ${
                   location.pathname === '/jobs'
                     ? 'border-slate-100 font-bold'
                     : 'border-transparent'
                 }`}
-              >
-                Jobs
-              </Link>
-            </div>
-          )}
+            >
+              Jobs
+            </Link>
+          </div>
+
           <div className="flex flex-row justify-end items-center">
             <NavBarButtons />
           </div>

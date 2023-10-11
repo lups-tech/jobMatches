@@ -8,17 +8,17 @@ import { teamMemberInfos } from '../data/teamMemberInfos';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 import { useEffect } from 'react';
+import { useThemeContext } from '../theme';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
-const registerUser = async (accessToken : string) => {
+const registerUser = async (accessToken: string) => {
   try {
-    console.log(accessToken);
     await axios.post(`${backendServer}api/users`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    })
+    });
   } catch (error) {
     console.log('Error:', (error as Error).message);
   }
@@ -47,21 +47,22 @@ const Point: React.FC<PointProp> = ({ imgUrl, alt, header, text }) => {
 
 const AboutUs = () => {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  const { darkMode } = useThemeContext();
 
-  const userCheck = async () =>{
+  const userCheck = async () => {
     const accessToken = await getAccessTokenSilently();
-    if(isAuthenticated){
+    if (isAuthenticated) {
       registerUser(accessToken);
     }
   };
 
   useEffect(() => {
     userCheck();
-  }, [])
-  
+  }, []);
+
   return (
     <div className="-mt-16 m-auto">
-      <div className="flex flex-col bg-Blue">
+      <div className={`flex flex-col ${darkMode ? 'bg-[#97B2EF]' : 'bg-Blue'}`}>
         <div className="flex pt-16 w-100 justify-center h-[90vh]">
           <div className="max-w-[1500px] flex md:flex-row flex-col justify-center gap-10">
             <img
@@ -92,7 +93,7 @@ const AboutUs = () => {
         </div>
       </div>
 
-      <div className="pt-10 pb-96 bg-Blue">
+      <div className={`pt-10  pb-96 ${darkMode ? 'bg-[#97B2EF]' : 'bg-Blue'}`}>
         <div className="grid md:grid-cols-3 grid-flow-row gap-3 text-white w-4/5 m-auto">
           <Point
             imgUrl={illu_precise}

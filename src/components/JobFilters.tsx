@@ -74,7 +74,7 @@ const JobFilters = ({ setSearchKeyword, skills }: IJobFilters) => {
   }
 
   return (
-    <form onSubmit={handleSubmit(processingData)}>
+    <form onSubmit={handleSubmit(processingData)} className="mt-6">
       <Controller
         control={control}
         name="searchKeyword"
