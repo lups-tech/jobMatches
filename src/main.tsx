@@ -31,11 +31,11 @@ const router = createBrowserRouter([
       // },
       {
         path: 'jobs',
-        element: <AuthenticationGuard component={AllJobsRoute} />,
+        element: <AllJobsRoute />,
       },
       {
         path: 'jobs/matches',
-        element: <AuthenticationGuard component={JobMatchesRoute} />,
+        element: <JobMatchesRoute />,
       },
       {
         path: 'developers',

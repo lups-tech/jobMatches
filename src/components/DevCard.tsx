@@ -67,7 +67,6 @@ const DevCard = ({ developer }: { developer: Developer }) => {
   };
 
   const groupedSkills = groupSkillsByCategory(developer.skills);
-  console.log('Grouped Skills', groupedSkills);
 
   return (
     <Card
