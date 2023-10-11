@@ -21,7 +21,8 @@ import { Developer } from '../types/innerTypes';
 import { cardColorLogic } from '../data/programmingLanguageColors';
 
 interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
+  // the value is either 'true' or 'false', not using boolean type because it causes a fontend terminal error
+  expand: string;
 }
 
 type Skill = {
@@ -34,7 +35,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   const { ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+  transform: expand != 'true' ? 'rotate(0deg)' : 'rotate(180deg)',
   marginLeft: 'auto',
   transition: theme.transitions.create('transform', {
     duration: theme.transitions.duration.shortest,
@@ -157,7 +158,7 @@ const DevCard = ({ developer }: { developer: Developer }) => {
           {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </IconButton>
         <ExpandMore
-          expand={expanded}
+          expand={expanded.toString()}
           onClick={handleExpandClick}
           aria-expanded={expanded}
           aria-label="show more"
