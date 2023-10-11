@@ -71,7 +71,7 @@ const MobileNavbar = () => {
               sx={{borderRadius: 0}}
             >
               {isAuthenticated ? (
-                <>
+                <div>
                   <MenuItem onClick={handleClose} sx={{background: '#8caaee'}}>
                     <UserBadgeButton user={userInfo!} loading={isUserLoading} />
                   </MenuItem>
@@ -100,7 +100,7 @@ const MobileNavbar = () => {
                   <MenuItem onClick={handleClose}>
                     <LogoutButton />
                   </MenuItem>
-                </>
+                </div>
               ) : (
                 <MenuItem onClick={handleClose}>
                   <LoginButton/>
