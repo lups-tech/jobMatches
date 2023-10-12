@@ -9,7 +9,6 @@ const UserProfile: React.FC = () => {
   const { user: userInfo, isLoading: isUserLoading, isAuthenticated } = useAuth0();
 
 
-  console.log(userInfo)
   if (isUserLoading) {
     return (
       <div className="flex justify-center mt-16">

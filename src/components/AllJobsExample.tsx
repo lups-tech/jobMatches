@@ -1,23 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
-import { Job, SearchResult } from '../types/externalTypes';
-import { CircularProgress, Pagination } from '@mui/material';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { FilterFormValues, Skill } from '../types/innerTypes';
-import JobFilters from './JobFilters';
-import JobCard from './JobCard';
-import { useAuth0 } from '@auth0/auth0-react';
-import { mockSkills } from '../data/mockSkills';
-
-const backendServer = import.meta.env.VITE_BE_SERVER;
-
-const fetchSkills = async (accessToken: string): Promise<Skill[]> => {
-  const res = await fetch(`${backendServer}api/Skills`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  return res.json();
-};
+import { useQuery } from "@tanstack/react-query";
+import { Job, SearchResult } from "../types/externalTypes";
+import { CircularProgress, Pagination } from "@mui/material";
+import { ChangeEvent, useEffect, useState } from "react";
+import { FilterFormValues, Skill } from "../types/innerTypes";
+import JobFilters from "./JobFilters";
+import JobCard from "./JobCard";
+import { mockSkills } from "./../data/mockSkills";
 
 const fetchJobs = async (
   searchFilter: FilterFormValues,
@@ -26,41 +14,34 @@ const fetchJobs = async (
   const res = await fetch(
     `https://jobsearch.api.jobtechdev.se/search?${searchFilter.regionFilter
       .map(
-        region => `region=${region['taxonomy/national-nuts-level-3-code-2019']}`
+        (region) =>
+          `region=${region["taxonomy/national-nuts-level-3-code-2019"]}`
       )
-      .join('&')}&experience=${
+      .join("&")}&experience=${
       searchFilter.isExperienced
     }&q=${encodeURIComponent(
-      searchFilter.skillsFilter.join(' ') + ' ' + searchFilter.searchKeyword
+      searchFilter.skillsFilter.join(" ") + " " + searchFilter.searchKeyword
     )}&offset=${page * 10}&limit=10`
   );
+
   return res.json();
 };
 
-const AllJobs = () => {
+const AllJobsExample = () => {
   const [searchKeyword, setSearchKeyword] = useState<FilterFormValues>({
-    searchKeyword: 'JavaScript',
+    searchKeyword: "JavaScript",
     skillsFilter: [],
     regionFilter: [],
     isExperienced: false,
   });
   const [currentPage, setCurrentPage] = useState(0);
-  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
 
-  const {
-    isLoading: isSkillsLoading,
-    error: skillsError,
-    data: skills,
-  } = useQuery<Skill[]>(['skills'], async () => {
-    if(isAuthenticated) {
-      const accessToken = await getAccessTokenSilently();
-      return fetchSkills(accessToken);
-    }
-    return mockSkills
-  });
+  const skills: Skill[] = mockSkills;
+  const isSkillsLoading: null = null
+  const skillsError: null = null
 
   const { isLoading, error, data } = useQuery<SearchResult>(
-    ['jobs', searchKeyword, currentPage],
+    ["jobs", searchKeyword, currentPage],
     () => fetchJobs(searchKeyword, currentPage),
     {
       // to prevent the page from fetching data too many times
@@ -86,7 +67,7 @@ const AllJobs = () => {
     );
 
   if (error || skillsError) {
-    console.log('❗️error: ', error);
+    console.log("❗️error: ", error);
     return (
       <div className="flex justify-center mt-16">
         An error has occurred, check console for more info
@@ -120,4 +101,4 @@ const AllJobs = () => {
   );
 };
 
-export default AllJobs;
+export default AllJobsExample;

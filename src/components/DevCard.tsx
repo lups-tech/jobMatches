@@ -25,7 +25,8 @@ import {  useAuth0 } from "@auth0/auth0-react";
 // const accessToken = await getAccessTokenSilently();
 
 interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
+  // the value is either 'true' or 'false', not using boolean type because it causes a fontend terminal error
+  expand: string;
 }
 
 type Skill = {
@@ -41,7 +42,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   const { ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+  transform: expand != 'true' ? 'rotate(0deg)' : 'rotate(180deg)',
   marginLeft: 'auto',
   transition: theme.transitions.create('transform', {
     duration: theme.transitions.duration.shortest,
@@ -128,7 +129,6 @@ const DevCard = ({ developer }: { developer: Developer }) => {
   };
 
   const groupedSkills = groupSkillsByCategory(developer.skills);
-  console.log('Grouped Skills', groupedSkills);
 
   return (
     <Card
@@ -172,12 +172,23 @@ const DevCard = ({ developer }: { developer: Developer }) => {
                 </Typography>
               )}
               {groupedSkills['Technical Skills'] && (
-                <Typography>
-                  Technical Skills:{' '}
-                  <span className="font-bold">
-                    {groupedSkills['Technical Skills'].join(', ')}
-                  </span>
-                </Typography>
+                <span className="font-bold flex">
+                  {groupedSkills['Technical Skills'].map((skill, index) => {
+                    const chipWidth = skill.length * 8 + 20;
+                    return (
+                      <div
+                        key={index}
+                        data-te-chip-init
+                        data-te-ripple-init
+                        className="[word-wrap: break-word] my-[5px] mr-4 flex h-[32px] items-center justify-center rounded-[16px] bg-[#f2efef] bg-opacity-70 px-[12px] py-0 text-[13px] font-normal normal-case leading-loose text-[#4f4f4f] shadow-none dark:bg-neutral-600 dark:text-neutral-200"
+                        style={{ width: `${chipWidth}px` }}
+                        data-te-close="true"
+                      >
+                        {skill}
+                      </div>
+                    );
+                  })}
+                </span>
               )}
               {groupedSkills['Prior Experience'] && (
                 <Typography>
@@ -208,7 +219,7 @@ const DevCard = ({ developer }: { developer: Developer }) => {
           {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </IconButton>
         <ExpandMore
-          expand={expanded}
+          expand={expanded.toString()}
           onClick={handleExpandClick}
           aria-expanded={expanded}
           aria-label="show more"

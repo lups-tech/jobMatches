@@ -35,7 +35,6 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
     });
 
   const processingData = (filterData: DeveloperFilterFormValues) => {
-    console.log('clicked search', filterData);
     setSearchFilter(filterData);
   };
 
