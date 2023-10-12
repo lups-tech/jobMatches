@@ -54,9 +54,7 @@ const DevCard = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(isLiked);
-  const { getAccessTokenSilently } = useAuth0();
-
-  const { user } = useAuth0();
+  const { getAccessTokenSilently, user } = useAuth0();
 
   const likeRequest = async (
     requestMethod: string,
