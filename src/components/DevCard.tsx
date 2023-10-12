@@ -58,7 +58,10 @@ const DevCard = ({
 
   const { user } = useAuth0();
 
-  const likeRequest = async (requestMethod: string, requestBody: any) => {
+  const likeRequest = async (
+    requestMethod: string,
+    requestBody: { userId: string; developerId: string }
+  ) => {
     const accessToken = await getAccessTokenSilently();
     try {
       const response = await fetch(`${backendServer}api/userdeveloper`, {
@@ -74,8 +77,7 @@ const DevCard = ({
         throw new Error('Response was not ok');
       }
 
-      const data = await response.json();
-      console.log(requestMethod, ' request successful:', data);
+      // const data = await response.json();
     } catch (error) {
       console.error('Error:', error);
     }
@@ -83,13 +85,12 @@ const DevCard = ({
 
   const sendLikeRequest = () => {
     const requestMethod = favorite ? 'DELETE' : 'PATCH';
-    const requestBody = { userId: user?.sub, developerId: developer.id };
-    console.log(requestMethod, requestBody);
+    const requestBody = {
+      userId: user?.sub ? user.sub : '',
+      developerId: developer.id,
+    };
     likeRequest(requestMethod, requestBody);
     setFavorite(!favorite);
-
-    // requestType === 'patch'? patchRequest()  : deleteRequest();
-    // setRequestType(prevReqType => prevReqType === 'patch'? 'delete' : 'patch')
   };
 
   const handleExpandClick = () => {

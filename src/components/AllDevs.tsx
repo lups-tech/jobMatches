@@ -40,7 +40,6 @@ const fetchUserInfo = async (accessToken: string, userId: string) => {
 
 const AllDevs = () => {
   const { getAccessTokenSilently, user } = useAuth0();
-  console.log('USER OBJ: ', user);
 
   const [searchFilter, setSearchFilter] = useState<DeveloperFilterFormValues>({
     searchKeyword: '',
