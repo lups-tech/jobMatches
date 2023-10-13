@@ -54,8 +54,7 @@ const AllJobs = () => {
     isExperienced: false,
   });
   const [currentPage, setCurrentPage] = useState(0);
-  const { getAccessTokenSilently, isAuthenticated, user } = useAuth0();
-  console.log('user here: ', user);
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
 
   const {
     isLoading: isSkillsLoading,
@@ -77,10 +76,7 @@ const AllJobs = () => {
     queryKey: ['userInfo'],
     queryFn: async () => {
       const accessToken = await getAccessTokenSilently();
-      if (user?.sub) {
-        return fetchUserInfo(accessToken, user?.sub ? user.sub : '');
-      }
-      return {};
+      return fetchUserInfo(accessToken, "self");
     },
   });
 
@@ -128,15 +124,29 @@ const AllJobs = () => {
       <div className="max-w-[800px] mx-10">
         <JobFilters setSearchKeyword={setSearchKeyword} skills={skills} />
         <div className="jobcards">
-          {userInfo.jobs &&
-            data.hits.map((job: Job) => {
+          {isAuthenticated && data.hits.map((job: Job) => {
               const isLikedJob = userInfo.jobs
                 .map(jobOfUser => jobOfUser.jobTechId)
                 .includes(job.id);
+              const databaseId = () => {
+                if(isLikedJob){
+                  const selectedJob = userInfo.jobs.find(userJob => userJob.jobTechId == job.id)
+                  if(selectedJob){
+                    return selectedJob.id;
+                  }
+                  return "";
+                }
+                return "";
+              }
               return (
-                <JobCard key={job.id} jobInfo={job} isLiked={isLikedJob} />
+                <JobCard key={job.id} jobInfo={job} isLiked={isLikedJob}  databaseId={databaseId()} userId={userInfo.id}/>
               );
             })}
+          {!isAuthenticated && data.hits.map((job: Job) => {
+            return (
+              <JobCard key={job.id} jobInfo={job} isLiked={false} databaseId={""} userId={""}/>
+            );
+          })}
         </div>
         <div className="flex justify-center my-10">
           <Pagination

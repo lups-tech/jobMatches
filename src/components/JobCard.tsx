@@ -36,10 +36,11 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
-const JobCard = ({ jobInfo, isLiked }: { jobInfo: Job; isLiked: boolean }) => {
+const JobCard = ({ jobInfo, isLiked, databaseId, userId }: { jobInfo: Job; isLiked: boolean; databaseId: string; userId: string }) => {
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(isLiked);
-  const { getAccessTokenSilently } = useAuth0();
+  const [idForDelete, setIdforDelete] = useState(databaseId);
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
 
   const likeRequest = async (
     requestMethod: string,
@@ -51,24 +52,44 @@ const JobCard = ({ jobInfo, isLiked }: { jobInfo: Job; isLiked: boolean }) => {
     }
   ) => {
     const accessToken = await getAccessTokenSilently();
-    try {
-      const response = await fetch(`${backendServer}api/jobs`, {
+    if(requestMethod == 'POST'){
+      try {
+        const response = await fetch(`${backendServer}api/jobs`, {
+          method: requestMethod,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(requestBody),
+        })
+        if (!response.ok) {
+            throw new Error('Response was not ok');
+        }
+        if(response.ok){
+          response.json()
+            .then(data => setIdforDelete(data.id))
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+    if(requestMethod == 'DELETE'){
+      const response = await fetch(`${backendServer}api/userjob`, {
         method: requestMethod,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify(requestBody),
-      });
-
+        body: JSON.stringify({
+          userId: userId,
+          jobId: idForDelete,
+        })
+      })
       if (!response.ok) {
         throw new Error('Response was not ok');
       }
-
-      // const data = await response.json();
-    } catch (error) {
-      console.error('Error:', error);
     }
+
   };
 
   const sendLikeRequest = () => {
@@ -138,9 +159,11 @@ const JobCard = ({ jobInfo, isLiked }: { jobInfo: Job; isLiked: boolean }) => {
       </CardContent>
 
       <CardActions disableSpacing sx={{ paddingBottom: 3 }}>
-        <IconButton aria-label="add to favorites" onClick={sendLikeRequest}>
-          {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-        </IconButton>
+        {isAuthenticated &&
+          <IconButton aria-label="add to favorites" onClick={sendLikeRequest}>
+            {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+          </IconButton>
+        }
         <Button size="small" variant="outlined" onClick={handleMatching}>
           Match developers
         </Button>
