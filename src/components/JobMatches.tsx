@@ -54,7 +54,6 @@ const sortMockDevelopers = (developers: Developer[], descriptionSkills: Skill[])
   const orderedDevs: Developer[] = [];
   // check if dev.skills[] includes anything from matchingSkills[]
   developers.map((dev: Developer) => {
-    // if dev's skills includes any matchingSkills, return the dev.
     const devSkillsId = dev.skills.map((skill: Skill) => skill.id);
     const descriptionSkillsId = descriptionSkills.map((skill: Skill) => skill.id);
     const matchingSkills = devSkillsId.filter((skillId: string) =>
@@ -179,7 +178,7 @@ const JobMatches = () => {
       </div>
       <div className="max-w-md flex-grow">
         <Typography variant="h2">Best Matches</Typography>
-        { matches.developers.length > 3 ? 
+        { matches.developers.length > 0 ? 
         matches.developers.map((dev) => (
           <Paper
             elevation={1}
