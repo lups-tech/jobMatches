@@ -7,19 +7,19 @@ import {
   Paper,
   Stack,
   Typography,
-} from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { useLocation } from "react-router-dom";
-import { Matches } from "../types/scraperTypes";
-import { Job } from "../types/jobTechApiTypes";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import EmailIcon from "@mui/icons-material/Email";
-import { useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-import { cardColorLogic } from "../data/programmingLanguageColors";
-import { mockDevelopers } from "../data/mockDevelopers";
-import { mockSkills } from "../data/mockSkills";
+} from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+import { Matches } from '../types/scraperTypes';
+import { Job } from '../types/jobTechApiTypes';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import EmailIcon from '@mui/icons-material/Email';
+import { useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { cardColorLogic } from '../data/programmingLanguageColors';
+import { mockDevelopers } from '../data/mockDevelopers';
+import { mockSkills } from '../data/mockSkills';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
@@ -41,7 +41,7 @@ const fetchMatches = async (job: Job, accessToken: string) => {
 const findMatchingSkills = (job: Job) => {
   const jobDescriptionStrArr = {
     description: job.description.text,
-  }.description.split(" ");
+  }.description.split(' ');
   const matchingSkills = mockSkills.filter((skill: any) =>
     jobDescriptionStrArr.includes(skill.title)
   );
@@ -84,7 +84,7 @@ const JobMatches = () => {
     error,
     data: matches,
   } = useQuery<Matches, Error>({
-    queryKey: ["developers"],
+    queryKey: ['developers'],
     queryFn: async () => {
       if (isAuthenticated) {
         const accessToken = await getAccessTokenSilently();
@@ -101,9 +101,9 @@ const JobMatches = () => {
       };
     },
   });
-  if (isLoading) return "Loading...";
+  if (isLoading) return 'Loading...';
 
-  if (error) return "An error has occurred: " + error.message;
+  if (error) return 'An error has occurred: ' + error.message;
 
   const saveJobHandle = async () => {
     const accessToken = await getAccessTokenSilently();
@@ -111,7 +111,7 @@ const JobMatches = () => {
       jobTechId: jobInfo.id,
       url: jobInfo.application_details.url,
       jobText: jobInfo.description.text,
-      SelectedSkillIds: matches.jobSkills.map((jobSkill) => jobSkill.id),
+      SelectedSkillIds: matches.jobSkills.map(jobSkill => jobSkill.id),
     };
     try {
       await axios.post(`${backendServer}api/jobs`, createJobReq, {
@@ -121,7 +121,7 @@ const JobMatches = () => {
       });
       setIsSaved(true);
     } catch (error) {
-      console.log("Error:", (error as Error).message);
+      console.log('Error:', (error as Error).message);
     }
   };
   return (
@@ -134,7 +134,7 @@ const JobMatches = () => {
           sx={{
             maxWidth: 700,
             padding: 4,
-            borderRadius: "24px",
+            borderRadius: '24px',
           }}
         >
           <AccordionSummary
@@ -161,7 +161,7 @@ const JobMatches = () => {
               dangerouslySetInnerHTML={{
                 __html: jobInfo.description.text_formatted,
               }}
-              style={{ all: "inherit" }}
+              style={{ all: 'inherit' }}
             ></div>
           </AccordionDetails>
         </Accordion>
@@ -225,13 +225,12 @@ const JobMatches = () => {
               marginBottom: 2,
               borderRadius: 6,
               // Following logic is to color the dev card based on the first Programming Language they have
-              backgroundColor: "white"
+              backgroundColor: 'white',
             }}
-            
           >
             <Typography variant="h5">No good matches</Typography>
-            
-          </Paper> }
+          </Paper>
+        )}
       </div>
     </div>
   );

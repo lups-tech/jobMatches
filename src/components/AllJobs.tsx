@@ -73,13 +73,13 @@ const AllJobs = () => {
     error: isUserInfoError,
     data: userInfo,
   } = useQuery<UserInfoDTO, Error>({
-    queryKey: ['userInfo'],
+    queryKey: ['userInfo', isAuthenticated],
     queryFn: async () => {
       if (isAuthenticated) {
         const accessToken = await getAccessTokenSilently();
         return fetchUserInfo(accessToken, 'self');
       }
-      return {};
+      return { jobs: [] };
     },
   });
 
@@ -128,6 +128,7 @@ const AllJobs = () => {
         <JobFilters setSearchKeyword={setSearchKeyword} skills={skills} />
         <div className="jobcards">
           {isAuthenticated &&
+            // userInfo.jobs &&
             data.hits.map((job: Job) => {
               const isLikedJob = userInfo.jobs
                 .map(jobOfUser => jobOfUser.jobTechId)
