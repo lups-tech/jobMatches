@@ -6,6 +6,8 @@ import {
   Toolbar,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import CodeIcon from '@mui/icons-material/Code';
+import WorkIcon from '@mui/icons-material/Work';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useState } from 'react';
@@ -71,7 +73,7 @@ const MobileNavbar = () => {
               sx={{borderRadius: 0}}
             >
               {isAuthenticated ? (
-                <>
+                <div>
                   <MenuItem onClick={handleClose} sx={{background: '#8caaee'}}>
                     <UserBadgeButton user={userInfo!} loading={isUserLoading} />
                   </MenuItem>
@@ -83,6 +85,7 @@ const MobileNavbar = () => {
                         location.pathname === '/developers' ? 'font-bold' : ''
                       }
                     >
+                       <CodeIcon />{" "}
                       Developers
                     </Link>
                   </MenuItem>
@@ -94,13 +97,14 @@ const MobileNavbar = () => {
                         location.pathname === '/jobs' ? 'font-bold' : ''
                       }
                     >
+                      <WorkIcon />{" "}
                       Jobs
                     </Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <LogoutButton />
                   </MenuItem>
-                </>
+                </div>
               ) : (
                 <MenuItem onClick={handleClose}>
                   <LoginButton/>

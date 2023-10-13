@@ -44,6 +44,7 @@ const findMatchingSkills = (job: Job) => {
   }.description.toLowerCase().replace(/[^a-zA-Z0-9\s#]/g, '').split(" ")
   const matchingSkills = mockSkills.filter((skill) =>
     jobDescriptionStrArr.includes(skill.title.toLowerCase())
+
   );
   return matchingSkills;
 };
@@ -82,7 +83,7 @@ const JobMatches = () => {
     error,
     data: matches,
   } = useQuery<Matches, Error>({
-    queryKey: ["developers"],
+    queryKey: ['developers'],
     queryFn: async () => {
       if (isAuthenticated) {
         const accessToken = await getAccessTokenSilently();
@@ -99,9 +100,9 @@ const JobMatches = () => {
       };
     },
   });
-  if (isLoading) return "Loading...";
+  if (isLoading) return 'Loading...';
 
-  if (error) return "An error has occurred: " + error.message;
+  if (error) return 'An error has occurred: ' + error.message;
 
   const saveJobHandle = async () => {
     const accessToken = await getAccessTokenSilently();
@@ -109,7 +110,7 @@ const JobMatches = () => {
       jobTechId: jobInfo.id,
       url: jobInfo.application_details.url,
       jobText: jobInfo.description.text,
-      SelectedSkillIds: matches.jobSkills.map((jobSkill) => jobSkill.id),
+      SelectedSkillIds: matches.jobSkills.map(jobSkill => jobSkill.id),
     };
     try {
       await axios.post(`${backendServer}api/jobs`, createJobReq, {
@@ -119,7 +120,7 @@ const JobMatches = () => {
       });
       setIsSaved(true);
     } catch (error) {
-      console.log("Error:", (error as Error).message);
+      console.log('Error:', (error as Error).message);
     }
   };
   return (
@@ -132,7 +133,7 @@ const JobMatches = () => {
           sx={{
             maxWidth: 700,
             padding: 4,
-            borderRadius: "24px",
+            borderRadius: '24px',
           }}
         >
           <AccordionSummary
@@ -159,7 +160,7 @@ const JobMatches = () => {
               dangerouslySetInnerHTML={{
                 __html: jobInfo.description.text_formatted,
               }}
-              style={{ all: "inherit" }}
+              style={{ all: 'inherit' }}
             ></div>
           </AccordionDetails>
         </Accordion>
@@ -175,8 +176,47 @@ const JobMatches = () => {
       </div>
       <div className="max-w-md flex-grow">
         <Typography variant="h2">Best Matches</Typography>
-        { matches.developers.length > 0 ? 
-        matches.developers.map((dev) => (
+
+        {matches.developers.length > 0 ? (
+          matches.developers.map(dev => (
+            <Paper
+              elevation={1}
+              sx={{
+                padding: 2,
+                marginBottom: 2,
+                borderRadius: 6,
+                // Following logic is to color the dev card based on the first Programming Language they have
+                backgroundColor: `${
+                  cardColorLogic[
+                    dev.skills.filter(
+                      skill => skill.type === 'Programming Language'
+                    ).length > 0
+                      ? dev.skills.filter(
+                          skill => skill.type === 'Programming Language'
+                        )[0].title
+                      : 'no_such_programming_skill'
+                  ]
+                }`,
+              }}
+              key={dev.id}
+            >
+              <Typography variant="h5">{dev.name}</Typography>
+              <Typography variant="body1">
+                <EmailIcon fontSize="small" sx={{ marginRight: 1 }} />
+                {dev.email}
+              </Typography>
+              <Stack spacing={1} direction="row">
+                {dev.skills
+                  .filter(skill =>
+                    matches.jobSkills.some(jobSkill => jobSkill.id === skill.id)
+                  )
+                  .map(skill => (
+                    <Chip label={skill.title} size="small" key={skill.id} />
+                  ))}
+              </Stack>
+            </Paper>
+          ))
+        ) : (
           <Paper
             elevation={1}
             sx={{
@@ -184,52 +224,12 @@ const JobMatches = () => {
               marginBottom: 2,
               borderRadius: 6,
               // Following logic is to color the dev card based on the first Programming Language they have
-              backgroundColor: `${
-                cardColorLogic[
-                  dev.skills.filter(
-                    (skill) => skill.type === "Programming Language"
-                  ).length > 0
-                    ? dev.skills.filter(
-                        (skill) => skill.type === "Programming Language"
-                      )[0].title
-                    : "no_such_programming_skill"
-                ]
-              }`,
+              backgroundColor: 'white',
             }}
-            key={dev.id}
-          >
-            <Typography variant="h5">{dev.name}</Typography>
-            <Typography variant="body1">
-              <EmailIcon fontSize="small" sx={{ marginRight: 1 }} />
-              {dev.email}
-            </Typography>
-            <Stack spacing={1} direction="row">
-              {dev.skills
-                .filter((skill) =>
-                  matches.jobSkills.some((jobSkill) => jobSkill.id === skill.id)
-                )
-                .map((skill) => (
-                  <Chip label={skill.title} size="small" key={skill.id} />
-                ))}
-            </Stack>
-          </Paper>
-        ))
-                
-        : 
-        <Paper
-            elevation={1}
-            sx={{
-              padding: 2,
-              marginBottom: 2,
-              borderRadius: 6,
-              // Following logic is to color the dev card based on the first Programming Language they have
-              backgroundColor: "white"
-            }}
-            
           >
             <Typography variant="h5">No good matches</Typography>
-            
-          </Paper> }
+          </Paper>
+        )}
       </div>
     </div>
   );
