@@ -62,9 +62,6 @@ const JobCard = ({ jobInfo, isLiked, databaseId, userId }: { jobInfo: Job; isLik
           },
           body: JSON.stringify(requestBody),
         })
-        if (!response.ok) {
-            throw new Error('Response was not ok');
-        }
         if(response.ok){
           response.json()
             .then(data => setIdforDelete(data.id))
@@ -74,19 +71,20 @@ const JobCard = ({ jobInfo, isLiked, databaseId, userId }: { jobInfo: Job; isLik
       }
     }
     if(requestMethod == 'DELETE'){
-      const response = await fetch(`${backendServer}api/userjob`, {
-        method: requestMethod,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          userId: userId,
-          jobId: idForDelete,
+      try {
+        await fetch(`${backendServer}api/userjob`, {
+          method: requestMethod,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            userId: userId,
+            jobId: idForDelete,
+          })
         })
-      })
-      if (!response.ok) {
-        throw new Error('Response was not ok');
+      } catch (error) {
+        console.error('Error:', error);
       }
     }
 
