@@ -177,7 +177,7 @@ const JobMatches = () => {
       </div>
       <div className="max-w-md flex-grow">
         <Typography variant="h2">Best Matches</Typography>
-        { matches.developers.length > 3 ? 
+        { matches.developers.length > 0 ? 
         matches.developers.map((dev) => (
           <Paper
             elevation={1}
