@@ -12,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { Matches } from "../types/scraperTypes";
+import { Developer, Skill } from "../types/innerTypes"
 import { Job } from "../types/jobTechApiTypes";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EmailIcon from "@mui/icons-material/Email";
@@ -42,19 +43,20 @@ const findMatchingSkills = (job: Job) => {
   const jobDescriptionStrArr = {
     description: job.description.text,
   }.description.split(" ");
-  const matchingSkills = mockSkills.filter((skill: any) =>
+  const matchingSkills = mockSkills.filter((skill) =>
     jobDescriptionStrArr.includes(skill.title)
   );
+  console.log("hello", matchingSkills)
   return matchingSkills;
 };
 
-const sortMockDevelopers = (developers: any, descriptionSkills: any) => {
-  const orderedDevs: any = [];
+const sortMockDevelopers = (developers: Developer[], descriptionSkills: Skill[]) => {
+  const orderedDevs: Developer[] = [];
   // check if dev.skills[] includes anything from matchingSkills[]
-  developers.map((dev: any) => {
+  developers.map((dev: Developer) => {
     // if dev's skills includes any matchingSkills, return the dev.
-    const devSkillsId = dev.skills.map((skill: any) => skill.id);
-    const descriptionSkillsId = descriptionSkills.map((skill: any) => skill.id);
+    const devSkillsId = dev.skills.map((skill: Skill) => skill.id);
+    const descriptionSkillsId = descriptionSkills.map((skill: Skill) => skill.id);
     const matchingSkills = devSkillsId.filter((skillId: string) =>
       descriptionSkillsId.includes(skillId)
     );
@@ -64,7 +66,7 @@ const sortMockDevelopers = (developers: any, descriptionSkills: any) => {
     }
   });
 
-  orderedDevs.sort((devA: any, devB: any) => {
+  orderedDevs.sort((devA: Developer, devB: Developer) => {
     const devASkillMatches = devA.skillMatch;
     const devBSkillMatches = devB.skillMatch;
 
