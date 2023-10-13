@@ -75,8 +75,11 @@ const AllJobs = () => {
   } = useQuery<UserInfoDTO, Error>({
     queryKey: ['userInfo'],
     queryFn: async () => {
-      const accessToken = await getAccessTokenSilently();
-      return fetchUserInfo(accessToken, "self");
+      if (isAuthenticated) {
+        const accessToken = await getAccessTokenSilently();
+        return fetchUserInfo(accessToken, 'self');
+      }
+      return {};
     },
   });
 
@@ -124,29 +127,45 @@ const AllJobs = () => {
       <div className="max-w-[800px] mx-10">
         <JobFilters setSearchKeyword={setSearchKeyword} skills={skills} />
         <div className="jobcards">
-          {isAuthenticated && data.hits.map((job: Job) => {
+          {isAuthenticated &&
+            data.hits.map((job: Job) => {
               const isLikedJob = userInfo.jobs
                 .map(jobOfUser => jobOfUser.jobTechId)
                 .includes(job.id);
               const databaseId = () => {
-                if(isLikedJob){
-                  const selectedJob = userInfo.jobs.find(userJob => userJob.jobTechId == job.id)
-                  if(selectedJob){
+                if (isLikedJob) {
+                  const selectedJob = userInfo.jobs.find(
+                    userJob => userJob.jobTechId == job.id
+                  );
+                  if (selectedJob) {
                     return selectedJob.id;
                   }
-                  return "";
+                  return '';
                 }
-                return "";
-              }
+                return '';
+              };
               return (
-                <JobCard key={job.id} jobInfo={job} isLiked={isLikedJob}  databaseId={databaseId()} userId={userInfo.id}/>
+                <JobCard
+                  key={job.id}
+                  jobInfo={job}
+                  isLiked={isLikedJob}
+                  databaseId={databaseId()}
+                  userId={userInfo.id}
+                />
               );
             })}
-          {!isAuthenticated && data.hits.map((job: Job) => {
-            return (
-              <JobCard key={job.id} jobInfo={job} isLiked={false} databaseId={""} userId={""}/>
-            );
-          })}
+          {!isAuthenticated &&
+            data.hits.map((job: Job) => {
+              return (
+                <JobCard
+                  key={job.id}
+                  jobInfo={job}
+                  isLiked={false}
+                  databaseId={''}
+                  userId={''}
+                />
+              );
+            })}
         </div>
         <div className="flex justify-center my-10">
           <Pagination
