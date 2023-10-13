@@ -19,6 +19,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import EmailIcon from '@mui/icons-material/Email';
 import { Developer } from '../types/innerTypes';
 import { cardColorLogic } from '../data/programmingLanguageColors';
+import { useAuth0 } from '@auth0/auth0-react';
 
 interface ExpandMoreProps extends IconButtonProps {
   // the value is either 'true' or 'false', not using boolean type because it causes a fontend terminal error
@@ -31,6 +32,8 @@ type Skill = {
   type: string;
 };
 
+const backendServer = import.meta.env.VITE_BE_SERVER;
+
 const ExpandMore = styled((props: ExpandMoreProps) => {
   const { ...other } = props;
   return <IconButton {...other} />;
@@ -42,11 +45,49 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-const DevCard = ({ developer }: { developer: Developer }) => {
+const DevCard = ({
+  developer,
+  isLiked,
+}: {
+  developer: Developer;
+  isLiked: boolean;
+}) => {
   const [expanded, setExpanded] = useState(false);
-  const [favorite, setFavorite] = useState(false);
-  const saveDeveloper = () => {
-    // need to add logic to save developer to favorites for user
+  const [favorite, setFavorite] = useState(isLiked);
+  const { getAccessTokenSilently, user } = useAuth0();
+
+  const likeRequest = async (
+    requestMethod: string,
+    requestBody: { userId: string; developerId: string }
+  ) => {
+    const accessToken = await getAccessTokenSilently();
+    try {
+      const response = await fetch(`${backendServer}api/userdeveloper`, {
+        method: requestMethod,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        throw new Error('Response was not ok');
+      }
+
+      // const data = await response.json();
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const sendLikeRequest = () => {
+    const requestMethod = favorite ? 'DELETE' : 'PATCH';
+    const requestBody = {
+      userId: user?.sub ? user.sub : '',
+      developerId: developer.id,
+    };
+    likeRequest(requestMethod, requestBody);
     setFavorite(!favorite);
   };
 
@@ -154,7 +195,7 @@ const DevCard = ({ developer }: { developer: Developer }) => {
         disableSpacing
         sx={{ paddingBottom: 3, marginY: 2, height: 30 }}
       >
-        <IconButton aria-label="add to favorites" onClick={saveDeveloper}>
+        <IconButton aria-label="add to favorites" onClick={sendLikeRequest}>
           {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </IconButton>
         <ExpandMore

@@ -85,7 +85,7 @@ const AllJobsExample = () => {
         <JobFilters setSearchKeyword={setSearchKeyword} skills={skills} />
         <div className="jobcards">
           {data.hits.map((job: Job) => (
-            <JobCard key={job.id} jobInfo={job} />
+            <JobCard key={job.id} jobInfo={job} isLiked={false} databaseId="" userId=""/>
           ))}
         </div>
         <div className="flex justify-center my-10">

@@ -2,11 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { Job, SearchResult } from '../types/externalTypes';
 import { CircularProgress, Pagination } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { FilterFormValues, Skill } from '../types/innerTypes';
+import { FilterFormValues, Skill, UserInfoDTO } from '../types/innerTypes';
 import JobFilters from './JobFilters';
 import JobCard from './JobCard';
 import { useAuth0 } from '@auth0/auth0-react';
 import { mockSkills } from '../data/mockSkills';
+import axios from 'axios';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
@@ -17,6 +18,14 @@ const fetchSkills = async (accessToken: string): Promise<Skill[]> => {
     },
   });
   return res.json();
+};
+
+const fetchUserInfo = async (accessToken: string, userId: string) => {
+  const userIdUrlString = encodeURIComponent(userId);
+  const res = await axios.get(`${backendServer}api/users/${userIdUrlString}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return res.data;
 };
 
 const fetchJobs = async (
@@ -52,11 +61,23 @@ const AllJobs = () => {
     error: skillsError,
     data: skills,
   } = useQuery<Skill[]>(['skills'], async () => {
-    if(isAuthenticated) {
+    if (isAuthenticated) {
       const accessToken = await getAccessTokenSilently();
       return fetchSkills(accessToken);
     }
-    return mockSkills
+    return mockSkills;
+  });
+
+  const {
+    isLoading: isUserInfoLoading,
+    error: isUserInfoError,
+    data: userInfo,
+  } = useQuery<UserInfoDTO, Error>({
+    queryKey: ['userInfo'],
+    queryFn: async () => {
+      const accessToken = await getAccessTokenSilently();
+      return fetchUserInfo(accessToken, "self");
+    },
   });
 
   const { isLoading, error, data } = useQuery<SearchResult>(
@@ -78,14 +99,14 @@ const AllJobs = () => {
     setCurrentPage(0);
   }, [searchKeyword]);
 
-  if (isLoading || isSkillsLoading)
+  if (isLoading || isSkillsLoading || isUserInfoLoading)
     return (
       <div className="flex justify-center mt-16">
         <CircularProgress />
       </div>
     );
 
-  if (error || skillsError) {
+  if (error || skillsError || isUserInfoError) {
     console.log('❗️error: ', error);
     return (
       <div className="flex justify-center mt-16">
@@ -94,7 +115,7 @@ const AllJobs = () => {
     );
   }
 
-  if (!data || !skills) {
+  if (!data || !skills || !userInfo) {
     return;
   }
 
@@ -103,9 +124,29 @@ const AllJobs = () => {
       <div className="max-w-[800px] mx-10">
         <JobFilters setSearchKeyword={setSearchKeyword} skills={skills} />
         <div className="jobcards">
-          {data.hits.map((job: Job) => (
-            <JobCard key={job.id} jobInfo={job} />
-          ))}
+          {isAuthenticated && data.hits.map((job: Job) => {
+              const isLikedJob = userInfo.jobs
+                .map(jobOfUser => jobOfUser.jobTechId)
+                .includes(job.id);
+              const databaseId = () => {
+                if(isLikedJob){
+                  const selectedJob = userInfo.jobs.find(userJob => userJob.jobTechId == job.id)
+                  if(selectedJob){
+                    return selectedJob.id;
+                  }
+                  return "";
+                }
+                return "";
+              }
+              return (
+                <JobCard key={job.id} jobInfo={job} isLiked={isLikedJob}  databaseId={databaseId()} userId={userInfo.id}/>
+              );
+            })}
+          {!isAuthenticated && data.hits.map((job: Job) => {
+            return (
+              <JobCard key={job.id} jobInfo={job} isLiked={false} databaseId={""} userId={""}/>
+            );
+          })}
         </div>
         <div className="flex justify-center my-10">
           <Pagination
