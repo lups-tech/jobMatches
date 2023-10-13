@@ -23,12 +23,6 @@ const router = createBrowserRouter([
         path: '',
         element: <AboutUsRoute />,
       },
-      //TODO add dashboard component route
-      //TODO allow visit /jobs page withou login
-      // {
-      //   path: 'jobs',
-      //   element: <AllJobsRoute />,
-      // },
       {
         path: 'jobs',
         element: <AllJobsRoute />,

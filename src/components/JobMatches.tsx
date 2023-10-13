@@ -30,7 +30,6 @@ type LocationState = {
 
 const fetchMatches = async (job: Job, accessToken: string) => {
   const jobDescription = { description: job.description.text };
-
   const res = await axios.post(`${backendServer}scraper`, jobDescription, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -42,17 +41,15 @@ const fetchMatches = async (job: Job, accessToken: string) => {
 const findMatchingSkills = (job: Job) => {
   const jobDescriptionStrArr = {
     description: job.description.text,
-  }.description.split(" ");
+  }.description.toLowerCase().replace(/[^a-zA-Z0-9\s#]/g, '').split(" ")
   const matchingSkills = mockSkills.filter((skill) =>
-    jobDescriptionStrArr.includes(skill.title)
+    jobDescriptionStrArr.includes(skill.title.toLowerCase())
   );
-  console.log("hello", matchingSkills)
   return matchingSkills;
 };
 
 const sortMockDevelopers = (developers: Developer[], descriptionSkills: Skill[]) => {
   const orderedDevs: Developer[] = [];
-  // check if dev.skills[] includes anything from matchingSkills[]
   developers.map((dev: Developer) => {
     const devSkillsId = dev.skills.map((skill: Skill) => skill.id);
     const descriptionSkillsId = descriptionSkills.map((skill: Skill) => skill.id);
