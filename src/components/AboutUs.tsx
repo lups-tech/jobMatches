@@ -10,6 +10,8 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useThemeContext } from '../theme';
 
+import DataVisualisation from './DataVisualisation';
+
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
 interface PointProp {
@@ -58,6 +60,7 @@ const AboutUs = () => {
 
   return (
     <div className="-mt-16 m-auto">
+      <DataVisualisation/>
       <div className={`flex flex-col ${darkMode ? 'bg-[#97B2EF]' : 'bg-Blue'}`}>
         <div className="flex pt-16 w-100 justify-center h-[90vh]">
           <div className="max-w-[1500px] flex md:flex-row flex-col justify-center gap-10">
