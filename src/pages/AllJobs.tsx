@@ -3,11 +3,11 @@ import { Job, SearchResult } from '../types/externalTypes';
 import { CircularProgress, Pagination } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { FilterFormValues, Skill, UserInfoDTO } from '../types/innerTypes';
-import JobFilters from './JobFilters';
-import JobCard from './JobCard';
+import JobFilters from '../components/JobFilters';
+import JobCard from '../components/JobCard';
 import { useAuth0 } from '@auth0/auth0-react';
 import { mockSkills } from '../data/mockSkills';
-import axios from 'axios';
+import { fetchUserInfo } from '../utils/fetchingTools';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
@@ -18,14 +18,6 @@ const fetchSkills = async (accessToken: string): Promise<Skill[]> => {
     },
   });
   return res.json();
-};
-
-const fetchUserInfo = async (accessToken: string, userId: string) => {
-  const userIdUrlString = encodeURIComponent(userId);
-  const res = await axios.get(`${backendServer}api/users/${userIdUrlString}`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
-  return res.data;
 };
 
 const fetchJobs = async (

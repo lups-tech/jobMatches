@@ -1,7 +1,5 @@
-import DevelopersMain from '../components/DevelopersMain';
+import DevelopersMain from '../pages/DevelopersMain';
 
-const DevelopersMainRoute = () => {
-    return <DevelopersMain />
-}
-
-export default DevelopersMainRoute
+export const DevelopersMainRoute = () => {
+  return <DevelopersMain />;
+};

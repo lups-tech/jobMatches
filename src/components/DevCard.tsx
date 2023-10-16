@@ -17,7 +17,7 @@ import { useState } from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import EmailIcon from '@mui/icons-material/Email';
-import { Developer } from '../types/innerTypes';
+import { Developer, DeveloperDTO } from '../types/innerTypes';
 import { cardColorLogic } from '../data/programmingLanguageColors';
 import { useAuth0 } from '@auth0/auth0-react';
 
@@ -48,9 +48,13 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 const DevCard = ({
   developer,
   isLiked,
+  currentDevelopers,
+  setCurrentDevelopers,
 }: {
   developer: Developer;
   isLiked: boolean;
+  currentDevelopers?: DeveloperDTO[];
+  setCurrentDevelopers?: React.Dispatch<React.SetStateAction<DeveloperDTO[]>>;
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(isLiked);
@@ -75,6 +79,15 @@ const DevCard = ({
         throw new Error('Response was not ok');
       }
 
+      if (
+        requestMethod === 'DELETE' &&
+        currentDevelopers &&
+        setCurrentDevelopers
+      ) {
+        setCurrentDevelopers(
+          currentDevelopers.filter(dev => dev.id != developer.id)
+        );
+      }
       // const data = await response.json();
     } catch (error) {
       console.error('Error:', error);
