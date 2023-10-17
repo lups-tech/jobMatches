@@ -1,39 +1,19 @@
-import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { SearchResult } from "../types/externalTypes";
-import illu_precise from "../assets/illu_precise.svg";
 import { useThemeContext } from "../theme";
-import { useState } from "react";
+import { useState, useEffect, SetStateAction } from "react";
+import { Button } from '@mui/material';
+import { ChartExample } from "./ChartExample";
+import { useSubmit } from "react-router-dom";
 
-interface PointProp {
-  imgUrl: string;
-  alt: string;
-  header: string;
-  text: string;
-}
-
-interface Positions {
-  value: string;
-}
-
-const Point: React.FC<PointProp> = ({ imgUrl, alt, header, text }) => {
-  return (
-    <div className="grid grid-rows-7 p-4 w-full max-w-[400px] h-[300px] m-auto">
-      <img
-        src={imgUrl}
-        alt={alt}
-        className="rounded w-[240px] h-[240px] my-5 m-auto row-span-3"
-      />
-      <h3 className="mb-2 uppercase text-center font-bold">{header}</h3>
-      <p className="text-base row-span-3">{text}</p>
-    </div>
-  );
-};
-
-const getData = async (programmingLanguage: string): Promise<SearchResult> => {
+const getDataBySearchAndDates = async (
+  programmingLanguage: string,
+  dateAfter: string,
+  dateBefore: string
+): Promise<SearchResult> => {
   try {
     const response = await fetch(
-      `https://jobsearch.api.jobtechdev.se/search?published-after=10000&q=${programmingLanguage}&offset=0&limit=5`
+      `https://jobsearch.api.jobtechdev.se/search?published-before=${dateBefore}T00%3A00%3A00&published-after=${dateAfter}T00%3A00%3A00&q=${programmingLanguage}&offset=0&limit=100`
     );
     return response.json();
   } catch (error: any) {
@@ -42,32 +22,61 @@ const getData = async (programmingLanguage: string): Promise<SearchResult> => {
 };
 
 const DataVisualisation = () => {
-  const [numberOfPositions, setNumberOfPositions] = useState<Positions>({
-    value: "",
-  });
-
   const { darkMode } = useThemeContext();
+  const [searchKeyword, setSearchKeyword] = useState<string>("javascript")
+  const [thisWeekCount, setThisWeekCount] = useState<number>(0);
+  const [oneWeekOldCount, setOneWeekOldCount] = useState<number>(0);
+  const [twoWeekOldCount, setTwoWeekOldCount] = useState<number>(0);
 
-  const { isLoading, error, data } = useQuery({
-    queryKey: ["repoData"],
-    queryFn: () => getData("java"),
-  });
-
-  console.log("some data", data);
+  const { isLoading, error, data } = useQuery<any>(["publicationDates"], () =>
+    getDataBySearchAndDates(searchKeyword, "2023-01-01", "2023-10-16")
+  );
   
+  const handleFormSubmit = (e: any) => {
+    e.preventDefault();
+    // You can add validation or additional logic here
+    // For simplicity, we set the searchKeyword to the input value directly
+    setSearchKeyword(e.target.searchTerm.value);
+  };
+
+  useEffect(() => {
+      const dataPublicationData = data?.hits.map((job: any) => job.publication_date);
+      dataPublicationData?.forEach((date: any) => {
+        const timeDiff = Date.now() - new Date(date).getTime();
+        const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+        if (days < 8) {
+          setThisWeekCount(prev => prev + 1);
+        }
+        if (days >= 8 && days < 15) {
+          setOneWeekOldCount(prev => prev + 1);
+        }
+        if (days >= 15 && days < 22) {
+          setTwoWeekOldCount(prev => prev + 1);
+        }
+      });
+    
+  }, [data, searchKeyword]);
+  
+
+  const counts: number[] = [twoWeekOldCount, oneWeekOldCount, thisWeekCount];
+
   if (isLoading) return "Loading...";
 
   if (error) return "An error has occurred: " + error;
+  console.log(searchKeyword)
 
   return (
     <div className={`pt-10  pb-96 ${darkMode ? "bg-[#97B2EF]" : "bg-Blue"}`}>
-      <div className="grid md:grid-cols-3 grid-flow-row gap-3 text-white w-4/5 m-auto">
-        <Point
-          imgUrl={illu_precise}
-          alt="Point 1"
-          header="Precise"
-          text="hello"
+      <form className="m-10" onSubmit={handleFormSubmit}>
+        <input
+          type="text"
+          name="searchTerm"
+          placeholder="Enter search term"
         />
+        <Button type="submit">Search</Button>
+      </form>
+      <div className="grid md:grid-cols-3 grid-flow-row gap-3 text-white w-4/5 m-10">
+        <ChartExample jobsPerWeek={counts} />
       </div>
     </div>
   );
