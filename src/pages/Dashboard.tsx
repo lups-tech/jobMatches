@@ -45,10 +45,13 @@ const Dashboard = () => {
   }
 
   return (
-    <>
-      <SavedDevsList developers={userInfo.developers} />
-      <SavedJobsList developers={userInfo.jobs} />
-    </>
+    <div className="flex flex-col items-center mx-auto">
+      <div className="w-[800px] h-[400px] m-5 bg-blue-200">A chart</div>
+      <div className="max-w-[1000px] mx-auto my-5 flex flex-wrap gap-0.5 items-center">
+        <SavedDevsList developers={userInfo.developers} />
+        <SavedJobsList jobs={userInfo.jobs} userId={userInfo.id} />
+      </div>
+    </div>
   );
 };
 

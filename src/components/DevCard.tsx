@@ -100,7 +100,7 @@ const DevCard = ({
         paddingInline: 5,
         display: 'flex',
         flexDirection: 'column',
-        minWidth: '500px',
+        minWidth: '350px',
         borderRadius: 6,
         backgroundColor: `${
           groupedSkills['Programming Language']
@@ -120,7 +120,9 @@ const DevCard = ({
           />
         </Grid>
         <Grid item xs={10}>
-          <CardContent style={{ marginTop: -10, marginBottom: -10 }}>
+          <CardContent
+            style={{ marginTop: -10, marginBottom: -10, marginLeft: 10 }}
+          >
             <Typography variant="h5" gutterBottom className="">
               {developer.name}
             </Typography>

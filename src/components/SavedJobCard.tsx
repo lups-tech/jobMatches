@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { togglelikeRequest } from '../utils/fetchingTools';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { JobDTO } from '../types/innerTypes';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -42,7 +43,7 @@ const JobCard = ({
   databaseId,
   userId,
 }: {
-  jobInfo: Job;
+  jobInfo: JobDTO;
   isLiked: boolean;
   databaseId: string;
   userId: string;
@@ -64,9 +65,9 @@ const JobCard = ({
     const requestBody =
       requestMethod === 'POST'
         ? {
-            url: jobInfo.application_details.url,
+            url: jobInfo.url,
             jobTechId: jobInfo.id,
-            jobText: jobInfo.description.text,
+            jobText: jobInfo.jobText,
             selectedSkillIds: [],
           }
         : {
@@ -100,9 +101,9 @@ const JobCard = ({
       <CardHeader />
       <CardContent>
         <Typography color="text.secondary" gutterBottom>
-          {jobInfo.application_deadline.split('T')[0]}
+          {jobInfo.id}
         </Typography>
-        <Typography variant="h5" gutterBottom>
+        {/* <Typography variant="h5" gutterBottom>
           {jobInfo.headline}
         </Typography>
         <Typography variant="h6" gutterBottom>
@@ -135,7 +136,7 @@ const JobCard = ({
                 </p>
               )
           )}
-        </div>
+        </div> */}
       </CardContent>
 
       <CardActions disableSpacing sx={{ paddingBottom: 3 }}>
@@ -161,7 +162,7 @@ const JobCard = ({
         <CardContent>
           <div
             dangerouslySetInnerHTML={{
-              __html: jobInfo.description.text_formatted,
+              __html: jobInfo.jobText,
             }}
           ></div>
         </CardContent>
