@@ -21,21 +21,22 @@ import { Developer, DeveloperDTO, Skill } from '../types/innerTypes';
 import { cardColorLogic } from '../data/programmingLanguageColors';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { togglelikeRequest } from '../utils/fetchingTools';
 
 interface ExpandMoreProps extends IconButtonProps {
   // the value is either 'true' or 'false', not using boolean type because it causes a fontend terminal error
   expand: string;
 }
 
-type ToggleLikeRequestArgs = {
-  requestMethod: string;
-  requestBody: {
-    userId: string;
-    developerId: string;
-  };
-};
+// type ToggleLikeRequestArgs = {
+//   requestMethod: string;
+//   requestBody: {
+//     userId: string;
+//     developerId: string;
+//   };
+// };
 
-const backendServer = import.meta.env.VITE_BE_SERVER;
+// const backendServer = import.meta.env.VITE_BE_SERVER;
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
   const { ...other } = props;
@@ -62,28 +63,27 @@ const DevCard = ({
   const { getAccessTokenSilently, user } = useAuth0();
   const queryClient = useQueryClient();
 
-  const togglelikeRequest = async (args: ToggleLikeRequestArgs) => {
-    const accessToken = await getAccessTokenSilently();
-    const { requestMethod, requestBody } = args;
-    try {
-      const response = await fetch(`${backendServer}api/userdeveloper`, {
-        method: requestMethod,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(requestBody),
-      });
+  // const togglelikeRequest = async (args: ToggleLikeRequestArgs) => {
+  //   const { requestMethod, requestBody } = args;
+  //   try {
+  //     const response = await fetch(`${backendServer}api/userdeveloper`, {
+  //       method: requestMethod,
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //       body: JSON.stringify(requestBody),
+  //     });
 
-      if (!response.ok) {
-        throw new Error('Response was not ok');
-      }
+  //     if (!response.ok) {
+  //       throw new Error('Response was not ok');
+  //     }
 
-      // const data = await response.json();
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
+  //     // const data = await response.json();
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //   }
+  // };
 
   const mutation = useMutation(togglelikeRequest, {
     onSuccess: () => {
@@ -97,8 +97,12 @@ const DevCard = ({
       userId: user?.sub ? user.sub : '',
       developerId: developer.id,
     };
-    mutation.mutate({ requestMethod, requestBody });
-    // togglelikeRequest(requestMethod, requestBody);
+    mutation.mutate({
+      requestMethod,
+      requestBody,
+      endpointPath: 'api/userdeveloper',
+      getAccessTokenSilently: getAccessTokenSilently,
+    });
     setFavorite(!favorite);
   };
 

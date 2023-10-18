@@ -3,7 +3,8 @@ import { fetchUserInfo } from '../utils/fetchingTools';
 import { useQuery } from '@tanstack/react-query';
 import { UserInfoDTO } from '../types/innerTypes';
 import { CircularProgress } from '@mui/material';
-import DevList from '../components/DevList';
+import SavedDevsList from '../components/SavedDevsList';
+import SavedJobsList from '../components/SavedJobsList';
 
 const Dashboard = () => {
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
@@ -45,7 +46,8 @@ const Dashboard = () => {
 
   return (
     <>
-      <DevList developers={userInfo.developers} />
+      <SavedDevsList developers={userInfo.developers} />
+      <SavedJobsList developers={userInfo.jobs} />
     </>
   );
 };
