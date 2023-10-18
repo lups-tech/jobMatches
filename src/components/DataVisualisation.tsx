@@ -22,21 +22,16 @@ const getDataBySearchAndDates = async (
 
 const labels = ["3-4 weeks ago", "2-3 weeks ago", "1-2 weeks ago", "Last week"];
 
-const FormComponent = ({
-  jobsPerWeekData,
-  setJobsPerWeekData,
-  formId,
-}: any) => {
-  console.log(jobsPerWeekData);
-  console.log(formId);
-
+const FormComponent = ({ updateJobsPerWeek, formId }: any) => {
+  const [inputValue, setInputValue] = useState<string>("")
+  
   const todaysDate = new Date(Date.now()).toISOString().replace(/T.*/, "");
   const oneMonth = 2592000000;
   const oneMonthAgoDate = new Date(Date.now() - oneMonth)
     .toISOString()
     .replace(/T.*/, "");
 
-  const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [searchKeyword, setSearchKeyword] = useState<string>("javascript");
 
   const [thisWeekCount, setThisWeekCount] = useState<number>(0);
   const [oneWeekOldCount, setOneWeekOldCount] = useState<number>(0);
@@ -47,13 +42,46 @@ const FormComponent = ({
     ["publicationDates", searchKeyword],
     () => getDataBySearchAndDates(searchKeyword, oneMonthAgoDate, todaysDate)
   );
+  const dataPublicationData = data?.hits.map(
+    (job: any) => job.publication_date
+  );
+
+  const updateCounts = (dataPublicationData: string[]) => {
+    let thisWeek = 0;
+  let oneWeekOld = 0;
+  let twoWeekOld = 0;
+  let threeWeekOld = 0;
+
+  dataPublicationData?.forEach((date: any) => {
+    const timeDiff = Date.now() - new Date(date).getTime();
+    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+    
+    if (days < 8) {
+      thisWeek++;
+    }
+    if (days >= 8 && days < 15) {
+      oneWeekOld++;
+    }
+    if (days >= 15 && days < 22) {
+      twoWeekOld++;
+    }
+    if (days >= 22 && days < 29) {
+      threeWeekOld++;
+    }
+  });
+
+  setThisWeekCount(thisWeek);
+  setOneWeekOldCount(oneWeekOld);
+  setTwoWeekOldCount(twoWeekOld);
+  setThreeWeekOldCount(threeWeekOld);
+}
+
   const handleFormSubmit = (e: any) => {
+    console.log("submit")
     e.preventDefault();
-    setThisWeekCount(0);
-    setOneWeekOldCount(0);
-    setTwoWeekOldCount(0);
-    setThreeWeekOldCount(0);
-    setSearchKeyword(e.target.searchTerm.value);
+    setSearchKeyword(e.target.searchTerm.value)
+    updateCounts(dataPublicationData)
+    updateJobsPerWeek(formId, searchKeyword, counts)
   };
 
   const counts: number[] = [
@@ -63,44 +91,9 @@ const FormComponent = ({
     thisWeekCount,
   ];
 
-  //  const index = jobsPerWeekData.dataset.findIndex((dataset: any) => dataset.id === thisFormId)
-
   useEffect(() => {
-    const dataPublicationData = data?.hits.map(
-      (job: any) => job.publication_date
-    );
-    dataPublicationData?.forEach((date: any) => {
-      const timeDiff = Date.now() - new Date(date).getTime();
-      const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-      if (days < 8) {
-        setThisWeekCount((prev) => prev + 1);
-      }
-      if (days >= 8 && days < 15) {
-        setOneWeekOldCount((prev) => prev + 1);
-      }
-      if (days >= 15 && days < 22) {
-        setTwoWeekOldCount((prev) => prev + 1);
-      }
-      if (days >= 22 && days < 29) {
-        setThreeWeekOldCount((prev) => prev + 1);
-      }
-    });
-
-    setJobsPerWeekData((prevState: any) => {
-      return {
-        ...prevState,
-        datasets: [
-          ...prevState.datasets,
-          {
-            id: formId,
-            label: searchKeyword,
-            data: counts,
-            borderColor: "rgb(229, 217, 217)",
-            backgroundColor: "rgba(20, 144, 216, 0.5)",
-          },
-        ],
-      };
-    });
+    updateCounts(dataPublicationData)
+    updateJobsPerWeek(formId, searchKeyword, counts);
   }, [data, searchKeyword]);
 
   if (isLoading) return "Loading...";
@@ -112,6 +105,8 @@ const FormComponent = ({
       <input
         type="text"
         name="searchTerm"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
         placeholder="Enter search term"
         list="programmingLanguages"
       />
@@ -131,7 +126,7 @@ const DataVisualisation = () => {
     datasets: [
       {
         id: 1,
-        label: "search",
+        label: "javascript",
         data: [0, 0, 0, 0],
         borderColor: "rgb(229, 217, 217)",
         backgroundColor: "rgba(20, 144, 216, 0.5)",
@@ -140,10 +135,55 @@ const DataVisualisation = () => {
   });
 
   const { darkMode } = useThemeContext();
+
+  const updateJobsPerWeek = (
+    formId: number,
+    searchKeyword: string,
+    counts: number[]
+  ) => {
+    console.log("updatejobs called");
+
+    setJobsPerWeekData((prevState: any) => {
+      const foundDataSet = prevState.datasets.find(
+        (dataset: any) => dataset.id === formId
+      );
+      if (foundDataSet) {
+        const updatedDatasets = prevState.datasets.map((dataset: any) => {
+          console.log("formId", formId);
+          if (dataset.id === formId) {
+            return {
+              ...dataset,
+              label: searchKeyword,
+              data: counts,
+            };
+          }
+          return dataset;
+        });
+        return {
+          ...prevState,
+          datasets: updatedDatasets,
+        };
+      }
+      console.log("NEW? formId", formId);
+      return {
+        ...prevState,
+        datasets: [
+          ...prevState.datasets,
+          {
+            id: formId,
+            label: searchKeyword,
+            data: counts,
+            borderColor: "rgb(25, 29, 54)",
+            backgroundColor: "rgba(20, 144, 216, 0.5)",
+          },
+        ],
+      };
+    });
+  };
+
   const [formArray, setFormArray] = useState<any[]>([
     <FormComponent
-      jobsPerWeekData={jobsPerWeekData}
-      setJobsPerWeekData={setJobsPerWeekData}
+      updateJobsPerWeek={updateJobsPerWeek}
       formId={1}
     />,
   ]);
@@ -151,27 +191,10 @@ const DataVisualisation = () => {
   const addNewForm = () => {
     const formId = Date.now();
 
-    setJobsPerWeekData((prevState: any) => {
-      return {
-        ...prevState,
-        datasets: [
-          ...prevState.datasets,
-          {
-            id: formId,
-            label: "",
-            data: [0, 0, 0, 0],
-            borderColor: "rgb(255, 255, 255)",
-            backgroundColor: "rgba(23, 50, 66, 0.5)",
-          },
-        ],
-      };
-    });
-
     setFormArray([
       ...formArray,
       <FormComponent
-        jobsPerWeekData={jobsPerWeekData}
-        setJobsPerWeekData={setJobsPerWeekData}
+        updateJobsPerWeek={updateJobsPerWeek}
         formId={formId}
       />,
     ]);
