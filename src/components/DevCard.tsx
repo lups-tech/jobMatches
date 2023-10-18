@@ -17,19 +17,22 @@ import { useState } from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import EmailIcon from '@mui/icons-material/Email';
-import { Developer, DeveloperDTO } from '../types/innerTypes';
+import { Developer, DeveloperDTO, Skill } from '../types/innerTypes';
 import { cardColorLogic } from '../data/programmingLanguageColors';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface ExpandMoreProps extends IconButtonProps {
   // the value is either 'true' or 'false', not using boolean type because it causes a fontend terminal error
   expand: string;
 }
 
-type Skill = {
-  id: string;
-  title: string;
-  type: string;
+type ToggleLikeRequestArgs = {
+  requestMethod: string;
+  requestBody: {
+    userId: string;
+    developerId: string;
+  };
 };
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
@@ -48,8 +51,6 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 const DevCard = ({
   developer,
   isLiked,
-  currentDevelopers,
-  setCurrentDevelopers,
 }: {
   developer: Developer;
   isLiked: boolean;
@@ -59,12 +60,11 @@ const DevCard = ({
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(isLiked);
   const { getAccessTokenSilently, user } = useAuth0();
+  const queryClient = useQueryClient();
 
-  const likeRequest = async (
-    requestMethod: string,
-    requestBody: { userId: string; developerId: string }
-  ) => {
+  const togglelikeRequest = async (args: ToggleLikeRequestArgs) => {
     const accessToken = await getAccessTokenSilently();
+    const { requestMethod, requestBody } = args;
     try {
       const response = await fetch(`${backendServer}api/userdeveloper`, {
         method: requestMethod,
@@ -79,28 +79,26 @@ const DevCard = ({
         throw new Error('Response was not ok');
       }
 
-      if (
-        requestMethod === 'DELETE' &&
-        currentDevelopers &&
-        setCurrentDevelopers
-      ) {
-        setCurrentDevelopers(
-          currentDevelopers.filter(dev => dev.id != developer.id)
-        );
-      }
       // const data = await response.json();
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
-  const sendLikeRequest = () => {
+  const mutation = useMutation(togglelikeRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userInfo']); // Invalidate and refetch the developers list
+    },
+  });
+
+  const handleLikeToggle = () => {
     const requestMethod = favorite ? 'DELETE' : 'PATCH';
     const requestBody = {
       userId: user?.sub ? user.sub : '',
       developerId: developer.id,
     };
-    likeRequest(requestMethod, requestBody);
+    mutation.mutate({ requestMethod, requestBody });
+    // togglelikeRequest(requestMethod, requestBody);
     setFavorite(!favorite);
   };
 
@@ -208,7 +206,7 @@ const DevCard = ({
         disableSpacing
         sx={{ paddingBottom: 3, marginY: 2, height: 30 }}
       >
-        <IconButton aria-label="add to favorites" onClick={sendLikeRequest}>
+        <IconButton aria-label="add to favorites" onClick={handleLikeToggle}>
           {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </IconButton>
         <ExpandMore
