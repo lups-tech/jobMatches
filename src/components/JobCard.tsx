@@ -18,6 +18,8 @@ import { Job } from '../types/externalTypes';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import { togglelikeRequest } from '../utils/fetchingTools';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -34,71 +36,51 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-const backendServer = import.meta.env.VITE_BE_SERVER;
-
-const JobCard = ({ jobInfo, isLiked, databaseId, userId }: { jobInfo: Job; isLiked: boolean; databaseId: string; userId: string }) => {
+const JobCard = ({
+  jobInfo,
+  isLiked,
+  databaseId,
+  userId,
+}: {
+  jobInfo: Job;
+  isLiked: boolean;
+  databaseId: string;
+  userId: string;
+}) => {
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(isLiked);
   const [idForDelete, setIdforDelete] = useState(databaseId);
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  const queryClient = useQueryClient();
 
-  const likeRequest = async (
-    requestMethod: string,
-    requestBody: {
-      url: string;
-      jobTechId: string;
-      jobText: string;
-      selectedSkillIds?: string[];
-    }
-  ) => {
-    const accessToken = await getAccessTokenSilently();
-    if(requestMethod == 'POST'){
-      try {
-        const response = await fetch(`${backendServer}api/jobs`, {
-          method: requestMethod,
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify(requestBody),
-        })
-        if(response.ok){
-          response.json()
-            .then(data => setIdforDelete(data.id))
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
-    if(requestMethod == 'DELETE'){
-      try {
-        await fetch(`${backendServer}api/userjob`, {
-          method: requestMethod,
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({
+  const mutation = useMutation(togglelikeRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userInfo']); // Invalidate and refetch the developers list
+    },
+  });
+
+  const handleLikeRequest = () => {
+    const requestMethod = favorite ? 'DELETE' : 'POST';
+    const requestBody =
+      requestMethod === 'POST'
+        ? {
+            url: jobInfo.application_details.url,
+            jobTechId: jobInfo.id,
+            jobText: jobInfo.description.text,
+            selectedSkillIds: [],
+          }
+        : {
             userId: userId,
             jobId: idForDelete,
-          })
-        })
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
-
-  };
-
-  const sendLikeRequest = () => {
-    const requestMethod = favorite ? 'DELETE' : 'POST';
-    const requestBody = {
-      url: jobInfo.application_details.url,
-      jobTechId: jobInfo.id,
-      jobText: jobInfo.description.text,
-      selectedSkillIds: [],
-    };
-    likeRequest(requestMethod, requestBody);
+          };
+    const endpointPath = requestMethod === 'POST' ? 'api/jobs' : 'api/userjob';
+    mutation.mutate({
+      requestMethod,
+      requestBody,
+      endpointPath,
+      getAccessTokenSilently,
+      setIdforDelete,
+    });
     setFavorite(!favorite);
   };
 
@@ -157,11 +139,11 @@ const JobCard = ({ jobInfo, isLiked, databaseId, userId }: { jobInfo: Job; isLik
       </CardContent>
 
       <CardActions disableSpacing sx={{ paddingBottom: 3 }}>
-        {isAuthenticated &&
-          <IconButton aria-label="add to favorites" onClick={sendLikeRequest}>
+        {isAuthenticated && (
+          <IconButton aria-label="add to favorites" onClick={handleLikeRequest}>
             {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
           </IconButton>
-        }
+        )}
         <Button size="small" variant="outlined" onClick={handleMatching}>
           Match developers
         </Button>
