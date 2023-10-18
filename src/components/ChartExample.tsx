@@ -22,8 +22,8 @@ ChartJS.register(
 
 
 
-export const ChartExample = ({ jobsPerWeek }: any) => {
-    console.log(jobsPerWeek)
+export const ChartExample = ({ jobsPerWeekData }: any) => {
+  
     const options = {
         responsive: true,
         plugins: {
@@ -32,31 +32,14 @@ export const ChartExample = ({ jobsPerWeek }: any) => {
           },
           title: {
             display: true,
-            text: "Chart.js Line Chart",
+            text: "Programming languages job postings by week",
           },
         },
       };
       
-      const labels = [
-        "January",
-        "February",
-        "March",
-      ];
-      
-      const data = {
-        labels,
-        datasets: [
-          {
-            label: "Dataset 1",
-            data: jobsPerWeek,
-            borderColor: "rgb(46, 73, 93)",
-            backgroundColor: "rgba(83, 173, 224, 0.5)",
-          },
-        ],
-      };
   return (
     <>
-      <Line options={options} data={data} />;
+      <Line options={options} data={jobsPerWeekData} />;
     </>
   );
 };
