@@ -3,7 +3,7 @@ import { SearchResult } from "../types/externalTypes";
 import { useThemeContext } from "../theme";
 import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
-import { ChartExample } from "./ChartExample";
+import { JobsChart } from "./JobsChart";
 
 const getDataBySearchAndDates = async (
   programmingLanguage: string,
@@ -27,6 +27,9 @@ const FormComponent = ({
   setJobsPerWeekData,
   formId,
 }: any) => {
+  console.log(jobsPerWeekData);
+  console.log(formId);
+
   const todaysDate = new Date(Date.now()).toISOString().replace(/T.*/, "");
   const oneMonth = 2592000000;
   const oneMonthAgoDate = new Date(Date.now() - oneMonth)
@@ -60,7 +63,7 @@ const FormComponent = ({
     thisWeekCount,
   ];
 
-    //  const index = jobsPerWeekData.dataset.findIndex((dataset: any) => dataset.id === thisFormId)
+  //  const index = jobsPerWeekData.dataset.findIndex((dataset: any) => dataset.id === thisFormId)
 
   useEffect(() => {
     const dataPublicationData = data?.hits.map(
@@ -81,6 +84,22 @@ const FormComponent = ({
       if (days >= 22 && days < 29) {
         setThreeWeekOldCount((prev) => prev + 1);
       }
+    });
+
+    setJobsPerWeekData((prevState: any) => {
+      return {
+        ...prevState,
+        datasets: [
+          ...prevState.datasets,
+          {
+            id: formId,
+            label: searchKeyword,
+            data: counts,
+            borderColor: "rgb(229, 217, 217)",
+            backgroundColor: "rgba(20, 144, 216, 0.5)",
+          },
+        ],
+      };
     });
   }, [data, searchKeyword]);
 
@@ -110,36 +129,44 @@ const DataVisualisation = () => {
   const [jobsPerWeekData, setJobsPerWeekData] = useState<any>({
     labels,
     datasets: [
+      {
+        id: 1,
+        label: "search",
+        data: [0, 0, 0, 0],
+        borderColor: "rgb(229, 217, 217)",
+        backgroundColor: "rgba(20, 144, 216, 0.5)",
+      },
     ],
   });
 
   const { darkMode } = useThemeContext();
+  const [formArray, setFormArray] = useState<any[]>([
+    <FormComponent
+      jobsPerWeekData={jobsPerWeekData}
+      setJobsPerWeekData={setJobsPerWeekData}
+      formId={1}
+    />,
+  ]);
 
-  const [formArray, setFormArray] = useState<any[]>([]);
-
-  const addNewFormAndDataset = () => {
+  const addNewForm = () => {
     const formId = Date.now();
-  
+
     setJobsPerWeekData((prevState: any) => {
-      const newDataset = {
-        id: formId,
-        label: "",
-        data: [0, 0, 0, 0],
-        borderColor: "rgb(229, 217, 217)",
-        backgroundColor: "rgba(20, 144, 216, 0.5)",
-      };
-  
-      // Create a new array with the existing datasets and the new dataset
-      const newDatasets = [...prevState.datasets, newDataset];
-  
-      // Return a new state with the updated datasets
       return {
         ...prevState,
-        datasets: newDatasets,
+        datasets: [
+          ...prevState.datasets,
+          {
+            id: formId,
+            label: "",
+            data: [0, 0, 0, 0],
+            borderColor: "rgb(255, 255, 255)",
+            backgroundColor: "rgba(23, 50, 66, 0.5)",
+          },
+        ],
       };
     });
 
-  
     setFormArray([
       ...formArray,
       <FormComponent
@@ -155,9 +182,9 @@ const DataVisualisation = () => {
       {formArray.map((form: any, index) => {
         return <div key={index}>{form}</div>;
       })}
-      <Button onClick={addNewFormAndDataset}>Add Language</Button>
+      <Button onClick={addNewForm}>Add Language</Button>
       <div className="grid md:grid-cols-3 grid-flow-row gap-3 text-white w-4/5 m-10">
-        <ChartExample jobsPerWeekData={jobsPerWeekData} />
+        <JobsChart jobsPerWeekData={jobsPerWeekData} />
       </div>
     </div>
   );

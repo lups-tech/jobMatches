@@ -22,7 +22,7 @@ ChartJS.register(
 
 
 
-export const ChartExample = ({ jobsPerWeekData }: any) => {
+export const JobsChart = ({ jobsPerWeekData }: any) => {
   
     const options = {
         responsive: true,
