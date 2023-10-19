@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { togglelikeRequest } from '../utils/fetchingTools';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Skill } from '../types/innerTypes';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -41,17 +42,32 @@ const JobCard = ({
   isLiked,
   databaseId,
   userId,
+  allSkills,
 }: {
   jobInfo: Job;
   isLiked: boolean;
   databaseId: string;
   userId: string;
+  allSkills: Skill[];
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(isLiked);
   const [idForDelete, setIdforDelete] = useState(databaseId);
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   const queryClient = useQueryClient();
+
+  const findMatchingSkills = (job: Job) => {
+    const jobDescriptionStrArr = {
+      description: job.description.text,
+    }.description
+      .toLowerCase()
+      .replace(/[^a-zA-Z0-9\s#]/g, '')
+      .split(' ');
+    const matchingSkills = allSkills.filter((skill) =>
+      jobDescriptionStrArr.includes(skill.title.toLowerCase()),
+    );
+    return matchingSkills;
+  };
 
   const mutation = useMutation(togglelikeRequest, {
     onSuccess: () => {
@@ -67,7 +83,9 @@ const JobCard = ({
             url: jobInfo.application_details.url,
             jobTechId: jobInfo.id,
             jobText: jobInfo.description.text,
-            selectedSkillIds: [],
+            selectedSkillIds: findMatchingSkills(jobInfo).map(
+              (skill) => skill.id,
+            ),
           }
         : {
             userId: userId,
@@ -109,7 +127,7 @@ const JobCard = ({
           {jobInfo.employer.name}
         </Typography>
         <div>
-          {Object.values(jobInfo.must_have).some(arr => arr.length > 0) && (
+          {Object.values(jobInfo.must_have).some((arr) => arr.length > 0) && (
             <Typography>Must have: </Typography>
           )}
           {Object.entries(jobInfo.must_have).map(
@@ -117,23 +135,23 @@ const JobCard = ({
               values.length > 0 && (
                 <Typography key={key}>
                   <strong>{key.replace('_', ' ')}:</strong>{' '}
-                  {values.map(item => item.label).join(', ')}
+                  {values.map((item) => item.label).join(', ')}
                 </Typography>
-              )
+              ),
           )}
         </div>
         <div>
-          {Object.values(jobInfo.nice_to_have).some(arr => arr.length > 0) && (
-            <p>Nice to have: </p>
-          )}
+          {Object.values(jobInfo.nice_to_have).some(
+            (arr) => arr.length > 0,
+          ) && <p>Nice to have: </p>}
           {Object.entries(jobInfo.nice_to_have).map(
             ([key, values]) =>
               values.length > 0 && (
                 <p key={key}>
                   <strong>{key}:</strong>{' '}
-                  {values.map(item => item.label).join(', ')}
+                  {values.map((item) => item.label).join(', ')}
                 </p>
-              )
+              ),
           )}
         </div>
       </CardContent>

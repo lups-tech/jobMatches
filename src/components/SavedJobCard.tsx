@@ -20,7 +20,8 @@ import { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { togglelikeRequest } from '../utils/fetchingTools';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { JobDTO } from '../types/innerTypes';
+import { JobDTO, Skill } from '../types/innerTypes';
+import { Job } from '../types/externalTypes';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -42,11 +43,13 @@ const JobCard = ({
   isLiked,
   databaseId,
   userId,
+  allSkills,
 }: {
   jobInfo: JobDTO;
   isLiked: boolean;
   databaseId: string;
   userId: string;
+  allSkills: Skill[];
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(isLiked);
@@ -54,12 +57,25 @@ const JobCard = ({
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   const queryClient = useQueryClient();
 
+  const findMatchingSkills = (job: JobDTO) => {
+    const jobDescriptionStrArr = {
+      description: job.jobText,
+    }.description
+      .toLowerCase()
+      .replace(/[^a-zA-Z0-9\s#]/g, '')
+      .split(' ');
+    const matchingSkills = allSkills.filter((skill) =>
+      jobDescriptionStrArr.includes(skill.title.toLowerCase()),
+    );
+    return matchingSkills;
+  };
   const mutation = useMutation(togglelikeRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries(['userInfo']); // Invalidate and refetch the developers list
     },
   });
 
+  //handle post unnecessary-delete it later
   const handleLikeRequest = () => {
     const requestMethod = favorite ? 'DELETE' : 'POST';
     const requestBody =
@@ -68,7 +84,9 @@ const JobCard = ({
             url: jobInfo.url,
             jobTechId: jobInfo.id,
             jobText: jobInfo.jobText,
-            selectedSkillIds: [],
+            selectedSkillIds: findMatchingSkills(jobInfo).map(
+              (skill) => skill.id,
+            ),
           }
         : {
             userId: userId,
