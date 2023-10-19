@@ -21,7 +21,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { togglelikeRequest } from '../utils/fetchingTools';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { JobDTO, Skill } from '../types/innerTypes';
-import { Job } from '../types/externalTypes';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
