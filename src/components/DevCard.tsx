@@ -56,6 +56,7 @@ const DevCard = ({
   const mutation = useMutation(togglelikeRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries(['userInfo']); // Invalidate and refetch the developers list
+      setFavorite(!favorite);
     },
   });
 
@@ -71,7 +72,6 @@ const DevCard = ({
       endpointPath: 'api/userdeveloper',
       getAccessTokenSilently: getAccessTokenSilently,
     });
-    setFavorite(!favorite);
   };
 
   const handleExpandClick = () => {
