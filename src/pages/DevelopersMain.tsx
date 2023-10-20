@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import DevForm from './DevForm';
-import AllDevs from './AllDevs';
+import DevForm from '../components/DevForm';
+import AllDevs from '../components/AllDevs';
 import { Button } from '@mui/material';
 
 const DevelopersMainRoute = () => {

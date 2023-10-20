@@ -17,22 +17,16 @@ import { useState } from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import EmailIcon from '@mui/icons-material/Email';
-import { Developer } from '../types/innerTypes';
+import { Developer, DeveloperDTO, Skill } from '../types/innerTypes';
 import { cardColorLogic } from '../data/programmingLanguageColors';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { togglelikeRequest } from '../utils/fetchingTools';
 
 interface ExpandMoreProps extends IconButtonProps {
   // the value is either 'true' or 'false', not using boolean type because it causes a fontend terminal error
   expand: string;
 }
-
-type Skill = {
-  id: string;
-  title: string;
-  type: string;
-};
-
-const backendServer = import.meta.env.VITE_BE_SERVER;
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
   const { ...other } = props;
@@ -51,44 +45,33 @@ const DevCard = ({
 }: {
   developer: Developer;
   isLiked: boolean;
+  currentDevelopers?: DeveloperDTO[];
+  setCurrentDevelopers?: React.Dispatch<React.SetStateAction<DeveloperDTO[]>>;
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(isLiked);
   const { getAccessTokenSilently, user } = useAuth0();
+  const queryClient = useQueryClient();
 
-  const likeRequest = async (
-    requestMethod: string,
-    requestBody: { userId: string; developerId: string }
-  ) => {
-    const accessToken = await getAccessTokenSilently();
-    try {
-      const response = await fetch(`${backendServer}api/userdeveloper`, {
-        method: requestMethod,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(requestBody),
-      });
+  const mutation = useMutation(togglelikeRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userInfo']); // Invalidate and refetch the developers list
+      setFavorite(!favorite);
+    },
+  });
 
-      if (!response.ok) {
-        throw new Error('Response was not ok');
-      }
-
-      // const data = await response.json();
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
-  const sendLikeRequest = () => {
+  const handleLikeToggle = () => {
     const requestMethod = favorite ? 'DELETE' : 'PATCH';
     const requestBody = {
       userId: user?.sub ? user.sub : '',
       developerId: developer.id,
     };
-    likeRequest(requestMethod, requestBody);
-    setFavorite(!favorite);
+    mutation.mutate({
+      requestMethod,
+      requestBody,
+      endpointPath: 'api/userdeveloper',
+      getAccessTokenSilently: getAccessTokenSilently,
+    });
   };
 
   const handleExpandClick = () => {
@@ -117,7 +100,7 @@ const DevCard = ({
         paddingInline: 5,
         display: 'flex',
         flexDirection: 'column',
-        minWidth: '500px',
+        minWidth: '350px',
         borderRadius: 6,
         backgroundColor: `${
           groupedSkills['Programming Language']
@@ -137,7 +120,9 @@ const DevCard = ({
           />
         </Grid>
         <Grid item xs={10}>
-          <CardContent style={{ marginTop: -10, marginBottom: -10 }}>
+          <CardContent
+            style={{ marginTop: -10, marginBottom: -10, marginLeft: 10 }}
+          >
             <Typography variant="h5" gutterBottom className="">
               {developer.name}
             </Typography>
@@ -195,7 +180,7 @@ const DevCard = ({
         disableSpacing
         sx={{ paddingBottom: 3, marginY: 2, height: 30 }}
       >
-        <IconButton aria-label="add to favorites" onClick={sendLikeRequest}>
+        <IconButton aria-label="add to favorites" onClick={handleLikeToggle}>
           {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </IconButton>
         <ExpandMore

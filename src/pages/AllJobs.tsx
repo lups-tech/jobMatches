@@ -3,11 +3,11 @@ import { Job, SearchResult } from '../types/externalTypes';
 import { CircularProgress, Pagination } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { FilterFormValues, Skill, UserInfoDTO } from '../types/innerTypes';
-import JobFilters from './JobFilters';
-import JobCard from './JobCard';
+import JobFilters from '../components/JobFilters';
+import JobCard from '../components/JobCard';
 import { useAuth0 } from '@auth0/auth0-react';
 import { mockSkills } from '../data/mockSkills';
-import axios from 'axios';
+import { fetchUserInfo } from '../utils/fetchingTools';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
@@ -20,28 +20,21 @@ const fetchSkills = async (accessToken: string): Promise<Skill[]> => {
   return res.json();
 };
 
-const fetchUserInfo = async (accessToken: string, userId: string) => {
-  const userIdUrlString = encodeURIComponent(userId);
-  const res = await axios.get(`${backendServer}api/users/${userIdUrlString}`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
-  return res.data;
-};
-
 const fetchJobs = async (
   searchFilter: FilterFormValues,
-  page: number
+  page: number,
 ): Promise<SearchResult> => {
   const res = await fetch(
     `https://jobsearch.api.jobtechdev.se/search?${searchFilter.regionFilter
       .map(
-        region => `region=${region['taxonomy/national-nuts-level-3-code-2019']}`
+        (region) =>
+          `region=${region['taxonomy/national-nuts-level-3-code-2019']}`,
       )
       .join('&')}&experience=${
       searchFilter.isExperienced
     }&q=${encodeURIComponent(
-      searchFilter.skillsFilter.join(' ') + ' ' + searchFilter.searchKeyword
-    )}&offset=${page * 10}&limit=10`
+      searchFilter.skillsFilter.join(' ') + ' ' + searchFilter.searchKeyword,
+    )}&offset=${page * 10}&limit=10`,
   );
   return res.json();
 };
@@ -90,7 +83,7 @@ const AllJobs = () => {
       // to prevent the page from fetching data too many times
       staleTime: Infinity,
       cacheTime: Infinity,
-    }
+    },
   );
 
   const pageChangeHandler = (_event: ChangeEvent<unknown>, value: number) => {
@@ -131,12 +124,12 @@ const AllJobs = () => {
             // userInfo.jobs &&
             data.hits.map((job: Job) => {
               const isLikedJob = userInfo.jobs
-                .map(jobOfUser => jobOfUser.jobTechId)
+                .map((jobOfUser) => jobOfUser.jobTechId)
                 .includes(job.id);
               const databaseId = () => {
                 if (isLikedJob) {
                   const selectedJob = userInfo.jobs.find(
-                    userJob => userJob.jobTechId == job.id
+                    (userJob) => userJob.jobTechId == job.id,
                   );
                   if (selectedJob) {
                     return selectedJob.id;
@@ -152,6 +145,7 @@ const AllJobs = () => {
                   isLiked={isLikedJob}
                   databaseId={databaseId()}
                   userId={userInfo.id}
+                  allSkills={skills}
                 />
               );
             })}
@@ -164,6 +158,7 @@ const AllJobs = () => {
                   isLiked={false}
                   databaseId={''}
                   userId={''}
+                  allSkills={skills}
                 />
               );
             })}
