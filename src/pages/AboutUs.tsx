@@ -10,7 +10,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useThemeContext } from '../theme';
 
-import DataVisualisation from './DataVisualisation';
+// import DataVisualisation from './DataVisualisation';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
@@ -50,7 +50,7 @@ const AboutUs = () => {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
-          }
+          },
         );
       } catch (error) {
         console.log('Error:', (error as Error).message);
@@ -165,7 +165,7 @@ const AboutUs = () => {
           </div>
         </div>
         <div className="max-w-[1000px] grid md:grid-cols-3 gap-14 justify-items-center m-auto my-20">
-          {teamMemberInfos.map(info => (
+          {teamMemberInfos.map((info) => (
             <TeamMember memberInfo={info} key={Math.random()} />
           ))}
         </div>

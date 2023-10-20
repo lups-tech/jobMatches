@@ -20,7 +20,7 @@ type Dataset = {
 };
 
 export const DataVisualisation = () => {
-  const { darkMode } = useThemeContext();
+  // const { darkMode } = useThemeContext();
 
   const [chartData, setChartData] = useState<any>({
     labels,
