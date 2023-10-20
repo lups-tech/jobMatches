@@ -22,7 +22,7 @@ ChartJS.register(
 
 
 
-export const JobsChart = ({ jobsPerWeekData }: any) => {
+export const JobsChart = ({ chartData }: any) => {
   
     const options = {
         responsive: true,
@@ -39,7 +39,7 @@ export const JobsChart = ({ jobsPerWeekData }: any) => {
       
   return (
     <>
-      <Line options={options} data={jobsPerWeekData} />;
+      <Line options={options} data={chartData} />;
     </>
   );
 };
