@@ -1,17 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
-import { SearchResult } from "../types/externalTypes";
+import { useQuery } from '@tanstack/react-query';
+import { SearchResult } from '../types/externalTypes';
 // import { useThemeContext } from "../theme";
-import { useState, useEffect } from "react";
-import { Button, CircularProgress } from "@mui/material";
+import { useState, useEffect } from 'react';
+import { Button, CircularProgress } from '@mui/material';
 
 const getDataBySearchAndDates = async (
   programmingLanguage: string,
   dateAfter: string,
-  dateBefore: string
+  dateBefore: string,
 ): Promise<SearchResult> => {
   try {
     const response = await fetch(
-      `https://jobsearch.api.jobtechdev.se/search?published-before=${dateBefore}T00%3A00%3A00&published-after=${dateAfter}T00%3A00%3A00&q=${programmingLanguage}&offset=0&limit=100`
+      `https://jobsearch.api.jobtechdev.se/search?published-before=${dateBefore}T00%3A00%3A00&published-after=${dateAfter}T00%3A00%3A00&q=${programmingLanguage}&offset=0&limit=100`,
     );
     return response.json();
   } catch (error: any) {
@@ -20,28 +20,26 @@ const getDataBySearchAndDates = async (
 };
 
 type FormProps = {
-    updateChartData: Function, 
-    formId: number
-}
+  updateChartData: Function;
+  formId: number;
+};
 
 export const FormComponent = ({ updateChartData, formId }: FormProps) => {
-  const [inputValue, setInputValue] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>('');
 
-  const todaysDate = new Date(Date.now()).toISOString().replace(/T.*/, "");
+  const todaysDate = new Date(Date.now()).toISOString().replace(/T.*/, '');
   const oneMonth = 2592000000;
   const oneMonthAgoDate = new Date(Date.now() - oneMonth)
     .toISOString()
-    .replace(/T.*/, "");
+    .replace(/T.*/, '');
 
-  const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [searchKeyword, setSearchKeyword] = useState<string>('');
 
   const { isLoading, error, data } = useQuery<SearchResult>(
-    ["publicationDates", searchKeyword],
-    () => getDataBySearchAndDates(searchKeyword, oneMonthAgoDate, todaysDate)
+    ['publicationDates', searchKeyword],
+    () => getDataBySearchAndDates(searchKeyword, oneMonthAgoDate, todaysDate),
   );
-  const dataPublicationData = data?.hits.map(
-    (job) => job.publication_date
-  );
+  const dataPublicationData = data?.hits.map((job) => job.publication_date);
 
   const [thisWeekCount, setThisWeekCount] = useState<number>(0);
 
@@ -90,30 +88,40 @@ export const FormComponent = ({ updateChartData, formId }: FormProps) => {
     }
   }, [searchKeyword, thisWeekCount, data]);
 
-  if (isLoading) return (
-    <div className="flex justify-center mt-16">
-      <CircularProgress/>
-    </div>
-  );
+  if (isLoading)
+    return (
+      <div className="flex justify-center mt-16">
+        <CircularProgress />
+      </div>
+    );
 
-  if (error) return "An error has occurred: " + error;
+  if (error) return 'An error has occurred: ' + error;
 
   return (
     <div className="flex">
-    <form className="m-2 flex" onSubmit={handleFormSubmit} name="searchTerm1">
-      <input
-        type="text"
-        name="searchTerm"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        placeholder="Enter search term"
-        list="programmingLanguages"
-        className="m-6 p-2 rounded-lg"
+      <form
+        className="m-2 flex items-center"
+        onSubmit={handleFormSubmit}
+        name="searchTerm1"
+      >
+        <input
+          type="text"
+          name="searchTerm"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder="Enter search term"
+          list="programmingLanguages"
+          className="m-6 p-2 rounded-lg"
         />
-    </form>
-      <Button variant="outlined" size="small" type="submit" sx={{backgroundColor: "#767676", color: "#eaeaea"}}>
-        Search
-      </Button>
+        <Button
+          variant="outlined"
+          size="small"
+          type="submit"
+          sx={{ backgroundColor: '#767676', color: '#eaeaea', height: '30px' }}
+        >
+          Search
+        </Button>
+      </form>
     </div>
   );
 };
