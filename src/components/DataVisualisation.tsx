@@ -1,4 +1,3 @@
-import { useThemeContext } from '../theme';
 import { useState } from 'react';
 import { Button } from '@mui/material';
 import { JobsChart } from './JobsChart';
