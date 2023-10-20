@@ -1,28 +1,31 @@
-import {
-  AppBar,
-  IconButton,
-  Menu,
-  MenuItem,
-  Toolbar,
-} from '@mui/material';
+import { AppBar, IconButton, Menu, MenuItem, Toolbar } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Link, useLocation } from 'react-router-dom';
+import CodeIcon from '@mui/icons-material/Code';
+import WorkIcon from '@mui/icons-material/Work';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useLocation, Link } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useState } from 'react';
-import { LogoutButton } from './buttons/LogOutButton';
+import { LoginButton } from './buttons/LogInButton';
 import ToggleMode from './buttons/ToggleModeButton';
 import UserBadgeButton from './buttons/UserBadgeButton';
-import { LoginButton } from './buttons/LogInButton';
 
 const MobileNavbar = () => {
   const {
     isAuthenticated,
     user: userInfo,
     isLoading: isUserLoading,
+    logout,
   } = useAuth0();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const location = useLocation();
-
+  const handleLogout = () => {
+    logout({
+      logoutParams: {
+        returnTo: window.location.origin,
+      },
+    });
+  };
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -48,65 +51,78 @@ const MobileNavbar = () => {
           </div>
           <div>
             <ToggleMode />
-            <IconButton
-              id="mobile-nav-button"
-              color="info"
-              sx={{ '&:hover': { backgroundColor: '#3A3C4E' }, marginLeft: 2 }}
-              aria-controls={open ? 'basic-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? 'true' : undefined}
-              onClick={handleClick}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="mobile-nav-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
-                'disablePadding': true,
-              }}
-              sx={{borderRadius: 0}}
-            >
-              {isAuthenticated ? (
-                <div>
-                  <MenuItem onClick={handleClose} sx={{background: '#8caaee'}}>
-                    <UserBadgeButton user={userInfo!} loading={isUserLoading} />
-                  </MenuItem>
-                  <MenuItem onClick={handleClose}>
-                    <Link
-                      to="/developers"
-                      color="#ffffff"
-                      className={
-                        location.pathname === '/developers' ? 'font-bold' : ''
-                      }
-                    >
-                      Developers
-                    </Link>
-                  </MenuItem>
-                  <MenuItem onClick={handleClose}>
-                    <Link
-                      to="/jobs"
-                      color="#ffffff"
-                      className={
-                        location.pathname === '/jobs' ? 'font-bold' : ''
-                      }
-                    >
-                      Jobs
-                    </Link>
-                  </MenuItem>
-                  <MenuItem onClick={handleClose}>
-                    <LogoutButton />
-                  </MenuItem>
-                </div>
-              ) : (
-                <MenuItem onClick={handleClose}>
-                  <LoginButton/>
-                </MenuItem>
-              )}
-            </Menu>
+            {isAuthenticated ? (
+              <>
+                <IconButton
+                  id="mobile-nav-button"
+                  color="info"
+                  sx={{
+                    '&:hover': { backgroundColor: '#3A3C4E' },
+                    marginLeft: 2,
+                  }}
+                  aria-controls={open ? 'basic-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? 'true' : undefined}
+                  onClick={handleClick}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Menu
+                  id="mobile-nav-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                    disablePadding: true,
+                  }}
+                  sx={{ borderRadius: 0 }}
+                >
+                  <div className="bg-Blue">
+                    <MenuItem onClick={handleClose}>
+                      <UserBadgeButton
+                        user={userInfo!}
+                        loading={isUserLoading}
+                      />
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <Link
+                        to="/developers"
+                        className={
+                          location.pathname === '/developers' ? 'font-bold' : ''
+                        }
+                        style={{ color: '#ffffff' }}
+                      >
+                        <CodeIcon /> Developers
+                      </Link>
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <Link
+                        to="/jobs"
+                        style={{ color: '#ffffff' }}
+                        className={
+                          location.pathname === '/jobs' ? 'font-bold' : ''
+                        }
+                      >
+                        <WorkIcon /> Jobs
+                      </Link>
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      {/* <LogoutButton /> */}
+                      <Link
+                        to=""
+                        style={{ color: '#ffffff' }}
+                        onClick={handleLogout}
+                      >
+                        <LogoutIcon /> Log out
+                      </Link>
+                    </MenuItem>
+                  </div>
+                </Menu>
+              </>
+            ) : (
+              <LoginButton />
+            )}
           </div>
         </div>
       </Toolbar>

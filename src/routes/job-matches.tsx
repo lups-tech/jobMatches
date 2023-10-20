@@ -1,10 +1,9 @@
 import JobMatches from '../components/JobMatches';
 
- const JobMatchesRoute = () => {
+export const JobMatchesRoute = () => {
   return (
-    <div className='p-10 min-h-screen'>
+    <div className="p-10 min-h-screen">
       <JobMatches />
-      </div>
+    </div>
   );
-}
-export default JobMatchesRoute
+};

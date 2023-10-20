@@ -17,19 +17,16 @@ import { useState } from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import EmailIcon from '@mui/icons-material/Email';
-import { Developer } from '../types/innerTypes';
+import { Developer, DeveloperDTO, Skill } from '../types/innerTypes';
 import { cardColorLogic } from '../data/programmingLanguageColors';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { togglelikeRequest } from '../utils/fetchingTools';
 
 interface ExpandMoreProps extends IconButtonProps {
   // the value is either 'true' or 'false', not using boolean type because it causes a fontend terminal error
   expand: string;
 }
-
-type Skill = {
-  id: string;
-  title: string;
-  type: string;
-};
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
   const { ...other } = props;
@@ -42,12 +39,39 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-const DevCard = ({ developer }: { developer: Developer }) => {
+const DevCard = ({
+  developer,
+  isLiked,
+}: {
+  developer: Developer;
+  isLiked: boolean;
+  currentDevelopers?: DeveloperDTO[];
+  setCurrentDevelopers?: React.Dispatch<React.SetStateAction<DeveloperDTO[]>>;
+}) => {
   const [expanded, setExpanded] = useState(false);
-  const [favorite, setFavorite] = useState(false);
-  const saveDeveloper = () => {
-    // need to add logic to save developer to favorites for user
-    setFavorite(!favorite);
+  const [favorite, setFavorite] = useState(isLiked);
+  const { getAccessTokenSilently, user } = useAuth0();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation(togglelikeRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userInfo']); // Invalidate and refetch the developers list
+      setFavorite(!favorite);
+    },
+  });
+
+  const handleLikeToggle = () => {
+    const requestMethod = favorite ? 'DELETE' : 'PATCH';
+    const requestBody = {
+      userId: user?.sub ? user.sub : '',
+      developerId: developer.id,
+    };
+    mutation.mutate({
+      requestMethod,
+      requestBody,
+      endpointPath: 'api/userdeveloper',
+      getAccessTokenSilently: getAccessTokenSilently,
+    });
   };
 
   const handleExpandClick = () => {
@@ -76,7 +100,7 @@ const DevCard = ({ developer }: { developer: Developer }) => {
         paddingInline: 5,
         display: 'flex',
         flexDirection: 'column',
-        minWidth: '500px',
+        minWidth: '350px',
         borderRadius: 6,
         backgroundColor: `${
           groupedSkills['Programming Language']
@@ -96,7 +120,9 @@ const DevCard = ({ developer }: { developer: Developer }) => {
           />
         </Grid>
         <Grid item xs={10}>
-          <CardContent style={{ marginTop: -10, marginBottom: -10 }}>
+          <CardContent
+            style={{ marginTop: -10, marginBottom: -10, marginLeft: 10 }}
+          >
             <Typography variant="h5" gutterBottom className="">
               {developer.name}
             </Typography>
@@ -154,7 +180,7 @@ const DevCard = ({ developer }: { developer: Developer }) => {
         disableSpacing
         sx={{ paddingBottom: 3, marginY: 2, height: 30 }}
       >
-        <IconButton aria-label="add to favorites" onClick={saveDeveloper}>
+        <IconButton aria-label="add to favorites" onClick={handleLikeToggle}>
           {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </IconButton>
         <ExpandMore

@@ -1,8 +1,5 @@
-import UserProfile from "../components/UserProfile";
+import UserProfile from '../pages/UserProfile';
 
-
-const UserProfileRoute = () => {
-    return <UserProfile/>
-}
-
-export default UserProfileRoute;
+export const UserProfileRoute = () => {
+  return <UserProfile />;
+};

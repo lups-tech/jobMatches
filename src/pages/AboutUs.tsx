@@ -3,7 +3,7 @@ import illu_precise from '../assets/illu_precise.svg';
 import illu_data_driven from '../assets/illu_data_driven.svg';
 import illu_ideation from '../assets/illu_ideation.svg';
 import { Button, Link } from '@mui/material';
-import TeamMember from './TeamMember';
+import TeamMember from '../components/TeamMember';
 import { teamMemberInfos } from '../data/teamMemberInfos';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
@@ -43,11 +43,15 @@ const AboutUs = () => {
     if (isAuthenticated) {
       const accessToken = await getAccessTokenSilently();
       try {
-        await axios.post(`${backendServer}api/users`, {} ,{
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        await axios.post(
+          `${backendServer}api/users`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
       } catch (error) {
         console.log('Error:', (error as Error).message);
       }

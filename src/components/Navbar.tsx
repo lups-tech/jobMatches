@@ -7,7 +7,7 @@ import MobileNavbar from './MobileNavbar';
 const Navbar = () => {
   const { isAuthenticated } = useAuth0();
   const location = useLocation();
-  const isMobile = useMediaQuery('(max-width: 1130px)');
+  const isMobile = useMediaQuery('(max-width: 900px)');
 
   return isMobile ? (
     <MobileNavbar />

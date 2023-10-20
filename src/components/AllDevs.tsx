@@ -6,6 +6,7 @@ import {
   Developer,
   Skill,
   DeveloperFilterFormValues,
+  UserInfoDTO,
 } from '../types/innerTypes';
 import { ChangeEvent, useEffect, useState, useMemo } from 'react';
 import DevCard from './DevCard';
@@ -29,8 +30,16 @@ const fetchDevelopers = async (accessToken: string) => {
   return res.data;
 };
 
+const fetchUserInfo = async (accessToken: string, userId: string) => {
+  const userIdUrlString = encodeURIComponent(userId);
+  const res = await axios.get(`${backendServer}api/users/${userIdUrlString}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return res.data;
+};
+
 const AllDevs = () => {
-  const { getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently, user } = useAuth0();
 
   const [searchFilter, setSearchFilter] = useState<DeveloperFilterFormValues>({
     searchKeyword: '',
@@ -60,6 +69,18 @@ const AllDevs = () => {
     queryFn: async () => {
       const accessToken = await getAccessTokenSilently();
       return fetchDevelopers(accessToken);
+    },
+  });
+
+  const {
+    isLoading: isUserInfoLoading,
+    error: isUserInfoError,
+    data: userInfo,
+  } = useQuery<UserInfoDTO, Error>({
+    queryKey: ['userInfo'],
+    queryFn: async () => {
+      const accessToken = await getAccessTokenSilently();
+      return fetchUserInfo(accessToken, user?.sub ? user.sub : '');
     },
   });
 
@@ -155,14 +176,14 @@ const AllDevs = () => {
     setCurrentPage(value);
   };
 
-  if (isLoading || isSkillsLoading)
+  if (isLoading || isSkillsLoading || isUserInfoLoading)
     return (
       <div className="flex justify-center mt-16">
         <CircularProgress />
       </div>
     );
 
-  if (error || skillsError) {
+  if (error || skillsError || isUserInfoError) {
     console.log('❗️error: ', error);
     return (
       <div className="flex justify-center mt-16">
@@ -181,9 +202,18 @@ const AllDevs = () => {
         <DevFilters setSearchFilter={setSearchFilter} skills={skills} />
         <div className="jobcards">
           {displayedDevelopers &&
-            displayedDevelopers.map(dev => (
-              <DevCard key={dev.id} developer={dev} />
-            ))}
+            displayedDevelopers.map(dev => {
+              const isLikedDeveloper = userInfo.developers
+                .map(developer => developer.id)
+                .includes(dev.id);
+              return (
+                <DevCard
+                  key={dev.id}
+                  developer={dev}
+                  isLiked={isLikedDeveloper}
+                />
+              );
+            })}
         </div>
         <div className="flex justify-center my-10">
           <Pagination
