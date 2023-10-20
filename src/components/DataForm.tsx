@@ -99,7 +99,8 @@ export const FormComponent = ({ updateChartData, formId }: FormProps) => {
   if (error) return "An error has occurred: " + error;
 
   return (
-    <form className="m-5 flex p-2" onSubmit={handleFormSubmit} name="searchTerm1">
+    <div className="flex">
+    <form className="m-2 flex" onSubmit={handleFormSubmit} name="searchTerm1">
       <input
         type="text"
         name="searchTerm"
@@ -107,14 +108,12 @@ export const FormComponent = ({ updateChartData, formId }: FormProps) => {
         onChange={(e) => setInputValue(e.target.value)}
         placeholder="Enter search term"
         list="programmingLanguages"
-        className="m-2 p-3 rounded-lg"
-      />
-      <Button variant="outlined" type="submit" className="w-full" sx={{
-        backgroundColor: "#f5f5f5",
-        color: "#808080"
-      }}>
+        className="m-6 p-2 rounded-lg"
+        />
+    </form>
+      <Button variant="outlined" size="small" type="submit" sx={{backgroundColor: "#767676", color: "#eaeaea"}}>
         Search
       </Button>
-    </form>
+    </div>
   );
 };

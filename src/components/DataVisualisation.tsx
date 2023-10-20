@@ -19,7 +19,7 @@ type Dataset = {
   backgroundColor: string;
 };
 
-const DataVisualisation = () => {
+export const DataVisualisation = () => {
   const { darkMode } = useThemeContext();
 
   const [chartData, setChartData] = useState<any>({
@@ -91,18 +91,16 @@ const DataVisualisation = () => {
   };
 
   return (
-    <div className={`pt-10  pb-96 ${darkMode ? "bg-[#97B2EF]" : "bg-Blue"}`}>
-      <div className={`pt-10 ${darkMode ? "bg-[#97B2EF]" : "bg-Blue"} flex`}>
+    <div className="max-w-[1000px] mx-auto my-5 flex flex-col flex-wrap gap-0.5 items-center justify-center">
+      <div className={`max-w-[1000px] flex flex-wrap`}>
         {formArray.map((form: any, index) => {
           return <div key={index}>{form}</div>
         })}
       </div>
-      <Button onClick={addNewForm}>Add Language</Button>
+      <Button className="w-[415px] mx-5" onClick={addNewForm}>Add Language</Button>
       <div className="grid md:grid-cols-3 grid-flow-row gap-3 text-white w-4/5 m-10">
         <JobsChart chartData={chartData} />
       </div>
     </div>
   );
 };
-
-export default DataVisualisation;

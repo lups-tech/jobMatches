@@ -20,26 +20,18 @@ ChartJS.register(
   Legend
 );
 
-
-
 export const JobsChart = ({ chartData }: any) => {
-  
-    const options = {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: "top" as const,
-          },
-          title: {
-            display: true,
-            text: "Programming languages job postings by week",
-          },
-        },
-      };
-      
-  return (
-    <>
-      <Line options={options} data={chartData} />;
-    </>
-  );
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top" as const,
+      },
+      title: {
+        display: true,
+      },
+    },
+  };
+
+  return <Line options={options} data={chartData} />;
 };
