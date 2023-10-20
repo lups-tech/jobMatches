@@ -10,6 +10,8 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useThemeContext } from '../theme';
 
+import DataVisualisation from './DataVisualisation';
+
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
 interface PointProp {
