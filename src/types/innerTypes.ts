@@ -59,6 +59,9 @@ export type JobDTO = {
   jobTechId: string;
   url: string;
   jobText: string;
+  title: string;
+  deadline: string;
+  employer: string;
   skills: JobSkillDTO[];
 };
 

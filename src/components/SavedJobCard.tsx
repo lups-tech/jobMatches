@@ -83,6 +83,9 @@ const JobCard = ({
             url: jobInfo.url,
             jobTechId: jobInfo.id,
             jobText: jobInfo.jobText,
+            title: jobInfo.title,
+            deadline: jobInfo.deadline,
+            employer: jobInfo.employer,
             selectedSkillIds: findMatchingSkills(jobInfo).map(
               (skill) => skill.id,
             ),
