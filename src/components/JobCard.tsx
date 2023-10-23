@@ -121,7 +121,7 @@ const JobCard = ({
       <CardHeader />
       <CardContent>
         <Typography color="text.secondary" gutterBottom>
-          {jobInfo.application_deadline.split('T')[0]}
+          Deadline: {jobInfo.application_deadline.split('T')[0]}
         </Typography>
         <Typography variant="h5" gutterBottom>
           {jobInfo.headline}

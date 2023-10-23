@@ -119,10 +119,16 @@ const JobCard = ({
       sx={{ minWidth: 30, marginBlock: 1, paddingInline: 5, borderRadius: 6 }}
     >
       <CardHeader />
-      <CardContent>
+      <CardContent
+        style={{ marginTop: -10, marginBottom: -10, marginLeft: 10 }}
+      >
         <Typography color="text.secondary" gutterBottom>
-          {jobInfo.id}
+          Deadline: {jobInfo.deadline.split('T')[0]}
         </Typography>
+        <Typography variant="h5" gutterBottom>
+          {jobInfo.title}
+        </Typography>
+        <Typography gutterBottom>{jobInfo.employer}</Typography>
         {/* <Typography variant="h5" gutterBottom>
           {jobInfo.headline}
         </Typography>
