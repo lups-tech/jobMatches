@@ -109,6 +109,9 @@ const JobMatches = () => {
     const createJobReq = {
       jobTechId: jobInfo.id,
       url: jobInfo.application_details.url,
+      title: jobInfo.headline,
+      deadline: jobInfo.application_deadline,
+      employer: jobInfo.employer.name,
       jobText: jobInfo.description.text,
       SelectedSkillIds: matches.jobSkills.map(jobSkill => jobSkill.id),
     };
