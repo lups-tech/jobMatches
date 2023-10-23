@@ -5,10 +5,32 @@ import { UserInfoDTO } from '../types/innerTypes';
 import { CircularProgress } from '@mui/material';
 import SavedDevsList from '../components/SavedDevsList';
 import SavedJobsList from '../components/SavedJobsList';
-import { DataVisualisation } from '../components/DataVisualisation'
+import { DataVisualisation } from '../components/DataVisualisation';
+import axios from 'axios';
+
+const backendServer = import.meta.env.VITE_BE_SERVER;
 
 const Dashboard = () => {
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+
+  const userCheck = async () => {
+    if (isAuthenticated) {
+      const accessToken = await getAccessTokenSilently();
+      try {
+        await axios.post(
+          `${backendServer}api/users`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          },
+        );
+      } catch (error) {
+        console.log('Error:', (error as Error).message);
+      }
+    }
+  };
 
   const {
     isLoading: isUserInfoLoading,
@@ -18,6 +40,7 @@ const Dashboard = () => {
     queryKey: ['userInfo'],
     queryFn: async () => {
       if (isAuthenticated) {
+        await userCheck();
         const accessToken = await getAccessTokenSilently();
         return fetchUserInfo(accessToken, 'self');
       }
