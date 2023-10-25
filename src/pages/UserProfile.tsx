@@ -3,44 +3,80 @@ import {
   Avatar,
   Button,
   CircularProgress,
+  FormHelperText,
   TextField,
   Typography,
 } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
 import { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormControl } from '@mui/base';
+import * as z from 'zod';
+import { Controller, useForm } from 'react-hook-form';
+import axios from 'axios';
 
-type editedUserInfo = {
-  name?: string;
-  email?: string;
-};
+const backendServer = import.meta.env.VITE_BE_SERVER;
+
+const UserSchema = z
+  .object({
+    name: z.string().nonempty('Please specify an name'),
+    nickname: z.string().nonempty('Please specify a username').max(10),
+    newPassword: z.string().optional(),
+    confirmPassword: z.string().optional(),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: 'Please ensure passwords match',
+    path: ['confirmPassword'],
+  });
+
 const UserProfile: React.FC = () => {
   const {
     user: userInfo,
     isLoading: isUserLoading,
     isAuthenticated,
+    getAccessTokenSilently,
   } = useAuth0();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editedUserInfo, setEditedUserInfo] = useState<editedUserInfo>({
-    name: '',
-    email: '',
+  const [currentUser, setCurrentUser] = useState({
+    name: userInfo?.name,
+    nickname: userInfo?.nickname,
   });
 
-  // const handleFocus = () => {
-  //   setEditedUserInfo({ ...editedUserInfo, name: '', email: '' });
-  // };
-  const handleFocus = (e: any) => {
-    const inputElement = e.target;
-    inputElement.setSelectionRange(0, inputElement.value.length);
-  };
+  const { control, handleSubmit } = useForm<z.infer<typeof UserSchema>>({
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
+    resolver: zodResolver(UserSchema),
+    defaultValues: {
+      name: userInfo?.name,
+      nickname: userInfo?.nickname,
+      newPassword: '',
+      confirmPassword: '',
+    },
+  });
 
   const handleEdit = () => {
     setIsEditing(true);
-    setEditedUserInfo({ name: userInfo?.nickname, email: userInfo?.email });
   };
-  const handleSave = () => {
-    // patch request??
-    setIsEditing(false);
+
+  const handleSave = async (data: z.infer<typeof UserSchema>) => {
+    try {
+      const body = {
+        name: data.name,
+        nickname: data.nickname,
+      };
+
+      const accessToken = await getAccessTokenSilently();
+      await axios.patch(`${backendServer}api/users/edit`, body, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setCurrentUser(body);
+      setIsEditing(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleCancel = () => {
@@ -70,41 +106,127 @@ const UserProfile: React.FC = () => {
             />
           )}
           {isEditing ? (
-            <div>
-              <TextField
-                label="Name"
-                variant="outlined"
-                fullWidth
-                onFocus={handleFocus}
-                value={editedUserInfo.name}
-                onChange={(e) =>
-                  setEditedUserInfo({ ...editedUserInfo, name: e.target.value })
-                }
+            <form
+              noValidate
+              onSubmit={handleSubmit(handleSave)}
+              className="flex flex-col gap-3 min-w-[400px]"
+            >
+              <Controller
+                name="name"
+                control={control}
+                render={({
+                  field: { value, onChange, onBlur, ref },
+                  fieldState: { error },
+                }) => (
+                  <FormControl>
+                    <TextField
+                      name="name"
+                      label="Name"
+                      variant="outlined"
+                      fullWidth
+                      onChange={onChange}
+                      value={value}
+                      inputRef={ref}
+                      onBlur={onBlur}
+                      error={Boolean(error)}
+                    />
+                    <FormHelperText sx={{ color: 'error.main' }}>
+                      {error?.message ?? ''}
+                    </FormHelperText>
+                  </FormControl>
+                )}
               />
-              <TextField
-                label="Email"
-                variant="outlined"
-                fullWidth
-                onFocus={handleFocus}
-                value={editedUserInfo.email}
-                onChange={(e) =>
-                  setEditedUserInfo({
-                    ...editedUserInfo,
-                    email: e.target.value,
-                  })
-                }
+              <Controller
+                name="nickname"
+                control={control}
+                render={({
+                  field: { value, onChange, onBlur, ref },
+                  fieldState: { error },
+                }) => (
+                  <FormControl>
+                    <TextField
+                      name="nickname"
+                      label="Username"
+                      variant="outlined"
+                      fullWidth
+                      onChange={onChange}
+                      value={value}
+                      inputRef={ref}
+                      onBlur={onBlur}
+                      error={Boolean(error)}
+                    />
+                    <FormHelperText sx={{ color: 'error.main' }}>
+                      {error?.message ?? ''}
+                    </FormHelperText>
+                  </FormControl>
+                )}
               />
-              <Button variant="contained" onClick={handleSave}>
+              <Controller
+                name="newPassword"
+                control={control}
+                render={({
+                  field: { value, onChange, onBlur, ref },
+                  fieldState: { error },
+                }) => (
+                  <FormControl>
+                    <TextField
+                      name="newPassword"
+                      label="New Password"
+                      variant="outlined"
+                      type="password"
+                      fullWidth
+                      onChange={onChange}
+                      value={value}
+                      inputRef={ref}
+                      onBlur={onBlur}
+                      error={Boolean(error)}
+                    />
+                    <FormHelperText sx={{ color: 'error.main' }}>
+                      {error?.message ?? ''}
+                    </FormHelperText>
+                  </FormControl>
+                )}
+              />
+              <Controller
+                name="confirmPassword"
+                control={control}
+                render={({
+                  field: { value, onChange, onBlur, ref },
+                  fieldState: { error },
+                }) => (
+                  <FormControl>
+                    <TextField
+                      name="confirmPassword"
+                      label="Confirm New Password"
+                      variant="outlined"
+                      fullWidth
+                      onChange={onChange}
+                      value={value}
+                      type="password"
+                      inputRef={ref}
+                      onBlur={onBlur}
+                      error={Boolean(error)}
+                    />
+                    <FormHelperText sx={{ color: 'error.main' }}>
+                      {error?.message ?? ''}
+                    </FormHelperText>
+                  </FormControl>
+                )}
+              />
+              <Button variant="contained" type="submit">
                 Save
               </Button>
               <Button variant="outlined" onClick={handleCancel}>
                 Cancel
               </Button>
-            </div>
+            </form>
           ) : (
             <div>
               <Typography variant="h5" gutterBottom>
-                {userInfo?.nickname}
+                {currentUser.name}
+              </Typography>
+              <Typography variant="h5" gutterBottom>
+                {currentUser.nickname}
               </Typography>
               <Typography variant="body1">
                 <EmailIcon fontSize="small" sx={{ marginRight: 1 }} />
