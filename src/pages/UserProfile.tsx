@@ -161,58 +161,62 @@ const UserProfile: React.FC = () => {
                   </FormControl>
                 )}
               />
-              <Controller
-                name="newPassword"
-                control={control}
-                render={({
-                  field: { value, onChange, onBlur, ref },
-                  fieldState: { error },
-                }) => (
-                  <FormControl>
-                    <TextField
-                      name="newPassword"
-                      label="New Password"
-                      variant="outlined"
-                      type="password"
-                      fullWidth
-                      onChange={onChange}
-                      value={value}
-                      inputRef={ref}
-                      onBlur={onBlur}
-                      error={Boolean(error)}
-                    />
-                    <FormHelperText sx={{ color: 'error.main' }}>
-                      {error?.message ?? ''}
-                    </FormHelperText>
-                  </FormControl>
-                )}
-              />
-              <Controller
-                name="confirmPassword"
-                control={control}
-                render={({
-                  field: { value, onChange, onBlur, ref },
-                  fieldState: { error },
-                }) => (
-                  <FormControl>
-                    <TextField
-                      name="confirmPassword"
-                      label="Confirm New Password"
-                      variant="outlined"
-                      fullWidth
-                      onChange={onChange}
-                      value={value}
-                      type="password"
-                      inputRef={ref}
-                      onBlur={onBlur}
-                      error={Boolean(error)}
-                    />
-                    <FormHelperText sx={{ color: 'error.main' }}>
-                      {error?.message ?? ''}
-                    </FormHelperText>
-                  </FormControl>
-                )}
-              />
+
+              <div>
+                <Typography>Change Password</Typography>
+                <Controller
+                  name="newPassword"
+                  control={control}
+                  render={({
+                    field: { value, onChange, onBlur, ref },
+                    fieldState: { error },
+                  }) => (
+                    <FormControl>
+                      <TextField
+                        name="newPassword"
+                        label="New Password"
+                        variant="outlined"
+                        type="password"
+                        fullWidth
+                        onChange={onChange}
+                        value={value}
+                        inputRef={ref}
+                        onBlur={onBlur}
+                        error={Boolean(error)}
+                      />
+                      <FormHelperText sx={{ color: 'error.main' }}>
+                        {error?.message ?? ''}
+                      </FormHelperText>
+                    </FormControl>
+                  )}
+                />
+                <Controller
+                  name="confirmPassword"
+                  control={control}
+                  render={({
+                    field: { value, onChange, onBlur, ref },
+                    fieldState: { error },
+                  }) => (
+                    <FormControl>
+                      <TextField
+                        name="confirmPassword"
+                        label="Confirm New Password"
+                        variant="outlined"
+                        fullWidth
+                        onChange={onChange}
+                        value={value}
+                        type="password"
+                        inputRef={ref}
+                        onBlur={onBlur}
+                        error={Boolean(error)}
+                      />
+                      <FormHelperText sx={{ color: 'error.main' }}>
+                        {error?.message ?? ''}
+                      </FormHelperText>
+                    </FormControl>
+                  )}
+                />
+              </div>
               <Button variant="contained" type="submit">
                 Save
               </Button>
