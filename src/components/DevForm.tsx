@@ -119,6 +119,7 @@ const DevForm = () => {
         open={sendError}
         autoHideDuration={3000}
         message="Loading failed, please try again"
+        ContentProps={{sx : {backgroundColor: '#ff3030'}}}
       />
     </div>
   );
