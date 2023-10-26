@@ -161,11 +161,13 @@ const SkillForm = () => {
         open={sendSuccess}
         autoHideDuration={3000}
         message={`Skills added to ${developerInfo.name}`}
+        ContentProps={{sx : {backgroundColor: '#54ac68'}}}
       />
       <Snackbar
         open={sendError}
         autoHideDuration={3000}
         message="Loading failed, please try again"
+        ContentProps={{sx : {backgroundColor: '#ff3030'}}}
       />
     </>
   );
