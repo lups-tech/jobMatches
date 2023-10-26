@@ -3,6 +3,7 @@ import {
   Avatar,
   Button,
   CircularProgress,
+  Divider,
   FormHelperText,
   Snackbar,
   TextField,
@@ -21,11 +22,10 @@ import ChangePasswordForm from '../components/ChangePasswordForm';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
-const UserSchema = z
-  .object({
-    name: z.string().nonempty('Please specify an name'),
-    email: z.string().email().nonempty('Please specify an email'),
-})
+const UserSchema = z.object({
+  name: z.string().nonempty('Please specify an name'),
+  email: z.string().email().nonempty('Please specify an email'),
+});
 
 const UserProfile: React.FC = () => {
   const {
@@ -74,11 +74,11 @@ const UserProfile: React.FC = () => {
       });
       setCurrentUser(body);
       setSendSuccess(true);
-      setTimeout(() => setSendSuccess(false), 3000)
+      setTimeout(() => setSendSuccess(false), 3000);
     } catch (error) {
       setSendError(true);
-      setTimeout(() => setSendError(false), 3000)
-    } 
+      setTimeout(() => setSendError(false), 3000);
+    }
   };
 
   const handleCancel = () => {
@@ -98,132 +98,152 @@ const UserProfile: React.FC = () => {
     isAuthenticated && (
       <div className="flex justify-center">
         <div className="max-w-[800px] flex flex-col mx-10">
-        {isEditing && 
-          <Tooltip
-            title='Close'
-          >
-            <CloseIcon 
-              onClick={handleCancel}
-              sx={{alignSelf: 'end', marginTop: '1rem'}}
-            />
-          </Tooltip>
-        }
-          <div className='flex w-full justify-center mt-[-0.75rem]'>
-          {userInfo?.picture === undefined ? (
-              <Avatar sx={{ width: 56, height: 56, marginBlock: '1rem' }}>T</Avatar>
-          ) : (
+          {isEditing && (
+            <Tooltip title="Close">
+              <CloseIcon
+                onClick={handleCancel}
+                sx={{
+                  alignSelf: 'end',
+                  marginTop: '1rem',
+                }}
+              />
+            </Tooltip>
+          )}
+          <div className="flex w-full justify-center">
+            {userInfo?.picture === undefined ? (
+              <Avatar
+                sx={{
+                  width: 56,
+                  height: 56,
+                  marginTop: isEditing ? '-0.75' : '3rem',
+                  marginBottom: '1.5rem',
+                }}
+              >
+                T
+              </Avatar>
+            ) : (
               <Avatar
                 alt="Profie pic"
                 src={userInfo.picture}
-                sx={{ width: 56, height: 56, marginBlock: '1rem' }}
+                sx={{
+                  width: 90,
+                  height: 90,
+                  marginTop: isEditing ? '-0.75rem' : '3rem',
+                  marginBottom: '1.5rem',
+                }}
               />
-          )}
+            )}
           </div>
           {isEditing ? (
             <>
-            <form
-              noValidate
-              onSubmit={handleSubmit(handleSave)}
-              className="flex flex-col gap-3 min-w-[400px] my-3"
+              <form
+                noValidate
+                onSubmit={handleSubmit(handleSave)}
+                className="flex flex-col gap-3 min-w-[400px] my-3"
               >
-              <Typography>Personal Information</Typography>
-              <Controller
-                name="name"
-                control={control}
-                render={({
-                  field: { value, onChange, onBlur, ref },
-                  fieldState: { error },
-                }) => (
-                  <FormControl>
-                    <TextField
-                      name="name"
-                      label="Name"
-                      variant="outlined"
-                      fullWidth
-                      onChange={onChange}
-                      value={value}
-                      inputRef={ref}
-                      onBlur={onBlur}
-                      error={Boolean(error)}
-                    />
-                    <FormHelperText sx={{ color: 'error.main' }}>
-                      {error?.message ?? ''}
-                    </FormHelperText>
-                  </FormControl>
-                )}
+                <Divider>Personal Information</Divider>
+                <Controller
+                  name="name"
+                  control={control}
+                  render={({
+                    field: { value, onChange, onBlur, ref },
+                    fieldState: { error },
+                  }) => (
+                    <FormControl>
+                      <TextField
+                        name="name"
+                        label="Name"
+                        variant="outlined"
+                        fullWidth
+                        onChange={onChange}
+                        value={value}
+                        inputRef={ref}
+                        onBlur={onBlur}
+                        error={Boolean(error)}
+                      />
+                      <FormHelperText sx={{ color: 'error.main' }}>
+                        {error?.message ?? ''}
+                      </FormHelperText>
+                    </FormControl>
+                  )}
+                />
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({
+                    field: { value, onChange, onBlur, ref },
+                    fieldState: { error },
+                  }) => (
+                    <FormControl>
+                      <TextField
+                        name="email"
+                        label="Email"
+                        variant="outlined"
+                        fullWidth
+                        onChange={onChange}
+                        value={value}
+                        inputRef={ref}
+                        onBlur={onBlur}
+                        error={Boolean(error)}
+                      />
+                      <FormHelperText sx={{ color: 'error.main' }}>
+                        {error?.message ?? ''}
+                      </FormHelperText>
+                    </FormControl>
+                  )}
+                />
+                <div className="flex w-full justify-center mb-3">
+                  <Button variant="contained" type="submit">
+                    Update Details
+                  </Button>
+                </div>
+              </form>
+              <ChangePasswordForm
+                success={setPasswordSuccess}
+                passwordError={setPasswordError}
               />
-              <Controller
-                name="email"
-                control={control}
-                render={({
-                  field: { value, onChange, onBlur, ref },
-                  fieldState: { error },
-                }) => (
-                  <FormControl>
-                    <TextField
-                      name="email"
-                      label="Email"
-                      variant="outlined"
-                      fullWidth
-                      onChange={onChange}
-                      value={value}
-                      inputRef={ref}
-                      onBlur={onBlur}
-                      error={Boolean(error)}
-                    />
-                    <FormHelperText sx={{ color: 'error.main' }}>
-                      {error?.message ?? ''}
-                    </FormHelperText>
-                  </FormControl>
-                )}
-              />
-              <div className='flex w-full justify-center mb-3'>
-                <Button variant="contained" type="submit">
-                  Update Details
-                </Button>
-              </div>
-            </form>
-            <ChangePasswordForm success={setPasswordSuccess} passwordError={setPasswordError} />
             </>
           ) : (
-            <div>
-              <Typography variant="h5" gutterBottom>
+            <div className="flex flex-col gap-5 ">
+              <Typography variant="h4" gutterBottom>
                 {currentUser.name}
               </Typography>
-              <Typography variant="body1">
-                <EmailIcon fontSize="small" sx={{ marginRight: 1 }} />
+              <Divider>
+                <EmailIcon fontSize="small" sx={{ marginRight: 1 }} />{' '}
+              </Divider>
+              <Typography variant="h6" sx={{ alignSelf: 'center' }}>
                 {currentUser.email}
               </Typography>
               <Button variant="outlined" onClick={handleEdit}>
-                Edit
+                Edit Details
               </Button>
             </div>
           )}
         </div>
-      <Snackbar
-        open={sendSuccess}
-        autoHideDuration={3000}
-        message="Details successfully updated"
-        ContentProps={{sx : {backgroundColor: '#54ac68'}}}
-      />
-      <Snackbar
-        open={sendError}
-        autoHideDuration={3000}
-        message="There has been a problem, please try again"
-        ContentProps={{sx : {backgroundColor: '#ff3030'}}}
-      />
-      <Snackbar
-        open={passwordSuccess}
-        autoHideDuration={3000}
-        message="Password successfully changed"
-        ContentProps={{sx : {backgroundColor: '#54ac68'}}}
-      />
-      <Snackbar
-        open={passwordError}
-        autoHideDuration={3000}
-        message="There has been a problem, please try again"
-        ContentProps={{sx : {backgroundColor: '#ff3030'}}}
-      />
+        <Snackbar
+          open={sendSuccess}
+          autoHideDuration={3000}
+          message="Details successfully updated"
+          ContentProps={{ sx: { backgroundColor: '#54ac68' } }}
+        />
+        <Snackbar
+          open={sendError}
+          autoHideDuration={3000}
+          message="There has been a problem, please try again"
+          ContentProps={{ sx: { backgroundColor: '#ff3030' } }}
+        />
+        <Snackbar
+          open={passwordSuccess}
+          autoHideDuration={3000}
+          message="Password successfully changed"
+          ContentProps={{ sx: { backgroundColor: '#54ac68' } }}
+        />
+        <Snackbar
+          open={passwordError}
+          autoHideDuration={3000}
+          message="There has been a problem, please try again"
+          ContentProps={{ sx: { backgroundColor: '#ff3030' } }}
+        />
       </div>
     )
   );
