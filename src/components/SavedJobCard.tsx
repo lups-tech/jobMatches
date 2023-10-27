@@ -123,7 +123,7 @@ const JobCard = ({
         style={{ marginTop: -10, marginBottom: -10, marginLeft: 10 }}
       >
         <Typography color="text.secondary" gutterBottom>
-          Deadline: {jobInfo.deadline.split('T')[0]}
+          Deadline: {jobInfo.deadline?.split('T')[0]}
         </Typography>
         <Typography variant="h5" gutterBottom>
           {jobInfo.title}

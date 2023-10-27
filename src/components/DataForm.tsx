@@ -39,6 +39,7 @@ export const FormComponent = ({ updateChartData, formId }: FormProps) => {
     ['publicationDates', searchKeyword],
     () => getDataBySearchAndDates(searchKeyword, oneMonthAgoDate, todaysDate),
   );
+
   const dataPublicationData = data?.hits.map((job) => job.publication_date);
 
   const [thisWeekCount, setThisWeekCount] = useState<number>(0);
@@ -47,13 +48,13 @@ export const FormComponent = ({ updateChartData, formId }: FormProps) => {
     0, 0, 0, 0,
   ]);
 
-  const updateCounts = (dataPublicationData: string[] | undefined) => {
+  const updateCounts = (dataPublicationData: string[]) => {
     let thisWeek = 0;
     let oneWeekOld = 0;
     let twoWeekOld = 0;
     let threeWeekOld = 0;
 
-    dataPublicationData?.forEach((date) => {
+    dataPublicationData.forEach((date) => {
       const timeDiff = Date.now() - new Date(date).getTime();
       const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 
@@ -71,7 +72,6 @@ export const FormComponent = ({ updateChartData, formId }: FormProps) => {
       }
     });
 
-    setThisWeekCount(thisWeek);
     setJobsPerWeekCounts([threeWeekOld, twoWeekOld, oneWeekOld, thisWeek]);
   };
 
