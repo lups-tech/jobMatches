@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Autocomplete, TextField } from "@mui/material";
 import { JobsChart } from "./JobsChart";
-// import { FormComponent } from "./DataForm";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Skill } from "../types/innerTypes";
@@ -34,8 +33,8 @@ const getDataBySearchAndDates = async (
       `https://jobsearch.api.jobtechdev.se/search?published-before=${dateBefore}T00%3A00%3A00&published-after=${dateAfter}T00%3A00%3A00&q=${programmingLanguage}&offset=0&limit=100`
     )
     return response.data;
-  } catch (error: any) {
-    throw new Error(error.message);
+  } catch (error) {
+    console.error(error);
   }
 };
 
@@ -170,7 +169,7 @@ export const DataVisualisation = () => {
     <div className="max-w-[1000px] mx-auto my-5 flex flex-col flex-wrap gap-0.5 items-center justify-center">
       <div className={`max-w-[1000px] flex flex-wrap`}>
         <Autocomplete
-          className="w-96"
+          className="w-96 mb-[-3rem]"
           multiple
           options={skills.filter((s) => s.type === "Programming Language")}
           getOptionLabel={(option) => option.title}

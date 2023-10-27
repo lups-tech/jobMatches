@@ -204,8 +204,8 @@ const UserProfile: React.FC = () => {
               />
             </>
           ) : (
-            <div className="flex flex-col gap-5 ">
-              <Typography variant="h4" gutterBottom>
+            <div className="flex flex-col gap-5">
+              <Typography variant="h4" sx={{ alignSelf: 'center' }} gutterBottom>
                 {currentUser.name}
               </Typography>
               <Divider>
