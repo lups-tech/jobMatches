@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Skill } from '../types/innerTypes';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
@@ -52,9 +53,25 @@ export const togglelikeRequest = async (args: ToggleLikeRequestArgs) => {
       throw new Error('Response was not ok');
     }
     if (setIdforDelete && endpointPath == 'api/jobs') {
-      response.json().then(data => setIdforDelete(data.id));
+      response.json().then((data) => setIdforDelete(data.id));
     }
   } catch (error) {
     console.error('Error:', error);
   }
+};
+
+export const fetchSkills = async (accessToken: string): Promise<Skill[]> => {
+  const res = await fetch(`${backendServer}api/Skills`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  return res.json();
+};
+
+export const fetchDevelopers = async (accessToken: string) => {
+  const res = await axios.get(`${backendServer}api/developers`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return res.data;
 };

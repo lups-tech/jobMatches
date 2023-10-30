@@ -53,8 +53,10 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
                 borderRadius: '24px',
               },
             }}
-            options={skills.map(skill => skill.title)}
-            renderInput={params => (
+            options={skills
+              .filter((skill) => skill.type !== 'Programming Language')
+              .map((skill) => skill.title)}
+            renderInput={(params) => (
               <TextField {...params} label="Search skills" variant="outlined" />
             )}
             onInputChange={onChange}
@@ -94,11 +96,11 @@ const DevFilters = ({ setSearchFilter, skills }: IDevFilters) => {
                 value={value}
                 onChange={onChange}
                 input={<OutlinedInput label="Programming Language" />}
-                renderValue={selected => selected.join(', ')}
+                renderValue={(selected) => selected.join(', ')}
               >
                 {skills
-                  .filter(skill => skill.type === 'Programming Language')
-                  .map(skill => (
+                  .filter((skill) => skill.type === 'Programming Language')
+                  .map((skill) => (
                     <MenuItem key={skill.id} value={skill.title}>
                       <Checkbox
                         checked={value.indexOf(skill.title) > -1}

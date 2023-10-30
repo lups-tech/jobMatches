@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
-import { Autocomplete, TextField } from "@mui/material";
-import { JobsChart } from "./JobsChart";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
-import { Skill } from "../types/innerTypes";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useEffect, useState } from 'react';
+import { Autocomplete, TextField } from '@mui/material';
+import { JobsChart } from './JobsChart';
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import { Skill } from '../types/innerTypes';
+import { useAuth0 } from '@auth0/auth0-react';
+import { cardColorLogic } from '../data/programmingLanguageColors';
 
-const labels = ["3-4 weeks ago", "2-3 weeks ago", "1-2 weeks ago", "Last week"];
+const labels = ['3-4 weeks ago', '2-3 weeks ago', '1-2 weeks ago', 'Last week'];
 
 type ChartData = {
   labels: string[];
@@ -26,12 +27,12 @@ const backendServer = import.meta.env.VITE_BE_SERVER;
 const getDataBySearchAndDates = async (
   programmingLanguage: string,
   dateAfter: string,
-  dateBefore: string
+  dateBefore: string,
 ) => {
   try {
     const response = await axios.get(
-      `https://jobsearch.api.jobtechdev.se/search?published-before=${dateBefore}T00%3A00%3A00&published-after=${dateAfter}T00%3A00%3A00&q=${programmingLanguage}&offset=0&limit=100`
-    )
+      `https://jobsearch.api.jobtechdev.se/search?published-before=${dateBefore}T00%3A00%3A00&published-after=${dateAfter}T00%3A00%3A00&q=${programmingLanguage}&offset=0&limit=100`,
+    );
     return response.data;
   } catch (error) {
     console.error(error);
@@ -71,15 +72,15 @@ const updateCounts = (dataPublicationData: string[]) => {
     }
   });
 
-  return ([threeWeekOld, twoWeekOld, oneWeekOld, thisWeek])
+  return [threeWeekOld, twoWeekOld, oneWeekOld, thisWeek];
 };
 
 export const DataVisualisation = () => {
-  const todaysDate = new Date(Date.now()).toISOString().replace(/T.*/, "");
+  const todaysDate = new Date(Date.now()).toISOString().replace(/T.*/, '');
   const oneMonth = 2592000000;
   const oneMonthAgoDate = new Date(Date.now() - oneMonth)
     .toISOString()
-    .replace(/T.*/, "");
+    .replace(/T.*/, '');
   const [searchQueries, setSearchQueries] = useState<string[]>([]);
 
   useEffect(() => {
@@ -87,11 +88,12 @@ export const DataVisualisation = () => {
       searchQueries.map((searchQuery) => {
         getDataBySearchAndDates(searchQuery, oneMonthAgoDate, todaysDate).then(
           (response) => {
-            const publicationDates = response.hits.map((job: { publication_date: string; }) => job.publication_date)
-            const counts = updateCounts(publicationDates)
-            updateChartData(searchQuery, counts)
-          }
-         
+            const publicationDates = response.hits.map(
+              (job: { publication_date: string }) => job.publication_date,
+            );
+            const counts = updateCounts(publicationDates);
+            updateChartData(searchQuery, counts);
+          },
         );
       });
     }
@@ -102,31 +104,27 @@ export const DataVisualisation = () => {
     isLoading: isSkillsLoading,
     error: skillsError,
     data: skills,
-  } = useQuery<Skill[], Error>(["skills"], async () => {
+  } = useQuery<Skill[], Error>(['skills'], async () => {
     const accessToken = await getAccessTokenSilently();
     return fetchSkills(accessToken);
   });
-
 
   const [chartData, setChartData] = useState<any>({
     labels,
     datasets: [
       {
-        label: "",
+        label: '',
         data: [],
-        borderColor: "rgba(00,0,0,0)",
-        backgroundColor: "rgba(00,0,0,0)",
+        borderColor: 'rgba(00,0,0,0)',
+        backgroundColor: 'rgba(00,0,0,0)',
       },
     ],
   });
 
-  const updateChartData = (
-    searchKeyword: string,
-    counts: number[]
-  ) => {
+  const updateChartData = (searchKeyword: string, counts: number[]) => {
     setChartData((prevState: ChartData) => {
       const foundDataSet = prevState.datasets.find(
-        (dataset: Dataset) => dataset.label === searchKeyword
+        (dataset: Dataset) => dataset.label === searchKeyword,
       );
 
       if (foundDataSet) {
@@ -145,7 +143,8 @@ export const DataVisualisation = () => {
           datasets: updatedDatasets,
         };
       }
-      const lineColor = `#${Math.floor(Math.random()*16777215).toString(16)}`
+
+      const lineColor = cardColorLogic[searchKeyword] ?? 'grey'; // update 'data/programmingLanguageColors' when adding new languages
       return {
         ...prevState,
         datasets: [
@@ -171,7 +170,7 @@ export const DataVisualisation = () => {
         <Autocomplete
           className="w-96 mb-[-3rem]"
           multiple
-          options={skills.filter((s) => s.type === "Programming Language")}
+          options={skills.filter((s) => s.type === 'Programming Language')}
           getOptionLabel={(option) => option.title}
           renderInput={(params) => (
             <TextField {...params} label={`Search programming language`} />

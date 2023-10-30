@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm, FormProvider } from 'react-hook-form';
 import {
   Checkbox,
@@ -28,9 +28,9 @@ const backendServer = import.meta.env.VITE_BE_SERVER;
 
 const fetchSkills = async (accessToken: string) => {
   const res = await axios.get(`${backendServer}api/skills`, {
-    headers : {
-      "Authorization" : `Bearer ${accessToken}`
-    }
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
   });
   return res.data;
 };
@@ -49,7 +49,8 @@ const SkillForm = () => {
     refetch: refetchSkills,
   } = useQuery<Skill[], Error>(['skills'], async () => {
     const accessToken = await getAccessTokenSilently();
-    return fetchSkills(accessToken)});
+    return fetchSkills(accessToken);
+  });
 
   const formMethods = useForm<FormValues>({
     reValidateMode: 'onChange',
@@ -72,21 +73,43 @@ const SkillForm = () => {
 
   const skillTypes = Array.from(new Set(skills.map((skill) => skill.type)));
 
-  const onSubmit = async (formValues: FormValues) => {
+  const addSkillToDeveloperRequest = async ({
+    developerId,
+    selectedSkillIds,
+  }: any) => {
     const accessToken = await getAccessTokenSilently();
-    try {
-      await axios.patch(`${backendServer}api/developerSkills`, {
-        developerId: developerInfo.id,
-        selectedSkillIds: Object.values(formValues.selectedSkillIds).flat(),
-      }, {
-        headers : {
-          "Authorization" : `Bearer ${accessToken}`
-        }
-      });
+    await axios.patch(
+      `${backendServer}api/developerSkills`,
+      {
+        developerId: developerId,
+        selectedSkillIds: selectedSkillIds,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+  };
+
+  const queryClient = useQueryClient();
+  const mutation = useMutation(addSkillToDeveloperRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['allDevelopers']);
+    },
+  });
+
+  const onSubmit = async (formValues: FormValues) => {
+    mutation.mutate({
+      developerId: developerInfo.id,
+      selectedSkillIds: Object.values(formValues.selectedSkillIds).flat(),
+    });
+    if (mutation.isSuccess) {
       setSendSuccess(true);
       setTimeout(() => setSendSuccess(false), 2000);
       setTimeout(() => navigate('/developers'), 2500);
-    } catch (error) {
+    }
+    if (mutation.isError) {
       setSendError(true);
       setTimeout(() => setSendError(false), 2000);
     }
@@ -161,13 +184,13 @@ const SkillForm = () => {
         open={sendSuccess}
         autoHideDuration={3000}
         message={`Skills added to ${developerInfo.name}`}
-        ContentProps={{sx : {backgroundColor: '#54ac68'}}}
+        ContentProps={{ sx: { backgroundColor: '#54ac68' } }}
       />
       <Snackbar
         open={sendError}
         autoHideDuration={3000}
         message="Loading failed, please try again"
-        ContentProps={{sx : {backgroundColor: '#ff3030'}}}
+        ContentProps={{ sx: { backgroundColor: '#ff3030' } }}
       />
     </>
   );
