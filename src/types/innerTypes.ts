@@ -78,3 +78,16 @@ export type UserInfoDTO = {
   jobs: JobDTO[];
   developers: DeveloperDTO[];
 };
+
+export type ChartData = {
+  labels: string[];
+  datasets: Dataset[];
+};
+
+export type Dataset = {
+  id: number;
+  label: string;
+  data: number[];
+  borderColor: string;
+  backgroundColor: string;
+};

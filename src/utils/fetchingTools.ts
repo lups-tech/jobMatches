@@ -60,13 +60,13 @@ export const togglelikeRequest = async (args: ToggleLikeRequestArgs) => {
   }
 };
 
-export const fetchSkills = async (accessToken: string): Promise<Skill[]> => {
-  const res = await fetch(`${backendServer}api/Skills`, {
+export const fetchSkills = async (accessToken: string) => {
+  const res = await axios.get(`${backendServer}api/skills`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
   });
-  return res.json();
+  return res.data;
 };
 
 export const fetchDevelopers = async (accessToken: string) => {

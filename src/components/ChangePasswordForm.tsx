@@ -3,59 +3,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormControl } from '@mui/base';
 import * as z from 'zod';
 import { Controller, useForm } from 'react-hook-form';
-import axios from 'axios';
 import { Button, Divider, FormHelperText, TextField } from '@mui/material';
 import { Dispatch } from 'react';
-
-const backendServer = import.meta.env.VITE_BE_SERVER;
-
-const passwordSchema = z
-  .object({
-    newPassword: z
-      .string()
-      .nonempty()
-      .min(8, 'Password must be at least 8 characters long')
-      .refine(
-        (password) => /[A-Z]/.test(password),
-        'Password must contain at least one uppercase letter',
-      )
-      .refine(
-        (password) => /[a-z]/.test(password),
-        'Password must contain at least one lowercase letter',
-      )
-      .refine(
-        (password) => /[0-9]/.test(password),
-        'Password must contain at least one digit',
-      )
-      .refine(
-        (password) => /[\W_]/.test(password),
-        'Password must contain at least one special character',
-      ),
-    confirmPassword: z
-      .string()
-      .nonempty()
-      .min(8, 'Password must be at least 8 characters long')
-      .refine(
-        (password) => /[A-Z]/.test(password),
-        'Password must contain at least one uppercase letter',
-      )
-      .refine(
-        (password) => /[a-z]/.test(password),
-        'Password must contain at least one lowercase letter',
-      )
-      .refine(
-        (password) => /[0-9]/.test(password),
-        'Password must contain at least one digit',
-      )
-      .refine(
-        (password) => /[\W_]/.test(password),
-        'Password must contain at least one special character',
-      ),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'Please ensure passwords match',
-    path: ['confirmPassword'],
-  });
+import { passwordSchema } from '../types/validationTypes';
+import { editPassword } from '../utils/mutationTools';
 
 const ChangePasswordForm = ({
   success,
@@ -78,15 +29,7 @@ const ChangePasswordForm = ({
   const handleSave = async (data: z.infer<typeof passwordSchema>) => {
     try {
       const accessToken = await getAccessTokenSilently();
-      await axios.patch(
-        `${backendServer}api/users/editpassword`,
-        { password: data.newPassword },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
+      editPassword(data.newPassword, accessToken);
       success(true);
       setTimeout(() => success(false), 3000);
     } catch (error) {

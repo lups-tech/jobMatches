@@ -25,3 +25,18 @@ export const handleAddSkill = async (
   const skill: Skill = response.data;
   return skill;
 };
+
+export const editPassword = async (
+  newPassword: string,
+  accessToken: string,
+) => {
+  await axios.patch(
+    `${backendServer}api/users/editpassword`,
+    { password: newPassword },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+};

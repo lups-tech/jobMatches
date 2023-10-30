@@ -1,79 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Autocomplete, TextField } from '@mui/material';
 import { JobsChart } from './JobsChart';
-import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
-import { Skill } from '../types/innerTypes';
+import { ChartData, Dataset, Skill } from '../types/innerTypes';
 import { useAuth0 } from '@auth0/auth0-react';
 import { cardColorLogic } from '../data/programmingLanguageColors';
-
-const labels = ['3-4 weeks ago', '2-3 weeks ago', '1-2 weeks ago', 'Last week'];
-
-type ChartData = {
-  labels: string[];
-  datasets: Dataset[];
-};
-
-type Dataset = {
-  id: number;
-  label: string;
-  data: number[];
-  borderColor: string;
-  backgroundColor: string;
-};
-
-const backendServer = import.meta.env.VITE_BE_SERVER;
-
-const getDataBySearchAndDates = async (
-  programmingLanguage: string,
-  dateAfter: string,
-  dateBefore: string,
-) => {
-  try {
-    const response = await axios.get(
-      `https://jobsearch.api.jobtechdev.se/search?published-before=${dateBefore}T00%3A00%3A00&published-after=${dateAfter}T00%3A00%3A00&q=${programmingLanguage}&offset=0&limit=100`,
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const fetchSkills = async (accessToken: string) => {
-  const res = await axios.get(`${backendServer}api/skills`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  return res.data;
-};
-
-const updateCounts = (dataPublicationData: string[]) => {
-  let thisWeek = 0;
-  let oneWeekOld = 0;
-  let twoWeekOld = 0;
-  let threeWeekOld = 0;
-
-  dataPublicationData.forEach((date) => {
-    const timeDiff = Date.now() - new Date(date).getTime();
-    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-
-    if (days < 8) {
-      thisWeek++;
-    }
-    if (days >= 8 && days < 15) {
-      oneWeekOld++;
-    }
-    if (days >= 15 && days < 22) {
-      twoWeekOld++;
-    }
-    if (days >= 22 && days < 29) {
-      threeWeekOld++;
-    }
-  });
-
-  return [threeWeekOld, twoWeekOld, oneWeekOld, thisWeek];
-};
+import { getDataBySearchAndDates } from '../utils/apiTools';
+import { fetchSkills } from '../utils/fetchingTools';
+import { labels, updateCounts } from '../utils/utilities';
 
 export const DataVisualisation = () => {
   const todaysDate = new Date(Date.now()).toISOString().replace(/T.*/, '');

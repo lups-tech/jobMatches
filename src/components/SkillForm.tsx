@@ -100,12 +100,16 @@ const SkillForm = () => {
   });
 
   const onSubmit = async (formValues: FormValues) => {
+    console.log('entered onSubmit');
     mutation.mutate({
       developerId: developerInfo.id,
       selectedSkillIds: Object.values(formValues.selectedSkillIds).flat(),
     });
+    console.log('excuted mutation');
+    console.log('the mutation:', mutation);
     if (mutation.isSuccess) {
       setSendSuccess(true);
+      console.log('successed!');
       setTimeout(() => setSendSuccess(false), 2000);
       setTimeout(() => navigate('/developers'), 2500);
     }
@@ -113,6 +117,7 @@ const SkillForm = () => {
       setSendError(true);
       setTimeout(() => setSendError(false), 2000);
     }
+    console.log('leaved onSubmit');
   };
 
   return (
@@ -168,9 +173,9 @@ const SkillForm = () => {
                 Speaking Language.
               </FormHelperText>
             )}
-
+            {mutation.isLoading && <div>Loading</div>}
             <LoadingButton
-              loading={isFormSubmitting}
+              loading={mutation.isLoading}
               variant="outlined"
               type="submit"
               className="w-[60%] max-w-xs self-center"
