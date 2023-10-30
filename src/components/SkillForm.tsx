@@ -2,7 +2,9 @@ import axios from 'axios';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm, FormProvider } from 'react-hook-form';
 import {
+  Button,
   Checkbox,
+  CircularProgress,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -13,7 +15,6 @@ import {
 import { Skill } from '../types/innerTypes';
 import { useState } from 'react';
 import ComboBox from './ComboBox';
-import { LoadingButton } from '@mui/lab';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 
@@ -39,6 +40,7 @@ const SkillForm = () => {
   const navigate = useNavigate();
   const { state: developerInfo } = useLocation();
   const [sendError, setSendError] = useState<boolean>(false);
+  const [loadingState, setLoadingState] = useState<boolean>(false);
   const [sendSuccess, setSendSuccess] = useState<boolean>(false);
   const { getAccessTokenSilently } = useAuth0();
 
@@ -63,7 +65,7 @@ const SkillForm = () => {
 
   const {
     handleSubmit,
-    formState: { isSubmitting: isFormSubmitting, errors: formValidationErrors },
+    formState: { errors: formValidationErrors },
     register,
   } = formMethods;
 
@@ -96,28 +98,23 @@ const SkillForm = () => {
   const mutation = useMutation(addSkillToDeveloperRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries(['allDevelopers']);
+      setSendSuccess(true);
+      setTimeout(() => setSendSuccess(false), 2000);
+      setTimeout(() => navigate('/developers'), 2200);
+    },
+    onError: () => {
+      setLoadingState(false);
+      setSendError(true);
+      setTimeout(() => setSendError(false), 2000);
     },
   });
 
   const onSubmit = async (formValues: FormValues) => {
-    console.log('entered onSubmit');
+    setLoadingState(true);
     mutation.mutate({
       developerId: developerInfo.id,
       selectedSkillIds: Object.values(formValues.selectedSkillIds).flat(),
     });
-    console.log('excuted mutation');
-    console.log('the mutation:', mutation);
-    if (mutation.isSuccess) {
-      setSendSuccess(true);
-      console.log('successed!');
-      setTimeout(() => setSendSuccess(false), 2000);
-      setTimeout(() => navigate('/developers'), 2500);
-    }
-    if (mutation.isError) {
-      setSendError(true);
-      setTimeout(() => setSendError(false), 2000);
-    }
-    console.log('leaved onSubmit');
   };
 
   return (
@@ -173,15 +170,14 @@ const SkillForm = () => {
                 Speaking Language.
               </FormHelperText>
             )}
-            {mutation.isLoading && <div>Loading</div>}
-            <LoadingButton
-              loading={mutation.isLoading}
+            <Button
               variant="outlined"
               type="submit"
               className="w-[60%] max-w-xs self-center"
+              disabled={loadingState}
             >
-              Add skills
-            </LoadingButton>
+              {loadingState ? <CircularProgress size={18} /> : 'Add skills'}
+            </Button>
           </FormControl>
         </form>
       </FormProvider>

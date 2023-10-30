@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { Skill } from '../types/innerTypes';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
