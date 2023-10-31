@@ -11,17 +11,31 @@ import {
   Avatar,
   Grid,
   Divider,
+  TextField,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import EmailIcon from '@mui/icons-material/Email';
-import { Developer, DeveloperDTO, Skill } from '../types/innerTypes';
+import {
+  AddCommentRequestBody,
+  DeleteCommentRequestBody,
+  Developer,
+  DeveloperDTO,
+  Skill,
+} from '../types/innerTypes';
 import { cardColorLogic } from '../data/programmingLanguageColors';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { togglelikeRequest } from '../utils/fetchingTools';
+import {
+  sendAddCommentRequest,
+  sendDeleteCommentRequest,
+} from '../utils/mutationTools';
 
 interface ExpandMoreProps extends IconButtonProps {
   // the value is either 'true' or 'false', not using boolean type because it causes a fontend terminal error
@@ -52,11 +66,24 @@ const DevCard = ({
   const [favorite, setFavorite] = useState(isLiked);
   const { getAccessTokenSilently, user } = useAuth0();
   const queryClient = useQueryClient();
+  const [isAddingComment, setIsAddingComment] = useState(false);
+  const valueRef = useRef('');
 
-  const mutation = useMutation(togglelikeRequest, {
+  const mutationLikeDeveloper = useMutation(togglelikeRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries(['userInfo']); // Invalidate and refetch the developers list
       setFavorite(!favorite);
+    },
+  });
+
+  const mutationAddAComment = useMutation(sendAddCommentRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['allDevelopers']);
+    },
+  });
+  const mutationDeleteAComment = useMutation(sendDeleteCommentRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['allDevelopers']);
     },
   });
 
@@ -66,7 +93,7 @@ const DevCard = ({
       userId: user?.sub ? user.sub : '',
       developerId: developer.id,
     };
-    mutation.mutate({
+    mutationLikeDeveloper.mutate({
       requestMethod,
       requestBody,
       endpointPath: 'api/userdeveloper',
@@ -78,10 +105,40 @@ const DevCard = ({
     setExpanded(!expanded);
   };
 
+  const addCommentHandle = () => {
+    setIsAddingComment(!isAddingComment);
+  };
+
+  const sendAddCommentRequestHandle = ({
+    commentText,
+    userEmail,
+    developerId,
+    getAccessTokenSilently,
+  }: AddCommentRequestBody) => {
+    setIsAddingComment(false);
+    mutationAddAComment.mutate({
+      commentText,
+      userEmail,
+      developerId,
+      getAccessTokenSilently,
+    });
+  };
+
+  const discardCommentHandle = () => {
+    setIsAddingComment(false);
+  };
+
+  const DeleteCommentHandle = ({
+    commentId,
+    getAccessTokenSilently,
+  }: DeleteCommentRequestBody) => {
+    mutationDeleteAComment.mutate({ commentId, getAccessTokenSilently });
+  };
+
   const groupSkillsByCategory = (skills: Skill[]) => {
     const groupedSkills: { [key: string]: string[] } = {};
 
-    skills.forEach((skill) => {
+    skills.forEach(skill => {
       if (!groupedSkills[skill.type]) {
         groupedSkills[skill.type] = [];
       }
@@ -206,17 +263,80 @@ const DevCard = ({
             }}
           >
             <div>
-              <Typography variant="h6" gutterBottom>
-                About Me
-              </Typography>
-              <Typography variant="body1" style={{ maxWidth: '400px' }}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-                dapibus ante sit amet dolor tincidunt, non rutrum nibh rhoncus.
-                Aliquam at ex tellus. Nullam a dolor purus. Pellentesque vitae
-                ante ac felis congue congue tristique ac neque. Class aptent
-                taciti sociosqu ad litora torquent per conubia nostra, per
-                inceptos himenaeos.
-              </Typography>
+              <div className="flex flex-row justify-between">
+                <Typography variant="h6" gutterBottom>
+                  Comments
+                </Typography>
+                {!isAddingComment && (
+                  <button onClick={addCommentHandle}>Add a comment</button>
+                )}
+              </div>
+              {isAddingComment && (
+                <div className="flex flex-row justify-between">
+                  <TextField
+                    fullWidth
+                    inputRef={valueRef}
+                    id="standard-basic"
+                    label="New Comments:"
+                    variant="standard"
+                    sx={{ width: 400 }}
+                  />
+                  <div className="flex flex-row">
+                    <IconButton
+                      aria-label="save"
+                      onClick={() =>
+                        sendAddCommentRequestHandle({
+                          commentText: valueRef.current.value,
+                          userEmail: user!.email ?? '',
+                          developerId: developer.id,
+                          getAccessTokenSilently,
+                        })
+                      }
+                    >
+                      <CheckCircleOutlineIcon />
+                    </IconButton>
+                    <IconButton
+                      aria-label="discard"
+                      onClick={discardCommentHandle}
+                    >
+                      <DoNotDisturbIcon />
+                    </IconButton>
+                  </div>
+                </div>
+              )}
+              <div className="my-2">
+                <Divider />
+              </div>
+              {!developer.comments.length && (
+                <Typography variant="body1" style={{ maxWidth: '400px' }}>
+                  No comments yet
+                </Typography>
+              )}
+              {developer.comments.map(comment => (
+                <div key={comment.id} className="flex justify-between">
+                  <div>
+                    <Typography variant="body1" style={{ maxWidth: '400px' }}>
+                      {comment.commentText}
+                    </Typography>
+                    <Typography variant="body1" style={{ maxWidth: '400px' }}>
+                      From {comment.userEmail}
+                    </Typography>
+                  </div>
+                  {user!.email === comment.userEmail && (
+                    <IconButton
+                      aria-label="discard"
+                      onClick={() =>
+                        DeleteCommentHandle({
+                          commentId: comment.id,
+                          getAccessTokenSilently,
+                        })
+                      }
+                    >
+                      <DeleteOutlineIcon />
+                    </IconButton>
+                  )}
+                </div>
+              ))}
               <div className="my-2">
                 <Divider />
               </div>

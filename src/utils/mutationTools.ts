@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
-import { Skill } from '../types/innerTypes';
+import { CommentRequestBody, Skill } from '../types/innerTypes';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
 export const handleAddSkill = async (
   newSkillName: string,
   skillType: string,
-  getAccessTokenSilently: any,
+  getAccessTokenSilently: any
 ) => {
   const accessToken = await getAccessTokenSilently();
   const response = await axios.post(
@@ -19,7 +20,7 @@ export const handleAddSkill = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    },
+    }
   );
 
   const skill: Skill = response.data;
@@ -28,7 +29,7 @@ export const handleAddSkill = async (
 
 export const editPassword = async (
   newPassword: string,
-  accessToken: string,
+  accessToken: string
 ) => {
   await axios.patch(
     `${backendServer}api/users/editpassword`,
@@ -37,6 +38,49 @@ export const editPassword = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    },
+    }
   );
+};
+
+export const sendAddCommentRequest = async ({
+  commentText,
+  userEmail,
+  developerId,
+  getAccessTokenSilently,
+}: CommentRequestBody) => {
+  const accessToken = await getAccessTokenSilently();
+  const response = await axios.post(
+    `${backendServer}api/comments`,
+    {
+      commentText: commentText,
+      userEmail: userEmail,
+      developerId: developerId,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  const comment: Comment = response.data;
+  return comment;
+};
+
+export const sendDeleteCommentRequest = async ({
+  commentId,
+  getAccessTokenSilently,
+}: CommentRequestBody) => {
+  const accessToken = await getAccessTokenSilently();
+  const response = await axios.delete(
+    `${backendServer}api/comments/${commentId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  const comment: Comment = response.data;
+  return comment;
 };

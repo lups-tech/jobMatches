@@ -32,6 +32,7 @@ export type Developer = {
   email: string;
   skills: Skill[];
   skillMatch: number;
+  comments: Comment[];
 };
 
 export type TeamMemberInfo = {
@@ -90,4 +91,27 @@ export type Dataset = {
   data: number[];
   borderColor: string;
   backgroundColor: string;
+};
+
+export type Comment = {
+  id: string;
+  commentText: string;
+  createdAt: string;
+  userEmail: string;
+  userId: string;
+  developerId: string;
+};
+
+export type AddCommentRequestBody = {
+  commentText: string;
+  userEmail: string;
+  developerId: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getAccessTokenSilently: any;
+};
+
+export type DeleteCommentRequestBody = {
+  commentId: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getAccessTokenSilently: any;
 };
