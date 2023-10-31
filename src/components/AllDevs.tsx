@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useAuth0 } from '@auth0/auth0-react';
 import { CircularProgress, Pagination } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
@@ -11,32 +10,11 @@ import {
 import { ChangeEvent, useEffect, useState, useMemo } from 'react';
 import DevCard from './DevCard';
 import DevFilters from './DevFilters';
-
-const backendServer = import.meta.env.VITE_BE_SERVER;
-
-const fetchSkills = async (accessToken: string): Promise<Skill[]> => {
-  const res = await fetch(`${backendServer}api/Skills`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  return res.json();
-};
-
-const fetchDevelopers = async (accessToken: string) => {
-  const res = await axios.get(`${backendServer}api/developers`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
-  return res.data;
-};
-
-const fetchUserInfo = async (accessToken: string, userId: string) => {
-  const userIdUrlString = encodeURIComponent(userId);
-  const res = await axios.get(`${backendServer}api/users/${userIdUrlString}`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
-  return res.data;
-};
+import {
+  fetchSkills,
+  fetchDevelopers,
+  fetchUserInfo,
+} from '../utils/fetchingTools';
 
 const AllDevs = () => {
   const { getAccessTokenSilently, user } = useAuth0();
@@ -100,14 +78,14 @@ const AllDevs = () => {
   }, [allDevelopers]);
 
   const [displayedDevelopers, setDisplayedDevelopers] = useState<Developer[]>(
-    []
+    [],
   );
 
   useEffect(() => {
     if (!isLoading && orderedDevelopers) {
       setDisplayedDevelopers(orderedDevelopers);
       setNumberOfPages(
-        Math.floor(orderedDevelopers?.length ?? 0 / pageSize) + 1
+        Math.floor(orderedDevelopers?.length ?? 0 / pageSize) + 1,
       );
       setCurrentPage(0);
     }
@@ -125,7 +103,7 @@ const AllDevs = () => {
       const matchingSkills = devSkills.includes(searchFilter.searchKeyword);
       const matchingName = devName.includes(searchFilter.searchKeyword);
       const matchingProgrammingLanguages = searchFilter.skillsFilter.every(
-        skill => devSkills.includes(skill)
+        (skill) => devSkills.includes(skill),
       );
 
       if (searchFilter.speaksSwedish && !speaksSwedish) {
@@ -159,7 +137,7 @@ const AllDevs = () => {
 
     const slicedDevelopers = filteredDevelopers.slice(
       currentPage * pageSize,
-      currentPage * pageSize + pageSize
+      currentPage * pageSize + pageSize,
     );
 
     setDisplayedDevelopers(slicedDevelopers);
@@ -202,9 +180,9 @@ const AllDevs = () => {
         <DevFilters setSearchFilter={setSearchFilter} skills={skills} />
         <div className="jobcards">
           {displayedDevelopers &&
-            displayedDevelopers.map(dev => {
+            displayedDevelopers.map((dev) => {
               const isLikedDeveloper = userInfo.developers
-                .map(developer => developer.id)
+                .map((developer) => developer.id)
                 .includes(dev.id);
               return (
                 <DevCard

@@ -81,7 +81,7 @@ const DevCard = ({
   const groupSkillsByCategory = (skills: Skill[]) => {
     const groupedSkills: { [key: string]: string[] } = {};
 
-    skills.forEach(skill => {
+    skills.forEach((skill) => {
       if (!groupedSkills[skill.type]) {
         groupedSkills[skill.type] = [];
       }

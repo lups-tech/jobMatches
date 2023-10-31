@@ -1,8 +1,10 @@
 import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm, FormProvider } from 'react-hook-form';
 import {
+  Button,
   Checkbox,
+  CircularProgress,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -13,7 +15,6 @@ import {
 import { Skill } from '../types/innerTypes';
 import { useState } from 'react';
 import ComboBox from './ComboBox';
-import { LoadingButton } from '@mui/lab';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 
@@ -28,9 +29,9 @@ const backendServer = import.meta.env.VITE_BE_SERVER;
 
 const fetchSkills = async (accessToken: string) => {
   const res = await axios.get(`${backendServer}api/skills`, {
-    headers : {
-      "Authorization" : `Bearer ${accessToken}`
-    }
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
   });
   return res.data;
 };
@@ -39,6 +40,7 @@ const SkillForm = () => {
   const navigate = useNavigate();
   const { state: developerInfo } = useLocation();
   const [sendError, setSendError] = useState<boolean>(false);
+  const [loadingState, setLoadingState] = useState<boolean>(false);
   const [sendSuccess, setSendSuccess] = useState<boolean>(false);
   const { getAccessTokenSilently } = useAuth0();
 
@@ -49,7 +51,8 @@ const SkillForm = () => {
     refetch: refetchSkills,
   } = useQuery<Skill[], Error>(['skills'], async () => {
     const accessToken = await getAccessTokenSilently();
-    return fetchSkills(accessToken)});
+    return fetchSkills(accessToken);
+  });
 
   const formMethods = useForm<FormValues>({
     reValidateMode: 'onChange',
@@ -62,7 +65,7 @@ const SkillForm = () => {
 
   const {
     handleSubmit,
-    formState: { isSubmitting: isFormSubmitting, errors: formValidationErrors },
+    formState: { errors: formValidationErrors },
     register,
   } = formMethods;
 
@@ -72,24 +75,46 @@ const SkillForm = () => {
 
   const skillTypes = Array.from(new Set(skills.map((skill) => skill.type)));
 
-  const onSubmit = async (formValues: FormValues) => {
+  const addSkillToDeveloperRequest = async ({
+    developerId,
+    selectedSkillIds,
+  }: any) => {
     const accessToken = await getAccessTokenSilently();
-    try {
-      await axios.patch(`${backendServer}api/developerSkills`, {
-        developerId: developerInfo.id,
-        selectedSkillIds: Object.values(formValues.selectedSkillIds).flat(),
-      }, {
-        headers : {
-          "Authorization" : `Bearer ${accessToken}`
-        }
-      });
+    await axios.patch(
+      `${backendServer}api/developerSkills`,
+      {
+        developerId: developerId,
+        selectedSkillIds: selectedSkillIds,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+  };
+
+  const queryClient = useQueryClient();
+  const mutation = useMutation(addSkillToDeveloperRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['allDevelopers']);
       setSendSuccess(true);
       setTimeout(() => setSendSuccess(false), 2000);
-      setTimeout(() => navigate('/developers'), 2500);
-    } catch (error) {
+      setTimeout(() => navigate('/developers'), 2200);
+    },
+    onError: () => {
+      setLoadingState(false);
       setSendError(true);
       setTimeout(() => setSendError(false), 2000);
-    }
+    },
+  });
+
+  const onSubmit = async (formValues: FormValues) => {
+    setLoadingState(true);
+    mutation.mutate({
+      developerId: developerInfo.id,
+      selectedSkillIds: Object.values(formValues.selectedSkillIds).flat(),
+    });
   };
 
   return (
@@ -145,15 +170,14 @@ const SkillForm = () => {
                 Speaking Language.
               </FormHelperText>
             )}
-
-            <LoadingButton
-              loading={isFormSubmitting}
+            <Button
               variant="outlined"
               type="submit"
               className="w-[60%] max-w-xs self-center"
+              disabled={loadingState}
             >
-              Add skills
-            </LoadingButton>
+              {loadingState ? <CircularProgress size={18} /> : 'Add skills'}
+            </Button>
           </FormControl>
         </form>
       </FormProvider>
@@ -161,13 +185,13 @@ const SkillForm = () => {
         open={sendSuccess}
         autoHideDuration={3000}
         message={`Skills added to ${developerInfo.name}`}
-        ContentProps={{sx : {backgroundColor: '#54ac68'}}}
+        ContentProps={{ sx: { backgroundColor: '#54ac68' } }}
       />
       <Snackbar
         open={sendError}
         autoHideDuration={3000}
         message="Loading failed, please try again"
-        ContentProps={{sx : {backgroundColor: '#ff3030'}}}
+        ContentProps={{ sx: { backgroundColor: '#ff3030' } }}
       />
     </>
   );

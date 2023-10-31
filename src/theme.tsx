@@ -110,7 +110,7 @@ type ThemeContextType = {
 };
 
 const ThemeContext = React.createContext<ThemeContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const useThemeContext = () => {

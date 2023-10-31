@@ -1,10 +1,10 @@
 import { Autocomplete, TextField } from '@mui/material';
 import { ComboBoxProps, Skill } from '../types/innerTypes';
-import axios from 'axios';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import { Controller } from 'react-hook-form';
+import { handleAddSkill } from '../utils/mutationTools';
+import { useAuth0 } from '@auth0/auth0-react';
 
-const backendServer = import.meta.env.VITE_BE_SERVER;
 const filterFromMUI = createFilterOptions<string>();
 
 const ComboBox = ({
@@ -13,20 +13,11 @@ const ComboBox = ({
   refetchSkills,
   isRequired,
 }: ComboBoxProps) => {
+  const { getAccessTokenSilently } = useAuth0();
   const filteredSkills: Skill[] = skills.filter(
-    (skill) => skill.type === skillType
+    (skill) => skill.type === skillType,
   );
   const skillTitleList: string[] = filteredSkills.map((skill) => skill.title);
-
-  const handleAddSkill = async (newSkillName: string) => {
-    const response = await axios.post(`${backendServer}api/skills`, {
-      title: newSkillName,
-      type: skillType,
-    })
-
-    const skill: Skill = response.data;
-    return skill;
-  };
 
   return (
     <Controller
@@ -67,20 +58,22 @@ const ComboBox = ({
           onChange={async (_event, value) => {
             const skillsToCreate = value.filter(
               (skillTitle) =>
-                !filteredSkills.some((skill) => skill.title === skillTitle)
+                !filteredSkills.some((skill) => skill.title === skillTitle),
             );
 
-            const newSkills = await Promise.all(
-              skillsToCreate.map((skillTitle) => handleAddSkill(skillTitle))
-            );
+            const newSkills = await skillsToCreate.map((skillTitle) => {
+              handleAddSkill(skillTitle, skillType, getAccessTokenSilently);
+            });
 
             onChange(
               value.map(
                 (skillTitle) =>
-                  [...filteredSkills, ...newSkills].find(
-                    (skill) => skill.title === skillTitle
-                  )?.id
-              )
+                  [...filteredSkills, ...newSkills].find((skill) => {
+                    if (skill) {
+                      return skill.title === skillTitle;
+                    }
+                  })?.id,
+              ),
             );
 
             refetchSkills();
