@@ -1,3 +1,5 @@
+import { Skill } from '../types/innerTypes';
+
 //used in dataVisualization
 export const updateCounts = (dataPublicationData: string[]) => {
   let thisWeek = 0;
@@ -5,7 +7,7 @@ export const updateCounts = (dataPublicationData: string[]) => {
   let twoWeekOld = 0;
   let threeWeekOld = 0;
 
-  dataPublicationData.forEach((date) => {
+  dataPublicationData.forEach(date => {
     const timeDiff = Date.now() - new Date(date).getTime();
     const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 
@@ -33,3 +35,16 @@ export const labels = [
   '1-2 weeks',
   'Less than 1 week',
 ];
+
+export const groupSkillsByCategory = (skills: Skill[]) => {
+  const groupedSkills: { [key: string]: string[] } = {};
+
+  skills.forEach(skill => {
+    if (!groupedSkills[skill.type]) {
+      groupedSkills[skill.type] = [];
+    }
+    groupedSkills[skill.type].push(skill.title);
+  });
+
+  return groupedSkills;
+};
