@@ -4,13 +4,11 @@ import { FormHelperText, Snackbar, TextField, Typography } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { DevFormSchema } from '../types/validationTypes';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-
-const backendServer = import.meta.env.VITE_BE_SERVER;
+import { postDeveloperRequest } from '../utils/mutationTools';
 
 const DevForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -29,14 +27,9 @@ const DevForm = () => {
   const navigate = useNavigate();
   const onSubmit = async (data: z.infer<typeof DevFormSchema>) => {
     setLoading(true);
-    const accessToken = await getAccessTokenSilently();
     try {
-      const res = await axios.post(`${backendServer}api/developers`, data, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      navigate(`${res.data.id}/skills`, { state: res.data });
+      const res = await postDeveloperRequest({ data, getAccessTokenSilently });
+      navigate(`${res.id}/skills`, { state: res });
     } catch (error) {
       setSendError(true);
       setTimeout(() => setSendError(false), 2000);
@@ -119,7 +112,7 @@ const DevForm = () => {
         open={sendError}
         autoHideDuration={3000}
         message="Loading failed, please try again"
-        ContentProps={{sx : {backgroundColor: '#ff3030'}}}
+        ContentProps={{ sx: { backgroundColor: '#ff3030' } }}
       />
     </div>
   );

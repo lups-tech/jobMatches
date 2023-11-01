@@ -7,37 +7,7 @@ import JobFilters from '../components/JobFilters';
 import JobCard from '../components/JobCard';
 import { useAuth0 } from '@auth0/auth0-react';
 import { mockSkills } from '../data/mockSkills';
-import { fetchUserInfo } from '../utils/fetchingTools';
-
-const backendServer = import.meta.env.VITE_BE_SERVER;
-
-const fetchSkills = async (accessToken: string): Promise<Skill[]> => {
-  const res = await fetch(`${backendServer}api/Skills`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  return res.json();
-};
-
-const fetchJobs = async (
-  searchFilter: FilterFormValues,
-  page: number,
-): Promise<SearchResult> => {
-  const res = await fetch(
-    `https://jobsearch.api.jobtechdev.se/search?${searchFilter.regionFilter
-      .map(
-        (region) =>
-          `region=${region['taxonomy/national-nuts-level-3-code-2019']}`,
-      )
-      .join('&')}&experience=${
-      searchFilter.isExperienced
-    }&q=${encodeURIComponent(
-      searchFilter.skillsFilter.join(' ') + ' ' + searchFilter.searchKeyword,
-    )}&offset=${page * 10}&limit=10`,
-  );
-  return res.json();
-};
+import { fetchJobs, fetchSkills, fetchUserInfo } from '../utils/fetchingTools';
 
 const AllJobs = () => {
   const [searchKeyword, setSearchKeyword] = useState<FilterFormValues>({

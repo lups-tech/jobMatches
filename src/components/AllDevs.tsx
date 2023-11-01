@@ -1,6 +1,3 @@
-import { useAuth0 } from '@auth0/auth0-react';
-import { CircularProgress, Pagination } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
 import {
   Developer,
   Skill,
@@ -10,57 +7,29 @@ import {
 import { ChangeEvent, useEffect, useState, useMemo } from 'react';
 import DevCard from './DevCard';
 import DevFilters from './DevFilters';
-import {
-  fetchSkills,
-  fetchDevelopers,
-  fetchUserInfo,
-} from '../utils/fetchingTools';
+import { developerFilter } from '../utils/utilities';
+import { Pagination } from '@mui/material';
 
-const AllDevs = () => {
-  const { getAccessTokenSilently, user } = useAuth0();
-
+const AllDevs = ({
+  allDevelopers,
+  skills,
+  userInfo,
+}: {
+  allDevelopers: Developer[];
+  skills: Skill[];
+  userInfo: UserInfoDTO;
+}) => {
   const [searchFilter, setSearchFilter] = useState<DeveloperFilterFormValues>({
     searchKeyword: '',
     skillsFilter: [],
     speaksSwedish: false,
   });
-
   const [numberOfPages, setNumberOfPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
+  const [displayedDevelopers, setDisplayedDevelopers] = useState<Developer[]>(
+    [],
+  );
   const pageSize = 7;
-
-  const {
-    isLoading: isSkillsLoading,
-    error: skillsError,
-    data: skills,
-  } = useQuery<Skill[]>(['skills'], async () => {
-    const accessToken = await getAccessTokenSilently();
-    return fetchSkills(accessToken);
-  });
-
-  const {
-    isLoading,
-    error,
-    data: allDevelopers,
-  } = useQuery<Developer[], Error>({
-    queryKey: ['allDevelopers'],
-    queryFn: async () => {
-      const accessToken = await getAccessTokenSilently();
-      return fetchDevelopers(accessToken);
-    },
-  });
-
-  const {
-    isLoading: isUserInfoLoading,
-    error: isUserInfoError,
-    data: userInfo,
-  } = useQuery<UserInfoDTO, Error>({
-    queryKey: ['userInfo'],
-    queryFn: async () => {
-      const accessToken = await getAccessTokenSilently();
-      return fetchUserInfo(accessToken, user?.sub ? user.sub : '');
-    },
-  });
 
   const orderedDevelopers = useMemo(() => {
     if (allDevelopers) {
@@ -74,65 +43,28 @@ const AllDevs = () => {
         return 0;
       });
     }
+
     return [];
   }, [allDevelopers]);
 
-  const [displayedDevelopers, setDisplayedDevelopers] = useState<Developer[]>(
-    [],
-  );
-
   useEffect(() => {
-    if (!isLoading && orderedDevelopers) {
+    if (orderedDevelopers) {
       setDisplayedDevelopers(orderedDevelopers);
       setNumberOfPages(
         Math.floor(orderedDevelopers?.length ?? 0 / pageSize) + 1,
       );
       setCurrentPage(0);
     }
-  }, [isLoading, orderedDevelopers]);
+  }, [orderedDevelopers]);
 
   useEffect(() => {
     if (!orderedDevelopers) {
       return; // No developers to filter
     }
 
-    const filteredDevelopers = orderedDevelopers.filter((dev: Developer) => {
-      const devSkills = dev.skills.map((skill: Skill) => skill.title);
-      const devName = dev.name.toLowerCase();
-      const speaksSwedish = devSkills.includes('Swedish');
-      const matchingSkills = devSkills.includes(searchFilter.searchKeyword);
-      const matchingName = devName.includes(searchFilter.searchKeyword);
-      const matchingProgrammingLanguages = searchFilter.skillsFilter.every(
-        (skill) => devSkills.includes(skill),
-      );
-
-      if (searchFilter.speaksSwedish && !speaksSwedish) {
-        return false;
-      }
-
-      if (
-        searchFilter.speaksSwedish &&
-        speaksSwedish &&
-        searchFilter.searchKeyword === '' &&
-        searchFilter.skillsFilter.length === 0
-      ) {
-        return true;
-      }
-
-      if (
-        searchFilter.speaksSwedish &&
-        speaksSwedish &&
-        matchingProgrammingLanguages &&
-        (matchingSkills || matchingName)
-      ) {
-        return true;
-      }
-
-      if (matchingProgrammingLanguages && (matchingSkills || matchingName)) {
-        return true;
-      }
-
-      return false;
+    const filteredDevelopers = developerFilter({
+      orderedDevelopers,
+      searchFilter,
     });
 
     const slicedDevelopers = filteredDevelopers.slice(
@@ -153,26 +85,6 @@ const AllDevs = () => {
     value = value - 1;
     setCurrentPage(value);
   };
-
-  if (isLoading || isSkillsLoading || isUserInfoLoading)
-    return (
-      <div className="flex justify-center mt-16">
-        <CircularProgress />
-      </div>
-    );
-
-  if (error || skillsError || isUserInfoError) {
-    console.log('❗️error: ', error);
-    return (
-      <div className="flex justify-center mt-16">
-        An error has occurred, check console for more info
-      </div>
-    );
-  }
-
-  if (!skills) {
-    return;
-  }
 
   return (
     <div className="flex justify-center">

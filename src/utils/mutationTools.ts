@@ -5,13 +5,15 @@ import {
   DeleteCommentRequestBody,
   Skill,
 } from '../types/innerTypes';
+import { DevFormSchema } from '../types/validationTypes';
+import * as z from 'zod';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
 export const handleAddSkill = async (
   newSkillName: string,
   skillType: string,
-  getAccessTokenSilently: any
+  getAccessTokenSilently: any,
 ) => {
   const accessToken = await getAccessTokenSilently();
   const response = await axios.post(
@@ -24,7 +26,7 @@ export const handleAddSkill = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    }
+    },
   );
 
   const skill: Skill = response.data;
@@ -33,7 +35,7 @@ export const handleAddSkill = async (
 
 export const editPassword = async (
   newPassword: string,
-  accessToken: string
+  accessToken: string,
 ) => {
   await axios.patch(
     `${backendServer}api/users/editpassword`,
@@ -42,7 +44,7 @@ export const editPassword = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    }
+    },
   );
 };
 
@@ -64,7 +66,7 @@ export const sendAddCommentRequest = async ({
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    }
+    },
   );
 
   const comment: Comment = response.data;
@@ -82,9 +84,25 @@ export const sendDeleteCommentRequest = async ({
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    }
+    },
   );
 
   const comment: Comment = response.data;
   return comment;
+};
+
+export const postDeveloperRequest = async ({
+  data,
+  getAccessTokenSilently,
+}: {
+  data: z.infer<typeof DevFormSchema>;
+  getAccessTokenSilently: any;
+}) => {
+  const accessToken = await getAccessTokenSilently();
+  const res = await axios.post(`${backendServer}api/developers`, data, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  return res.data;
 };

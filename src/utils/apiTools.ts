@@ -14,3 +14,10 @@ export const getDataBySearchAndDates = async (
     console.error(error);
   }
 };
+
+export const fetchRegions = async () => {
+  const res = await fetch(
+    'https://taxonomy.api.jobtechdev.se/v1/taxonomy/specific/concepts/region',
+  );
+  return res.json();
+};

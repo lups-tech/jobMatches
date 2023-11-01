@@ -7,9 +7,7 @@ import {
   CardHeader,
   Collapse,
   IconButton,
-  IconButtonProps,
   Typography,
-  styled,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -21,21 +19,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { togglelikeRequest } from '../utils/fetchingTools';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Skill } from '../types/innerTypes';
-
-interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
-}
-
-const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
+import { ExpandMore } from './ExpandMore';
 
 const JobCard = ({
   jobInfo,

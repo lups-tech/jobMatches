@@ -1,4 +1,7 @@
 import axios from 'axios';
+import { FilterFormValues } from '../types/innerTypes';
+import { SearchResult } from '../types/externalTypes';
+import { Job } from '../types/jobTechApiTypes';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
@@ -71,6 +74,35 @@ export const fetchSkills = async (accessToken: string) => {
 export const fetchDevelopers = async (accessToken: string) => {
   const res = await axios.get(`${backendServer}api/developers`, {
     headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return res.data;
+};
+
+export const fetchJobs = async (
+  searchFilter: FilterFormValues,
+  page: number,
+): Promise<SearchResult> => {
+  const res = await fetch(
+    `https://jobsearch.api.jobtechdev.se/search?${searchFilter.regionFilter
+      .map(
+        (region) =>
+          `region=${region['taxonomy/national-nuts-level-3-code-2019']}`,
+      )
+      .join('&')}&experience=${
+      searchFilter.isExperienced
+    }&q=${encodeURIComponent(
+      searchFilter.skillsFilter.join(' ') + ' ' + searchFilter.searchKeyword,
+    )}&offset=${page * 10}&limit=10`,
+  );
+  return res.json();
+};
+
+export const fetchMatches = async (job: Job, accessToken: string) => {
+  const jobDescription = { description: job.description.text };
+  const res = await axios.post(`${backendServer}scraper`, jobDescription, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
   });
   return res.data;
 };

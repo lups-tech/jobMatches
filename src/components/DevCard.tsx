@@ -6,15 +6,12 @@ import {
   Collapse,
   Typography,
   IconButton,
-  IconButtonProps,
-  styled,
   Avatar,
   Grid,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useState } from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import EmailIcon from '@mui/icons-material/Email';
 import { Developer } from '../types/innerTypes';
@@ -24,22 +21,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { togglelikeRequest } from '../utils/fetchingTools';
 import { groupSkillsByCategory } from '../utils/utilities';
 import CommentList from './CommentList';
-
-interface ExpandMoreProps extends IconButtonProps {
-  // the value is either 'true' or 'false', not using boolean type because it causes a fontend terminal error
-  expand: string;
-}
-
-const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: expand != 'true' ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
+import { ExpandMore } from './ExpandMore';
 
 const DevCard = ({
   developer,
@@ -173,7 +155,7 @@ const DevCard = ({
           {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </IconButton>
         <ExpandMore
-          expand={expanded.toString()}
+          expand={expanded}
           onClick={handleExpandClick}
           aria-expanded={expanded}
           aria-label="show more"

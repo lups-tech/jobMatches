@@ -7,70 +7,25 @@ import {
   Paper,
   Stack,
   Typography,
-} from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { useLocation } from "react-router-dom";
-import { Matches } from "../types/scraperTypes";
-import { Developer, Skill } from "../types/innerTypes"
-import { Job } from "../types/jobTechApiTypes";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import EmailIcon from "@mui/icons-material/Email";
-import { useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-import { cardColorLogic } from "../data/programmingLanguageColors";
-import { mockDevelopers } from "../data/mockDevelopers";
-import { mockSkills } from "../data/mockSkills";
+} from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+import { Matches } from '../types/scraperTypes';
+import { Job } from '../types/jobTechApiTypes';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import EmailIcon from '@mui/icons-material/Email';
+import { useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { cardColorLogic } from '../data/programmingLanguageColors';
+import { mockDevelopers } from '../data/mockDevelopers';
+import { fetchMatches } from '../utils/fetchingTools';
+import { findMatchingSkills, sortMockDevelopers } from '../utils/utilities';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
 type LocationState = {
   state: Job;
-};
-
-const fetchMatches = async (job: Job, accessToken: string) => {
-  const jobDescription = { description: job.description.text };
-  const res = await axios.post(`${backendServer}scraper`, jobDescription, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  return res.data;
-};
-
-const findMatchingSkills = (job: Job) => {
-  const jobDescriptionStrArr = {
-    description: job.description.text,
-  }.description.toLowerCase().replace(/[^a-zA-Z0-9\s#]/g, '').split(" ")
-  const matchingSkills = mockSkills.filter((skill) =>
-    jobDescriptionStrArr.includes(skill.title.toLowerCase())
-
-  );
-  return matchingSkills;
-};
-
-const sortMockDevelopers = (developers: Developer[], descriptionSkills: Skill[]) => {
-  const orderedDevs: Developer[] = [];
-  developers.map((dev: Developer) => {
-    const devSkillsId = dev.skills.map((skill: Skill) => skill.id);
-    const descriptionSkillsId = descriptionSkills.map((skill: Skill) => skill.id);
-    const matchingSkills = devSkillsId.filter((skillId: string) =>
-      descriptionSkillsId.includes(skillId)
-    );
-    dev.skillMatch = matchingSkills.length;
-    if (matchingSkills.length > 0) {
-      orderedDevs.push(dev);
-    }
-  });
-
-  orderedDevs.sort((devA: Developer, devB: Developer) => {
-    const devASkillMatches = devA.skillMatch;
-    const devBSkillMatches = devB.skillMatch;
-
-    return devBSkillMatches - devASkillMatches;
-  });
-
-  return orderedDevs;
 };
 
 const JobMatches = () => {
@@ -92,7 +47,7 @@ const JobMatches = () => {
       const matchingSkills = findMatchingSkills(jobInfo);
       const developersSorted = sortMockDevelopers(
         mockDevelopers,
-        matchingSkills
+        matchingSkills,
       );
       return {
         developers: developersSorted,
@@ -113,7 +68,7 @@ const JobMatches = () => {
       deadline: jobInfo.application_deadline,
       employer: jobInfo.employer.name,
       jobText: jobInfo.description.text,
-      SelectedSkillIds: matches.jobSkills.map(jobSkill => jobSkill.id),
+      SelectedSkillIds: matches.jobSkills.map((jobSkill) => jobSkill.id),
     };
     try {
       await axios.post(`${backendServer}api/jobs`, createJobReq, {
@@ -126,6 +81,7 @@ const JobMatches = () => {
       console.log('Error:', (error as Error).message);
     }
   };
+
   return (
     <div className="flex flex-col sm:flex-row gap-5 justify-center items-start">
       <div className="flex flex-col gap-5">
@@ -181,7 +137,7 @@ const JobMatches = () => {
         <Typography variant="h2">Best Matches</Typography>
 
         {matches.developers.length > 0 ? (
-          matches.developers.map(dev => (
+          matches.developers.map((dev) => (
             <Paper
               elevation={1}
               sx={{
@@ -192,10 +148,10 @@ const JobMatches = () => {
                 backgroundColor: `${
                   cardColorLogic[
                     dev.skills.filter(
-                      skill => skill.type === 'Programming Language'
+                      (skill) => skill.type === 'Programming Language',
                     ).length > 0
                       ? dev.skills.filter(
-                          skill => skill.type === 'Programming Language'
+                          (skill) => skill.type === 'Programming Language',
                         )[0].title
                       : 'no_such_programming_skill'
                   ]
@@ -210,10 +166,12 @@ const JobMatches = () => {
               </Typography>
               <Stack spacing={1} direction="row">
                 {dev.skills
-                  .filter(skill =>
-                    matches.jobSkills.some(jobSkill => jobSkill.id === skill.id)
+                  .filter((skill) =>
+                    matches.jobSkills.some(
+                      (jobSkill) => jobSkill.id === skill.id,
+                    ),
                   )
-                  .map(skill => (
+                  .map((skill) => (
                     <Chip label={skill.title} size="small" key={skill.id} />
                   ))}
               </Stack>

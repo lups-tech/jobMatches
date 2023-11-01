@@ -20,20 +20,15 @@ import Checkbox from '@mui/material/Checkbox';
 import { Region } from '../types/externalTypes';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { fetchRegions } from '../utils/apiTools';
 
-interface IJobFilters {
+const JobFilters = ({
+  setSearchKeyword,
+  skills,
+}: {
   setSearchKeyword: Dispatch<SetStateAction<FilterFormValues>>;
   skills: Skill[];
-}
-
-const fetchRegions = async () => {
-  const res = await fetch(
-    'https://taxonomy.api.jobtechdev.se/v1/taxonomy/specific/concepts/region'
-  );
-  return res.json();
-};
-
-const JobFilters = ({ setSearchKeyword, skills }: IJobFilters) => {
+}) => {
   const { register, handleSubmit, control } = useForm<FilterFormValues>({
     defaultValues: {
       searchKeyword: 'JavaScript',
@@ -88,8 +83,8 @@ const JobFilters = ({ setSearchKeyword, skills }: IJobFilters) => {
                 borderRadius: '24px',
               },
             }}
-            options={skills.map(skill => skill.title)}
-            renderInput={params => (
+            options={skills.map((skill) => skill.title)}
+            renderInput={(params) => (
               <TextField {...params} label="Search skills" />
             )}
             onInputChange={onChange}
@@ -138,11 +133,11 @@ const JobFilters = ({ setSearchKeyword, skills }: IJobFilters) => {
                 value={value}
                 onChange={onChange}
                 input={<OutlinedInput label="Programming Language" />}
-                renderValue={selected => selected.join(', ')}
+                renderValue={(selected) => selected.join(', ')}
               >
                 {skills
-                  .filter(skill => skill.type === 'Programming Language')
-                  .map(skill => (
+                  .filter((skill) => skill.type === 'Programming Language')
+                  .map((skill) => (
                     <MenuItem key={skill.id} value={skill.title}>
                       <Checkbox
                         checked={value.indexOf(skill.title) > -1}
@@ -167,23 +162,23 @@ const JobFilters = ({ setSearchKeyword, skills }: IJobFilters) => {
               multiple
               size="small"
               options={
-                regions.filter(region =>
-                  region['taxonomy/preferred-label'].includes('län')
+                regions.filter((region) =>
+                  region['taxonomy/preferred-label'].includes('län'),
                 ) as Region[]
               }
-              renderInput={params => (
+              renderInput={(params) => (
                 <TextField
                   {...params}
                   key={params.id}
                   label={`Select regions`}
                 />
               )}
-              getOptionLabel={option => option['taxonomy/preferred-label']}
+              getOptionLabel={(option) => option['taxonomy/preferred-label']}
               onBlur={onBlur}
               onChange={(_event, values) => {
                 if (values && regions) {
-                  const regionMatched = values.map(regionMatched =>
-                    regions.find(region => regionMatched === region)
+                  const regionMatched = values.map((regionMatched) =>
+                    regions.find((region) => regionMatched === region),
                   );
                   onChange(regionMatched);
                 }
@@ -206,7 +201,3 @@ const JobFilters = ({ setSearchKeyword, skills }: IJobFilters) => {
 };
 
 export default JobFilters;
-
-// add filtering EXPERIENCE
-// add filtering REGION
-// add filtering PROGRAMMING LANGUAGES
