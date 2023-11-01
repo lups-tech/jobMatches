@@ -25,7 +25,6 @@ import {
   AddCommentRequestBody,
   DeleteCommentRequestBody,
   Developer,
-  DeveloperDTO,
   Skill,
 } from '../types/innerTypes';
 import { cardColorLogic } from '../data/programmingLanguageColors';
@@ -59,15 +58,15 @@ const DevCard = ({
 }: {
   developer: Developer;
   isLiked: boolean;
-  currentDevelopers?: DeveloperDTO[];
-  setCurrentDevelopers?: React.Dispatch<React.SetStateAction<DeveloperDTO[]>>;
+  currentDevelopers?: Developer[];
+  setCurrentDevelopers?: React.Dispatch<React.SetStateAction<Developer[]>>;
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(isLiked);
   const { getAccessTokenSilently, user } = useAuth0();
   const queryClient = useQueryClient();
   const [isAddingComment, setIsAddingComment] = useState(false);
-  const valueRef = useRef('');
+  const commentValue = useRef<HTMLInputElement>();
 
   const mutationLikeDeveloper = useMutation(togglelikeRequest, {
     onSuccess: () => {
@@ -116,6 +115,9 @@ const DevCard = ({
     getAccessTokenSilently,
   }: AddCommentRequestBody) => {
     setIsAddingComment(false);
+    if (!commentText) {
+      return;
+    }
     mutationAddAComment.mutate({
       commentText,
       userEmail,
@@ -275,7 +277,7 @@ const DevCard = ({
                 <div className="flex flex-row justify-between">
                   <TextField
                     fullWidth
-                    inputRef={valueRef}
+                    inputRef={commentValue}
                     id="standard-basic"
                     label="New Comments:"
                     variant="standard"
@@ -286,7 +288,7 @@ const DevCard = ({
                       aria-label="save"
                       onClick={() =>
                         sendAddCommentRequestHandle({
-                          commentText: valueRef.current.value,
+                          commentText: commentValue.current!.value,
                           userEmail: user!.email ?? '',
                           developerId: developer.id,
                           getAccessTokenSilently,

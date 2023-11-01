@@ -66,18 +66,10 @@ export type JobDTO = {
   skills: JobSkillDTO[];
 };
 
-export type DeveloperDTO = {
-  id: string;
-  name: string;
-  email: string;
-  skills: DevSkillDTO[];
-  skillMatch: number;
-};
-
 export type UserInfoDTO = {
   id: string;
   jobs: JobDTO[];
-  developers: DeveloperDTO[];
+  developers: Developer[];
 };
 
 export type ChartData = {

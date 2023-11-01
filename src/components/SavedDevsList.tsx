@@ -1,8 +1,8 @@
 import { Typography } from '@mui/material';
-import { DeveloperDTO } from '../types/innerTypes';
+import { Developer } from '../types/innerTypes';
 import DevCard from './DevCard';
 
-const SavedDevsList = ({ developers }: { developers: DeveloperDTO[] }) => {
+const SavedDevsList = ({ developers }: { developers: Developer[] }) => {
   return (
     <div className="w-[415px] mx-5">
       <Typography variant="h5">Saved Developers</Typography>

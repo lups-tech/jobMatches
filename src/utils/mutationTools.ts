@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
-import { CommentRequestBody, Skill } from '../types/innerTypes';
+import {
+  AddCommentRequestBody,
+  DeleteCommentRequestBody,
+  Skill,
+} from '../types/innerTypes';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
@@ -47,7 +51,7 @@ export const sendAddCommentRequest = async ({
   userEmail,
   developerId,
   getAccessTokenSilently,
-}: CommentRequestBody) => {
+}: AddCommentRequestBody) => {
   const accessToken = await getAccessTokenSilently();
   const response = await axios.post(
     `${backendServer}api/comments`,
@@ -70,7 +74,7 @@ export const sendAddCommentRequest = async ({
 export const sendDeleteCommentRequest = async ({
   commentId,
   getAccessTokenSilently,
-}: CommentRequestBody) => {
+}: DeleteCommentRequestBody) => {
   const accessToken = await getAccessTokenSilently();
   const response = await axios.delete(
     `${backendServer}api/comments/${commentId}`,
