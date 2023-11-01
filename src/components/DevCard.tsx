@@ -10,7 +10,6 @@ import {
   styled,
   Avatar,
   Grid,
-  Divider,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useState } from 'react';
@@ -201,9 +200,6 @@ const DevCard = ({
                 developer={developer}
                 getAccessTokenSilently={getAccessTokenSilently}
               />
-              <div className="my-2">
-                <Divider />
-              </div>
               <Typography variant="body1">
                 <EmailIcon fontSize="small" sx={{ marginRight: 1 }} />
                 <span className="font-bold">{developer.email}</span>
