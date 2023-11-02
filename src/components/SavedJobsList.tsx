@@ -3,17 +3,7 @@ import { JobDTO, Skill } from '../types/innerTypes';
 import SavedJobCard from './SavedJobCard';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth0 } from '@auth0/auth0-react';
-
-const backendServer = import.meta.env.VITE_BE_SERVER;
-
-const fetchSkills = async (accessToken: string): Promise<Skill[]> => {
-  const res = await fetch(`${backendServer}api/Skills`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  return res.json();
-};
+import { fetchSkills } from '../utils/fetchingTools';
 
 const SavedJobsList = ({
   jobs,
@@ -57,7 +47,7 @@ const SavedJobsList = ({
         <div className="w-[400px]">
           {jobs &&
             jobs.length > 0 &&
-            jobs.map((job) => (
+            jobs.map(job => (
               <SavedJobCard
                 key={job.id}
                 databaseId={job.id}

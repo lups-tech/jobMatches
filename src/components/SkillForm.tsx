@@ -17,6 +17,7 @@ import { useState } from 'react';
 import ComboBox from './ComboBox';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
+import { fetchSkills } from '../utils/fetchingTools';
 
 type FormValues = {
   developerId: string;
@@ -26,15 +27,6 @@ type FormValues = {
 };
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
-
-const fetchSkills = async (accessToken: string) => {
-  const res = await axios.get(`${backendServer}api/skills`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  return res.data;
-};
 
 const SkillForm = () => {
   const navigate = useNavigate();
@@ -69,16 +61,13 @@ const SkillForm = () => {
     register,
   } = formMethods;
 
-  if (isSkillsLoading) return <p>Loading...</p>;
-  if (skillsError || skills === undefined)
-    return <p>An error has occurred: {skillsError?.message}</p>;
-
-  const skillTypes = Array.from(new Set(skills.map((skill) => skill.type)));
-
   const addSkillToDeveloperRequest = async ({
     developerId,
     selectedSkillIds,
-  }: any) => {
+  }: {
+    developerId: string;
+    selectedSkillIds: string[];
+  }) => {
     const accessToken = await getAccessTokenSilently();
     await axios.patch(
       `${backendServer}api/developerSkills`,
@@ -90,7 +79,7 @@ const SkillForm = () => {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      },
+      }
     );
   };
 
@@ -108,6 +97,11 @@ const SkillForm = () => {
       setTimeout(() => setSendError(false), 2000);
     },
   });
+  if (isSkillsLoading) return <p>Loading...</p>;
+  if (skillsError || skills === undefined)
+    return <p>An error has occurred: {skillsError?.message}</p>;
+
+  const skillTypes = Array.from(new Set(skills.map(skill => skill.type)));
 
   const onSubmit = async (formValues: FormValues) => {
     setLoadingState(true);
@@ -131,15 +125,15 @@ const SkillForm = () => {
             <FormLabel>Programming Language</FormLabel>
             <div className="pl-2 w-full flex flex-col">
               {skills
-                .filter((skill) => skill.type === 'Programming Language')
-                .map((skill) => (
+                .filter(skill => skill.type === 'Programming Language')
+                .map(skill => (
                   <FormControlLabel
                     key={skill.id}
                     control={
                       <Checkbox
                         value={skill.id}
                         {...register('selectedSkillIds.Programming Language', {
-                          validate: (value) => value.length > 0,
+                          validate: value => value.length > 0,
                         })}
                       />
                     }
@@ -152,8 +146,8 @@ const SkillForm = () => {
             <FormLabel>Add Specialist Skills</FormLabel>
             <div className="w-full px-2 flex flex-col gap-4">
               {skillTypes
-                .filter((skillType) => skillType != 'Programming Language')
-                .map((skillType) => (
+                .filter(skillType => skillType != 'Programming Language')
+                .map(skillType => (
                   <ComboBox
                     key={skillType}
                     skills={skills}
