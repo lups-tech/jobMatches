@@ -1,8 +1,8 @@
 export const mockDevelopers = [
   {
-    email: 'james@bond.com',
+    email: 'mock@developer.com',
     id: 'c2ccad9d-9c53-42a7-8cba-381b73cec906',
-    name: 'james bond',
+    name: 'James Bond the Mock',
     skillMatch: 1,
     comments: [],
     skills: [
@@ -39,9 +39,9 @@ export const mockDevelopers = [
     ],
   },
   {
-    email: 'david@beckham.com',
+    email: 'mock@developer.com',
     id: '6a828d3e-62f9-47cd-94c1-191f16a5bf84',
-    name: 'David Beckham',
+    name: 'David Beckham the Mock',
     skillMatch: 1,
     comments: [],
     skills: [
@@ -78,9 +78,9 @@ export const mockDevelopers = [
     ],
   },
   {
-    email: 'jason@bourne.com',
+    email: 'mock@developer.com',
     id: '8c738ea0-d305-4f62-9a09-11d7c0e660d9',
-    name: 'Jason Bourne',
+    name: 'Jason Bourne the Mock',
     skillMatch: 1,
     comments: [],
     skills: [
@@ -112,9 +112,9 @@ export const mockDevelopers = [
     ],
   },
   {
-    email: 'john@smith.com',
+    email: 'mock@developer.com',
     id: 'b902cd1a-1c1d-4387-91e9-5e6a6aa5d1b5',
-    name: 'John Smith',
+    name: 'John Smith the mock',
     skillMatch: 1,
     comments: [],
     skills: [
