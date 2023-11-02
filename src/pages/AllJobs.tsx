@@ -53,7 +53,7 @@ const AllJobs = () => {
       // to prevent the page from fetching data too many times
       staleTime: Infinity,
       cacheTime: Infinity,
-    },
+    }
   );
 
   const pageChangeHandler = (_event: ChangeEvent<unknown>, value: number) => {
@@ -94,12 +94,16 @@ const AllJobs = () => {
             // userInfo.jobs &&
             data.hits.map((job: Job) => {
               const isLikedJob = userInfo.jobs
-                .map((jobOfUser) => jobOfUser.jobTechId)
+                .map(jobOfUser => jobOfUser.jobTechId)
                 .includes(job.id);
+              // A BUG TO BE DEBUGGED
+              if (isLikedJob) {
+                console.log('job is liked: ', job.headline);
+              }
               const databaseId = () => {
                 if (isLikedJob) {
                   const selectedJob = userInfo.jobs.find(
-                    (userJob) => userJob.jobTechId == job.id,
+                    userJob => userJob.jobTechId == job.id
                   );
                   if (selectedJob) {
                     return selectedJob.id;
