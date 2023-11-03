@@ -1,8 +1,8 @@
 import { Button, Paper, Typography, Stack, Chip } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
-import { cardColorLogic } from '../data/programmingLanguageColors';
-import { Developer } from '../types/innerTypes';
-import { Matches } from '../types/scraperTypes';
+import { cardColorLogic } from '../../../data/programmingLanguageColors';
+import { Developer } from '../../../types/innerTypes';
+import { Matches } from '../../../types/scraperTypes';
 
 const JobMatchesDevPaper = ({
   dev,
@@ -22,10 +22,10 @@ const JobMatchesDevPaper = ({
         // Following logic is to color the dev card based on the first Programming Language they have
         backgroundColor: `${
           cardColorLogic[
-            dev.skills.filter(skill => skill.type === 'Programming Language')
+            dev.skills.filter((skill) => skill.type === 'Programming Language')
               .length > 0
               ? dev.skills.filter(
-                  skill => skill.type === 'Programming Language'
+                  (skill) => skill.type === 'Programming Language',
                 )[0].title
               : 'no_such_programming_skill'
           ]
@@ -42,10 +42,10 @@ const JobMatchesDevPaper = ({
           </Typography>
           <Stack spacing={1} direction="row">
             {dev.skills
-              .filter(skill =>
-                matches.jobSkills.some(jobSkill => jobSkill.id === skill.id)
+              .filter((skill) =>
+                matches.jobSkills.some((jobSkill) => jobSkill.id === skill.id),
               )
-              .map(skill => (
+              .map((skill) => (
                 <Chip label={skill.title} size="small" key={skill.id} />
               ))}
           </Stack>

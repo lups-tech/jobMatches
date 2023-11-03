@@ -16,10 +16,10 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { togglelikeRequest } from '../utils/fetchingTools';
+import { togglelikeRequest } from '../../../utils/fetchingTools';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { JobDTO, Skill } from '../types/innerTypes';
-import { ExpandMore } from './ExpandMore';
+import { JobDTO, Skill } from '../../../types/innerTypes';
+import { ExpandMore } from '../../../components/ExpandMore';
 
 const JobCard = ({
   jobInfo,
@@ -47,8 +47,8 @@ const JobCard = ({
       .toLowerCase()
       .replace(/[^a-zA-Z0-9\s#]/g, '')
       .split(' ');
-    const matchingSkills = allSkills.filter(skill =>
-      jobDescriptionStrArr.includes(skill.title.toLowerCase())
+    const matchingSkills = allSkills.filter((skill) =>
+      jobDescriptionStrArr.includes(skill.title.toLowerCase()),
     );
     return matchingSkills;
   };
@@ -71,7 +71,7 @@ const JobCard = ({
             deadline: jobInfo.deadline,
             employer: jobInfo.employer,
             selectedSkillIds: findMatchingSkills(jobInfo).map(
-              skill => skill.id
+              (skill) => skill.id,
             ),
           }
         : {

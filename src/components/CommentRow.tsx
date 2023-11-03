@@ -12,7 +12,7 @@ interface CommentRowProps {
   getAccessTokenSilently: any;
 }
 
-const CommentRow = ({
+export const CommentRow = ({
   comment,
   user,
   getAccessTokenSilently,
@@ -55,5 +55,3 @@ const CommentRow = ({
     </div>
   );
 };
-
-export default CommentRow;

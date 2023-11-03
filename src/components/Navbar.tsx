@@ -2,9 +2,9 @@ import { AppBar, Toolbar, useMediaQuery } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 import { NavBarButtons } from './buttons/NavBarButtons';
 import { useAuth0 } from '@auth0/auth0-react';
-import MobileNavbar from './MobileNavbar';
+import { MobileNavbar } from './MobileNavbar';
 
-const Navbar = () => {
+export const Navbar = () => {
   const { isAuthenticated } = useAuth0();
   const location = useLocation();
   const isMobile = useMediaQuery('(max-width: 900px)');
@@ -63,5 +63,3 @@ const Navbar = () => {
     </AppBar>
   );
 };
-
-export default Navbar;

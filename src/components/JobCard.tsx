@@ -21,7 +21,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Skill } from '../types/innerTypes';
 import { ExpandMore } from './ExpandMore';
 
-const JobCard = ({
+export const JobCard = ({
   jobInfo,
   isLiked,
   databaseId,
@@ -174,5 +174,3 @@ const JobCard = ({
     </Card>
   );
 };
-
-export default JobCard;

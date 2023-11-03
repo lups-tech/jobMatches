@@ -1,7 +1,7 @@
-import logoContainer from '../assets/logoContainer.png';
-import logoCore from '../assets/logoCore.png';
+import logoContainer from '/assets/logoContainer.png';
+import logoCore from '/assets/logoCore.png';
 
-const SpinningLogo = () => {
+export const SpinningLogo = () => {
   return (
     <div className="relative w-1/3">
       <img
@@ -17,5 +17,3 @@ const SpinningLogo = () => {
     </div>
   );
 };
-
-export default SpinningLogo;

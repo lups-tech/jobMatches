@@ -3,12 +3,12 @@ import { FormControl } from '@mui/base';
 import { FormHelperText, Snackbar, TextField, Typography } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { DevFormSchema } from '../types/validationTypes';
+import { DevFormSchema } from '../../../types/validationTypes';
 import { useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { postDeveloperRequest } from '../utils/mutationTools';
+import { postDeveloperRequest } from '../../../utils/mutationTools';
 
 const DevForm = () => {
   const [loading, setLoading] = useState<boolean>(false);

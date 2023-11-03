@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { Skill } from '../types/innerTypes';
 import { useState } from 'react';
-import ComboBox from './ComboBox';
+import { ComboBox } from './ComboBox';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { fetchSkills } from '../utils/fetchingTools';
@@ -28,7 +28,7 @@ type FormValues = {
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
-const SkillForm = () => {
+export const SkillForm = () => {
   const navigate = useNavigate();
   const { state: developerInfo } = useLocation();
   const [sendError, setSendError] = useState<boolean>(false);
@@ -79,7 +79,7 @@ const SkillForm = () => {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }
+      },
     );
   };
 
@@ -101,7 +101,7 @@ const SkillForm = () => {
   if (skillsError || skills === undefined)
     return <p>An error has occurred: {skillsError?.message}</p>;
 
-  const skillTypes = Array.from(new Set(skills.map(skill => skill.type)));
+  const skillTypes = Array.from(new Set(skills.map((skill) => skill.type)));
 
   const onSubmit = async (formValues: FormValues) => {
     setLoadingState(true);
@@ -125,15 +125,15 @@ const SkillForm = () => {
             <FormLabel>Programming Language</FormLabel>
             <div className="pl-2 w-full flex flex-col">
               {skills
-                .filter(skill => skill.type === 'Programming Language')
-                .map(skill => (
+                .filter((skill) => skill.type === 'Programming Language')
+                .map((skill) => (
                   <FormControlLabel
                     key={skill.id}
                     control={
                       <Checkbox
                         value={skill.id}
                         {...register('selectedSkillIds.Programming Language', {
-                          validate: value => value.length > 0,
+                          validate: (value) => value.length > 0,
                         })}
                       />
                     }
@@ -146,8 +146,8 @@ const SkillForm = () => {
             <FormLabel>Add Specialist Skills</FormLabel>
             <div className="w-full px-2 flex flex-col gap-4">
               {skillTypes
-                .filter(skillType => skillType != 'Programming Language')
-                .map(skillType => (
+                .filter((skillType) => skillType != 'Programming Language')
+                .map((skillType) => (
                   <ComboBox
                     key={skillType}
                     skills={skills}
@@ -190,5 +190,3 @@ const SkillForm = () => {
     </>
   );
 };
-
-export default SkillForm;

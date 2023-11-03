@@ -5,13 +5,13 @@ import {
   FormControlLabel,
   TextField,
 } from '@mui/material';
-import { Skill } from '../types/innerTypes';
+import { Skill } from '../../../types/innerTypes';
 import { Dispatch, SetStateAction } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import { DeveloperFilterFormValues } from '../types/innerTypes';
+import { DeveloperFilterFormValues } from '../../../types/innerTypes';
 import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';

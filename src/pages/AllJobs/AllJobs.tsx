@@ -1,15 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
-import { Job, SearchResult } from '../types/externalTypes';
+import { Job, SearchResult } from '../../types/externalTypes';
 import { CircularProgress, Pagination } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { FilterFormValues, Skill, UserInfoDTO } from '../types/innerTypes';
-import JobFilters from '../components/JobFilters';
-import JobCard from '../components/JobCard';
+import { FilterFormValues, Skill, UserInfoDTO } from '../../types/innerTypes';
+import JobFilters from './components/JobFilters';
+import { JobCard } from '../../components';
 import { useAuth0 } from '@auth0/auth0-react';
-import { mockSkills } from '../data/mockSkills';
-import { fetchJobs, fetchSkills, fetchUserInfo } from '../utils/fetchingTools';
+import { mockSkills } from '../../data/mockSkills';
+import {
+  fetchJobs,
+  fetchSkills,
+  fetchUserInfo,
+} from '../../utils/fetchingTools';
 
-const AllJobs = () => {
+export const AllJobs = () => {
   const [searchKeyword, setSearchKeyword] = useState<FilterFormValues>({
     searchKeyword: 'JavaScript',
     skillsFilter: [],
@@ -53,7 +57,7 @@ const AllJobs = () => {
       // to prevent the page from fetching data too many times
       staleTime: Infinity,
       cacheTime: Infinity,
-    }
+    },
   );
 
   const pageChangeHandler = (_event: ChangeEvent<unknown>, value: number) => {
@@ -94,7 +98,7 @@ const AllJobs = () => {
             // userInfo.jobs &&
             data.hits.map((job: Job) => {
               const isLikedJob = userInfo.jobs
-                .map(jobOfUser => jobOfUser.jobTechId)
+                .map((jobOfUser) => jobOfUser.jobTechId)
                 .includes(job.id);
               // A BUG TO BE DEBUGGED
               if (isLikedJob) {
@@ -103,7 +107,7 @@ const AllJobs = () => {
               const databaseId = () => {
                 if (isLikedJob) {
                   const selectedJob = userInfo.jobs.find(
-                    userJob => userJob.jobTechId == job.id
+                    (userJob) => userJob.jobTechId == job.id,
                   );
                   if (selectedJob) {
                     return selectedJob.id;
@@ -149,5 +153,3 @@ const AllJobs = () => {
     </div>
   );
 };
-
-export default AllJobs;

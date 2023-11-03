@@ -1,16 +1,16 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { fetchUserInfo } from '../utils/fetchingTools';
+import { fetchUserInfo } from '../../utils/fetchingTools';
 import { useQuery } from '@tanstack/react-query';
-import { UserInfoDTO } from '../types/innerTypes';
+import { UserInfoDTO } from '../../types/innerTypes';
 import { CircularProgress } from '@mui/material';
-import SavedDevsList from '../components/SavedDevsList';
-import SavedJobsList from '../components/SavedJobsList';
-import { DataVisualisation } from '../components/DataVisualisation';
+import SavedDevsList from './components/SavedDevsList';
+import SavedJobsList from './components/SavedJobsList';
+import { DataVisualisation } from './components/DataVisualisation';
 import axios from 'axios';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
-const Dashboard = () => {
+export const Dashboard = () => {
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   const userCheck = async () => {
@@ -78,5 +78,3 @@ const Dashboard = () => {
     </div>
   );
 };
-
-export default Dashboard;

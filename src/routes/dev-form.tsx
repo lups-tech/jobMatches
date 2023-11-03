@@ -1,7 +1,7 @@
-import DevForm from "../components/DevForm";
+import DevForm from '../pages/DevelopersMain/components/DevForm';
 
 const DevFormRoute = () => {
-    return <DevForm />
-}
+  return <DevForm />;
+};
 
-export default DevFormRoute
+export default DevFormRoute;

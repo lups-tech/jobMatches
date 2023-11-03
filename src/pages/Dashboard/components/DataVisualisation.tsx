@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { Autocomplete, TextField } from '@mui/material';
 import { JobsChart } from './JobsChart';
 import { useQuery } from '@tanstack/react-query';
-import { ChartData, Dataset, Skill } from '../types/innerTypes';
+import { ChartData, Dataset, Skill } from '../../../types/innerTypes';
 import { useAuth0 } from '@auth0/auth0-react';
-import { cardColorLogic } from '../data/programmingLanguageColors';
-import { getDataBySearchAndDates } from '../utils/apiTools';
-import { fetchSkills } from '../utils/fetchingTools';
-import { labels, updateCounts } from '../utils/utilities';
+import { cardColorLogic } from '../../../data/programmingLanguageColors';
+import { getDataBySearchAndDates } from '../../../utils/apiTools';
+import { fetchSkills } from '../../../utils/fetchingTools';
+import { labels, updateCounts } from '../../../utils/utilities';
 
 export const DataVisualisation = () => {
   const todaysDate = new Date(Date.now()).toISOString().replace(/T.*/, '');

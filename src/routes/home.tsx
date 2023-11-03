@@ -1,6 +1,6 @@
 import { CircularProgress } from '@mui/material';
-import AboutUs from '../pages/AboutUs';
-import Dashboard from '../pages/Dashboard';
+import { AboutUs } from '../pages/AboutUs/AboutUs';
+import { Dashboard } from '../pages/Dashboard';
 import { useAuth0 } from '@auth0/auth0-react';
 
 export const HomeRoute = () => {

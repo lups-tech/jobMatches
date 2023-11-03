@@ -18,7 +18,7 @@ import { FormControl } from '@mui/base';
 import * as z from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import axios from 'axios';
-import ChangePasswordForm from '../components/ChangePasswordForm';
+import ChangePasswordForm from './components/ChangePasswordForm';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
@@ -27,7 +27,7 @@ const UserSchema = z.object({
   email: z.string().email().nonempty('Please specify an email'),
 });
 
-const UserProfile: React.FC = () => {
+export const UserProfile: React.FC = () => {
   const {
     user: userInfo,
     isLoading: isUserLoading,
@@ -205,7 +205,11 @@ const UserProfile: React.FC = () => {
             </>
           ) : (
             <div className="flex flex-col gap-5">
-              <Typography variant="h4" sx={{ alignSelf: 'center' }} gutterBottom>
+              <Typography
+                variant="h4"
+                sx={{ alignSelf: 'center' }}
+                gutterBottom
+              >
                 {currentUser.name}
               </Typography>
               <Divider>
@@ -248,5 +252,3 @@ const UserProfile: React.FC = () => {
     )
   );
 };
-
-export default UserProfile;

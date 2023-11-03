@@ -7,7 +7,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 const filterFromMUI = createFilterOptions<string>();
 
-const ComboBox = ({
+export const ComboBox = ({
   skills,
   skillType,
   refetchSkills,
@@ -83,5 +83,3 @@ const ComboBox = ({
     />
   );
 };
-
-export default ComboBox;

@@ -7,20 +7,20 @@ import {
   TextField,
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { Skill } from '../types/innerTypes';
+import { Skill } from '../../../types/innerTypes';
 import { Dispatch, SetStateAction } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import { FilterFormValues } from '../types/innerTypes';
+import { FilterFormValues } from '../../../types/innerTypes';
 import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
-import { Region } from '../types/externalTypes';
+import { Region } from '../../../types/externalTypes';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { fetchRegions } from '../utils/apiTools';
+import { fetchRegions } from '../../../utils/apiTools';
 
 const JobFilters = ({
   setSearchKeyword,

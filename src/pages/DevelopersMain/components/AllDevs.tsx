@@ -3,11 +3,11 @@ import {
   Skill,
   DeveloperFilterFormValues,
   UserInfoDTO,
-} from '../types/innerTypes';
+} from '../../../types/innerTypes';
 import { ChangeEvent, useEffect, useState, useMemo } from 'react';
-import DevCard from './DevCard';
+import { DevCard } from '../../../components';
 import DevFilters from './DevFilters';
-import { developerFilter } from '../utils/utilities';
+import { developerFilter } from '../../../utils/utilities';
 import { Pagination } from '@mui/material';
 
 const AllDevs = ({

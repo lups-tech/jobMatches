@@ -1,5 +1,5 @@
 import { TeamMemberInfo } from '../types/innerTypes';
-import illu_member_profile from '../assets/illu_member_profile.svg';
+import illu_member_profile from '/assets/illu_member_profile.svg';
 
 export const teamMemberInfos: TeamMemberInfo[] = [
   {

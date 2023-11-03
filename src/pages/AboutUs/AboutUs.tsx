@@ -1,14 +1,14 @@
-import logo from '../assets/logo_white.svg';
-import illu_precise from '../assets/illu_precise.svg';
-import illu_data_driven from '../assets/illu_data_driven.svg';
-import illu_ideation from '../assets/illu_ideation.svg';
+import logo from '/assets/logo_white.svg';
+import illu_precise from '/assets/illu_precise.svg';
+import illu_data_driven from '/assets/illu_data_driven.svg';
+import illu_ideation from '/assets/illu_ideation.svg';
 import { Button, Link } from '@mui/material';
-import TeamMember from '../components/TeamMember';
-import { teamMemberInfos } from '../data/teamMemberInfos';
+import TeamMember from './components/TeamMember';
+import { teamMemberInfos } from '../../data/teamMemberInfos';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 import { useEffect } from 'react';
-import { useThemeContext } from '../theme';
+import { useThemeContext } from '../../theme';
 
 // import DataVisualisation from './DataVisualisation';
 
@@ -35,7 +35,7 @@ const Point: React.FC<PointProp> = ({ imgUrl, alt, header, text }) => {
   );
 };
 
-const AboutUs = () => {
+export const AboutUs = () => {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   const { darkMode } = useThemeContext();
 
@@ -178,5 +178,3 @@ const AboutUs = () => {
     </div>
   );
 };
-
-export default AboutUs;

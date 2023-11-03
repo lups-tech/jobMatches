@@ -20,10 +20,10 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { togglelikeRequest } from '../utils/fetchingTools';
 import { groupSkillsByCategory } from '../utils/utilities';
-import CommentList from './CommentList';
+import { CommentList } from './CommentList';
 import { ExpandMore } from './ExpandMore';
 
-const DevCard = ({
+export const DevCard = ({
   developer,
   isLiked,
 }: {
@@ -193,5 +193,3 @@ const DevCard = ({
     </Card>
   );
 };
-
-export default DevCard;

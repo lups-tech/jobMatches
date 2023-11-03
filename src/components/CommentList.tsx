@@ -6,7 +6,7 @@ import {
   Divider,
   Button,
 } from '@mui/material';
-import CommentRow from './CommentRow';
+import { CommentRow } from './CommentRow';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, useRef } from 'react';
 import { AddCommentRequestBody, Developer } from '../types/innerTypes';
@@ -21,7 +21,7 @@ interface CommentListProps {
   getAccessTokenSilently: any;
 }
 
-const CommentList = ({
+export const CommentList = ({
   user,
   developer,
   getAccessTokenSilently,
@@ -113,7 +113,7 @@ const CommentList = ({
           No comments yet
         </Typography>
       )}
-      {developer.comments.map(comment => (
+      {developer.comments.map((comment) => (
         <CommentRow
           key={comment.id}
           comment={comment}
@@ -127,5 +127,3 @@ const CommentList = ({
     </div>
   );
 };
-
-export default CommentList;

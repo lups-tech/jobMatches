@@ -1,17 +1,17 @@
 import { useState } from 'react';
-import DevForm from '../components/DevForm';
-import AllDevs from '../components/AllDevs';
+import DevForm from './components/DevForm';
+import AllDevs from './components/AllDevs';
 import { Button, CircularProgress } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import {
   fetchDevelopers,
   fetchSkills,
   fetchUserInfo,
-} from '../utils/fetchingTools';
-import { Skill, Developer, UserInfoDTO } from '../types/innerTypes';
+} from '../../utils/fetchingTools';
+import { Skill, Developer, UserInfoDTO } from '../../types/innerTypes';
 import { useAuth0 } from '@auth0/auth0-react';
 
-const DevelopersMainRoute = () => {
+export const DevelopersMainRoute = () => {
   const { getAccessTokenSilently, user } = useAuth0();
 
   const [showForm, setShowForm] = useState(false);
@@ -90,5 +90,3 @@ const DevelopersMainRoute = () => {
     </div>
   );
 };
-
-export default DevelopersMainRoute;

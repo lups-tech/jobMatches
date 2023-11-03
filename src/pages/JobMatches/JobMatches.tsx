@@ -1,20 +1,20 @@
 import { Paper, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
-import { Matches } from '../types/scraperTypes';
-import { Job } from '../types/jobTechApiTypes';
+import { Matches } from '../../types/scraperTypes';
+import { Job } from '../../types/jobTechApiTypes';
 import { useAuth0 } from '@auth0/auth0-react';
-import { mockDevelopers } from '../data/mockDevelopers';
-import { fetchMatches } from '../utils/fetchingTools';
-import { findMatchingSkills, sortMockDevelopers } from '../utils/utilities';
-import JobMatchesJobPaper from './JobMatchesJobPaper';
-import JobMatchesDevPaper from './JobMatchesDevPaper';
+import { mockDevelopers } from '../../data/mockDevelopers';
+import { fetchMatches } from '../../utils/fetchingTools';
+import { findMatchingSkills, sortMockDevelopers } from '../../utils/utilities';
+import JobMatchesJobPaper from './components/JobMatchesJobPaper';
+import JobMatchesDevPaper from './components/JobMatchesDevPaper';
 
 type LocationState = {
   state: Job;
 };
 
-const JobMatches = () => {
+export const JobMatches = () => {
   const { state: jobInfo } = useLocation() as LocationState;
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
 
@@ -32,7 +32,7 @@ const JobMatches = () => {
       const matchingSkills = findMatchingSkills(jobInfo);
       const developersSorted = sortMockDevelopers(
         mockDevelopers,
-        matchingSkills
+        matchingSkills,
       );
       return {
         developers: developersSorted,
@@ -51,8 +51,8 @@ const JobMatches = () => {
         <Typography variant="h2">Best Matches</Typography>
         <div className="h-[600px] w-[460px] mx-auto overflow-hidden hover:overflow-y-auto">
           {matches.developers.length > 0 ? (
-            matches.developers.map(dev => (
-              <JobMatchesDevPaper dev={dev} matches={matches} />
+            matches.developers.map((dev) => (
+              <JobMatchesDevPaper key={dev.id} dev={dev} matches={matches} />
             ))
           ) : (
             <Paper
@@ -73,5 +73,3 @@ const JobMatches = () => {
     </div>
   );
 };
-
-export default JobMatches;

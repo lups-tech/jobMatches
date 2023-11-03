@@ -10,7 +10,7 @@ import { LoginButton } from './buttons/LogInButton';
 import ToggleMode from './buttons/ToggleModeButton';
 import UserBadgeButton from './buttons/UserBadgeButton';
 
-const MobileNavbar = () => {
+export const MobileNavbar = () => {
   const {
     isAuthenticated,
     user: userInfo,
@@ -129,5 +129,3 @@ const MobileNavbar = () => {
     </AppBar>
   );
 };
-
-export default MobileNavbar;

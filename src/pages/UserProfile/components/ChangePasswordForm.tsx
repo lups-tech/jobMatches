@@ -5,8 +5,8 @@ import * as z from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import { Button, Divider, FormHelperText, TextField } from '@mui/material';
 import { Dispatch } from 'react';
-import { passwordSchema } from '../types/validationTypes';
-import { editPassword } from '../utils/mutationTools';
+import { passwordSchema } from '../../../types/validationTypes';
+import { editPassword } from '../../../utils/mutationTools';
 
 const ChangePasswordForm = ({
   success,
