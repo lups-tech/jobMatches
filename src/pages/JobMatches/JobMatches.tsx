@@ -32,7 +32,7 @@ export const JobMatches = () => {
       const matchingSkills = findMatchingSkills(jobInfo);
       const developersSorted = sortMockDevelopers(
         mockDevelopers,
-        matchingSkills,
+        matchingSkills
       );
       return {
         developers: developersSorted,
@@ -49,9 +49,9 @@ export const JobMatches = () => {
       <JobMatchesJobPaper jobInfo={jobInfo} matches={matches} />
       <div className="max-w-md flex-grow">
         <Typography variant="h2">Best Matches</Typography>
-        <div className="h-[600px] w-[460px] mx-auto overflow-hidden hover:overflow-y-auto">
+        <div className="h-[600px] w-[460px] mx-auto mt-6 overflow-hidden hover:overflow-y-auto">
           {matches.developers.length > 0 ? (
-            matches.developers.map((dev) => (
+            matches.developers.map(dev => (
               <JobMatchesDevPaper key={dev.id} dev={dev} matches={matches} />
             ))
           ) : (
