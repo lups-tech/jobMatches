@@ -26,7 +26,7 @@ export const teamMemberInfos: TeamMemberInfo[] = [
   {
     imgUrl: 'https://avatars.githubusercontent.com/u/65496134?v=4',
     memberName: 'Feng Yang',
-    memberDescription: 'An extremely cool developer',
+    memberDescription: 'A developer who loves arts and games',
     githubLink: 'https://github.com/Finns841594',
     linkedinLink: 'https://www.linkedin.com/in/feng-yang-511361166/',
   },
@@ -43,6 +43,14 @@ export const teamMemberInfos: TeamMemberInfo[] = [
     memberDescription: 'Undefined',
     githubLink: 'https://github.com/Sonja-Kitanoska',
     linkedinLink: 'https://www.linkedin.com/in/sonja-kitanoska-986ba8a8/',
+  },
+  {
+    imgUrl: 'https://avatars.githubusercontent.com/u/121138332?v=4',
+    memberName: 'Anastasia Nilsson',
+    memberDescription:
+      'Loves to explore her creative side through the code she writes.',
+    githubLink: 'https://github.com/AnastasiaNilsson',
+    linkedinLink: 'https://www.linkedin.com/in/anastasia-nilsson/',
   },
   {
     imgUrl: 'https://avatars.githubusercontent.com/u/116962905?v=4',
