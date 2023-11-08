@@ -107,3 +107,34 @@ export type DeleteCommentRequestBody = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getAccessTokenSilently: any;
 };
+
+export type proposed = {
+  id: string;
+  date: Date;
+  succeeded: boolean;
+};
+
+export type contract = {
+  id: string;
+  date: string;
+  contractStage: string;
+};
+
+export type interview = {
+  id: string;
+  date: string;
+  interviewType: string;
+  passed: true;
+};
+
+export type MatchingProcess = {
+  id: string;
+  proposed: proposed;
+  interviews: interview[];
+  contracts: contract[];
+  placed: true;
+  resultDate: string;
+  developerId: string;
+  jobId: string;
+  userId: string;
+};

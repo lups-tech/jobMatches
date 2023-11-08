@@ -52,7 +52,12 @@ export const JobMatches = () => {
         <div className="h-[600px] w-[460px] mx-auto mt-6 overflow-hidden hover:overflow-y-auto">
           {matches.developers.length > 0 ? (
             matches.developers.map(dev => (
-              <JobMatchesDevPaper key={dev.id} dev={dev} matches={matches} />
+              <JobMatchesDevPaper
+                key={dev.id}
+                dev={dev}
+                matches={matches}
+                jobInfo={jobInfo}
+              />
             ))
           ) : (
             <Paper

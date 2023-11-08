@@ -11,20 +11,11 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
 import { UserInfoDTO } from '../../../types/innerTypes';
-import axios from 'axios';
 import { fetchUserInfo } from '../../../utils/fetchingTools';
 import { Job } from '../../../types/jobTechApiTypes';
-
-const backendServer = import.meta.env.VITE_BE_SERVER;
+import { postJobRequest } from '../../../utils/mutationTools';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const postJobRequest = async ({ createJobReq, accessToken }: any) => {
-  await axios.post(`${backendServer}api/jobs`, createJobReq, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-};
 
 const JobMatchesJobPaper = ({
   jobInfo,
@@ -50,7 +41,7 @@ const JobMatchesJobPaper = ({
   });
 
   useEffect(() => {
-    if (userInfo?.jobs.find((job) => job.jobTechId === jobInfo.id)) {
+    if (userInfo?.jobs.find(job => job.jobTechId === jobInfo.id)) {
       setIsSaved(true);
     } else {
       setIsSaved(false);
@@ -75,7 +66,7 @@ const JobMatchesJobPaper = ({
         deadline: jobInfo.application_deadline,
         employer: jobInfo.employer.name,
         jobText: jobInfo.description.text,
-        SelectedSkillIds: matches.jobSkills.map((jobSkill) => jobSkill.id),
+        SelectedSkillIds: matches.jobSkills.map(jobSkill => jobSkill.id),
       };
       mutationLikeJob.mutate({ createJobReq, accessToken });
     }

@@ -1,7 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { fetchUserInfo } from '../../utils/fetchingTools';
+import { fetchMatchingProcess, fetchUserInfo } from '../../utils/fetchingTools';
 import { useQuery } from '@tanstack/react-query';
-import { UserInfoDTO } from '../../types/innerTypes';
+import { UserInfoDTO, MatchingProcess } from '../../types/innerTypes';
 import { CircularProgress } from '@mui/material';
 import SavedDevsList from './components/SavedDevsList';
 import SavedJobsList from './components/SavedJobsList';
@@ -24,7 +24,7 @@ export const Dashboard = () => {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
-          },
+          }
         );
       } catch (error) {
         console.log('Error:', (error as Error).message);
@@ -43,6 +43,17 @@ export const Dashboard = () => {
         await userCheck();
         const accessToken = await getAccessTokenSilently();
         return fetchUserInfo(accessToken, 'self');
+      }
+      return { jobs: [] };
+    },
+  });
+  const { data: MatchingProcess } = useQuery<MatchingProcess, Error>({
+    queryKey: ['matchingProcess'],
+    queryFn: async () => {
+      if (isAuthenticated) {
+        await userCheck();
+        const accessToken = await getAccessTokenSilently();
+        return fetchMatchingProcess(accessToken);
       }
       return { jobs: [] };
     },
@@ -72,6 +83,7 @@ export const Dashboard = () => {
     <div className="flex flex-col items-center mx-auto">
       <div className="max-w-[1000px] mx-auto my-5 flex flex-wrap gap-0.5 items-center">
         <DataVisualisation />
+        {MatchingProcess && <p>process: {MatchingProcess.id}</p>}
         <SavedDevsList developers={userInfo.developers} />
         <SavedJobsList jobs={userInfo.jobs} userId={userInfo.id} />
       </div>

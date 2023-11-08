@@ -13,7 +13,7 @@ const backendServer = import.meta.env.VITE_BE_SERVER;
 export const handleAddSkill = async (
   newSkillName: string,
   skillType: string,
-  getAccessTokenSilently: any,
+  getAccessTokenSilently: any
 ) => {
   const accessToken = await getAccessTokenSilently();
   const response = await axios.post(
@@ -26,7 +26,7 @@ export const handleAddSkill = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    },
+    }
   );
 
   const skill: Skill = response.data;
@@ -35,7 +35,7 @@ export const handleAddSkill = async (
 
 export const editPassword = async (
   newPassword: string,
-  accessToken: string,
+  accessToken: string
 ) => {
   await axios.patch(
     `${backendServer}api/users/editpassword`,
@@ -44,7 +44,7 @@ export const editPassword = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    },
+    }
   );
 };
 
@@ -66,7 +66,7 @@ export const sendAddCommentRequest = async ({
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    },
+    }
   );
 
   const comment: Comment = response.data;
@@ -84,7 +84,7 @@ export const sendDeleteCommentRequest = async ({
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    },
+    }
   );
 
   const comment: Comment = response.data;
@@ -100,6 +100,34 @@ export const postDeveloperRequest = async ({
 }) => {
   const accessToken = await getAccessTokenSilently();
   const res = await axios.post(`${backendServer}api/developers`, data, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  return res.data;
+};
+export const postJobRequest = async ({
+  createJobReq,
+  getAccessTokenSilently,
+}: any) => {
+  const accessToken = await getAccessTokenSilently();
+  const res = await axios.post(`${backendServer}api/jobs`, createJobReq, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  return res.data;
+};
+
+export const postMatchingProcessRequest = async ({
+  data,
+  getAccessTokenSilently,
+}: {
+  data: { developerId: string; jobId: string };
+  getAccessTokenSilently: any;
+}) => {
+  const accessToken = await getAccessTokenSilently();
+  const res = await axios.post(`${backendServer}api/matchingprocess`, data, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
