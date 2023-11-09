@@ -7,12 +7,8 @@ import JobFilters from './components/JobFilters';
 import { JobCard } from '../../components';
 import { useAuth0 } from '@auth0/auth0-react';
 import { mockSkills } from '../../data/mockSkills';
-import {
-  fetchJobs,
-  fetchSkills,
-  fetchUserInfo,
-} from '../../utils/fetchingTools';
-
+import { fetchSkills, fetchUserInfo } from '../../utils/fetchingTools';
+import { fetchJobs } from '../../utils/apiTools';
 export const AllJobs = () => {
   const [searchKeyword, setSearchKeyword] = useState<FilterFormValues>({
     searchKeyword: 'JavaScript',

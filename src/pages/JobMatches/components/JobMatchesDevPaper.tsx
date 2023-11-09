@@ -10,6 +10,7 @@ import {
 } from '../../../utils/mutationTools';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Job } from '../../../types/jobTechApiTypes';
+import { checkIfAJobIsExisted } from '../../../utils/fetchingTools';
 
 const JobMatchesDevPaper = ({
   dev,
@@ -29,31 +30,35 @@ const JobMatchesDevPaper = ({
     },
   });
   const startProcessHandle = async () => {
-    console.log('started');
-    // checkIfAJobIsExisted() ? fetchJobId() : postJobRequest()
+    const accessToken = await getAccessTokenSilently();
 
-    // Get the job id from our database
+    const existingJob = await checkIfAJobIsExisted(accessToken, jobInfo.id);
 
-    // Post the job to our database and get the job id
-    const createJobReq = {
-      jobTechId: jobInfo.id,
-      url: jobInfo.application_details.url,
-      title: jobInfo.headline,
-      deadline: jobInfo.application_deadline,
-      employer: jobInfo.employer.name,
-      jobText: jobInfo.description.text,
-      SelectedSkillIds: matches.jobSkills.map(jobSkill => jobSkill.id),
-    };
-    const newJob = (await postJobRequest({
-      createJobReq,
-      getAccessTokenSilently,
-    })) as JobDTO;
+    if (existingJob) {
+      mutationStartProcess.mutate({
+        data: { developerId: dev.id, jobId: existingJob.id },
+        getAccessTokenSilently,
+      });
+    } else {
+      const createJobReq = {
+        jobTechId: jobInfo.id,
+        url: jobInfo.application_details.url,
+        title: jobInfo.headline,
+        deadline: jobInfo.application_deadline,
+        employer: jobInfo.employer.name,
+        jobText: jobInfo.description.text,
+        SelectedSkillIds: matches.jobSkills.map((jobSkill) => jobSkill.id),
+      };
+      const newJob = (await postJobRequest({
+        createJobReq,
+        getAccessTokenSilently,
+      })) as JobDTO;
 
-    // post a new MatchingProcess object
-    mutationStartProcess.mutate({
-      data: { developerId: dev.id, jobId: newJob.id },
-      getAccessTokenSilently,
-    });
+      mutationStartProcess.mutate({
+        data: { developerId: dev.id, jobId: newJob.id },
+        getAccessTokenSilently,
+      });
+    }
   };
 
   return (
@@ -67,10 +72,10 @@ const JobMatchesDevPaper = ({
         // Following logic is to color the dev card based on the first Programming Language they have
         backgroundColor: `${
           cardColorLogic[
-            dev.skills.filter(skill => skill.type === 'Programming Language')
+            dev.skills.filter((skill) => skill.type === 'Programming Language')
               .length > 0
               ? dev.skills.filter(
-                  skill => skill.type === 'Programming Language'
+                  (skill) => skill.type === 'Programming Language',
                 )[0].title
               : 'no_such_programming_skill'
           ]
@@ -87,10 +92,10 @@ const JobMatchesDevPaper = ({
           </Typography>
           <Stack spacing={1} direction="row">
             {dev.skills
-              .filter(skill =>
-                matches.jobSkills.some(jobSkill => jobSkill.id === skill.id)
+              .filter((skill) =>
+                matches.jobSkills.some((jobSkill) => jobSkill.id === skill.id),
               )
-              .map(skill => (
+              .map((skill) => (
                 <Chip label={skill.title} size="small" key={skill.id} />
               ))}
           </Stack>

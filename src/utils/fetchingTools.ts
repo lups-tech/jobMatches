@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
-import { FilterFormValues } from '../types/innerTypes';
-import { SearchResult } from '../types/externalTypes';
 import { Job } from '../types/jobTechApiTypes';
+import { JobDTO } from '../types/innerTypes';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
@@ -56,7 +55,7 @@ export const togglelikeRequest = async (args: ToggleLikeRequestArgs) => {
       throw new Error('Response was not ok');
     }
     if (setIdforDelete && endpointPath == 'api/jobs') {
-      response.json().then(data => setIdforDelete(data.id));
+      response.json().then((data) => setIdforDelete(data.id));
     }
   } catch (error) {
     console.error('Error:', error);
@@ -79,24 +78,6 @@ export const fetchDevelopers = async (accessToken: string) => {
   return res.data;
 };
 
-export const fetchJobs = async (
-  searchFilter: FilterFormValues,
-  page: number
-): Promise<SearchResult> => {
-  const res = await fetch(
-    `https://jobsearch.api.jobtechdev.se/search?${searchFilter.regionFilter
-      .map(
-        region => `region=${region['taxonomy/national-nuts-level-3-code-2019']}`
-      )
-      .join('&')}&experience=${
-      searchFilter.isExperienced
-    }&q=${encodeURIComponent(
-      searchFilter.skillsFilter.join(' ') + ' ' + searchFilter.searchKeyword
-    )}&offset=${page * 10}&limit=10`
-  );
-  return res.json();
-};
-
 export const fetchMatches = async (job: Job, accessToken: string) => {
   const jobDescription = { description: job.description.text };
   const res = await axios.post(`${backendServer}scraper`, jobDescription, {
@@ -116,4 +97,19 @@ export const fetchMatchingProcess = async (accessToken: string) => {
   return res.data;
 };
 
-export const checkIfAJobIsExisted = async () => {};
+export const checkIfAJobIsExisted = async (
+  accessToken: string,
+  jobId: string,
+) => {
+  const allJobs: JobDTO[] = await getAllJobs(accessToken);
+  return allJobs.find((job) => job.jobTechId === jobId);
+};
+
+export const getAllJobs = async (accessToken: string) => {
+  const res = await axios.get(`${backendServer}api/jobs`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  return res.data;
+};

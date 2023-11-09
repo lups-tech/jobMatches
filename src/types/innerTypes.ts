@@ -108,31 +108,31 @@ export type DeleteCommentRequestBody = {
   getAccessTokenSilently: any;
 };
 
-export type proposed = {
+export type Proposed = {
   id: string;
-  date: Date;
+  date: string;
   succeeded: boolean;
 };
 
-export type contract = {
+export type Contract = {
   id: string;
   date: string;
   contractStage: string;
 };
 
-export type interview = {
+export type Interview = {
   id: string;
   date: string;
   interviewType: string;
-  passed: true;
+  passed: boolean;
 };
 
 export type MatchingProcess = {
   id: string;
-  proposed: proposed;
-  interviews: interview[];
-  contracts: contract[];
-  placed: true;
+  proposed: Proposed;
+  interviews: Interview[];
+  contracts: Contract[];
+  placed: boolean;
   resultDate: string;
   developerId: string;
   jobId: string;
