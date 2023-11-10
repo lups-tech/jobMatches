@@ -1,23 +1,9 @@
+import { styled, TableCell, tableCellClasses, TableRow } from '@mui/material';
 import {
-  Box,
-  Collapse,
-  Table,
-  TableBody,
-  IconButton,
-  styled,
-  TableHead,
-  Typography,
-  TableCell,
-  tableCellClasses,
-  TableRow,
-  Checkbox,
-} from '@mui/material';
-import { MatchingProcess, UserInfoDTO } from '../../../types/innerTypes';
-
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import { useState } from 'react';
-import CancelIcon from '@mui/icons-material/Cancel';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+  MatchingProcess,
+  Proposed,
+  UserInfoDTO,
+} from '../../../types/innerTypes';
 import { InterviewCell } from './InterviewCell';
 
 interface MatchingProcessTableRow {
@@ -45,42 +31,52 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+const displayProposed = (proposed: Proposed) => {
+  if (proposed) {
+    if (proposed.succeeded) {
+      return proposed.date.split('T')[0];
+    }
+    return 'Rejected';
+  }
+  return 'No';
+};
+
 export const MatchingProcessTableRow = ({
   process,
   userInfo,
 }: MatchingProcessTableRow) => {
-  const [open, setOpen] = useState(false);
-
   return (
     <>
       <StyledTableRow key={process.id}>
         <StyledTableCell component="th" scope="row">
           {
             userInfo.developers.find(
-              (developer) => developer.id === process.developerId,
+              developer => developer.id === process.developerId
             )?.name
           }
         </StyledTableCell>
         <StyledTableCell component="th" scope="row">
-          {userInfo.jobs.find((job) => job.id === process.jobId)?.employer}
+          {userInfo.jobs.find(job => job.id === process.jobId)?.employer}
         </StyledTableCell>
         <StyledTableCell component="th" scope="row">
-          {userInfo.jobs.find((job) => job.id === process.jobId)?.title}
+          {userInfo.jobs.find(job => job.id === process.jobId)?.title}
         </StyledTableCell>
         <StyledTableCell align="right">
-          {process.proposed.succeeded
-            ? process.proposed.date.split('T')[0]
-            : 'No'}
+          {displayProposed(process.proposed)}
         </StyledTableCell>
         <StyledTableCell align="right">
           <div>
-            {process.interviews.map((interview) => (
-              <InterviewCell interview={interview} />
-            ))}
+            {process.interviews.length > 0
+              ? process.interviews.map(interview => (
+                  <InterviewCell key={interview.id} interview={interview} />
+                ))
+              : 'No interview yet'}
           </div>
         </StyledTableCell>
         <StyledTableCell align="right">
-          {process.contracts.length}
+          {process.interviews.length > 0
+            ? process.contracts.length
+            : 'No Contracts yet'}
         </StyledTableCell>
         <StyledTableCell align="right">
           {process.placed ? 'Yes' : 'No'}

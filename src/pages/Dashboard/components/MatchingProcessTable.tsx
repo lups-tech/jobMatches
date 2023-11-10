@@ -10,7 +10,7 @@ import {
   tableCellClasses,
 } from '@mui/material';
 import { mockMatchingProcesses } from '../../../data/mockMatchingProcesses';
-import { UserInfoDTO } from '../../../types/innerTypes';
+import { MatchingProcess, UserInfoDTO } from '../../../types/innerTypes';
 import { MatchingProcessTableRow } from './MatchingProcessTableRow';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -25,9 +25,17 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 interface MatchingProcessTable {
   userInfo: UserInfoDTO;
+  matchingProcesses: MatchingProcess[] | undefined;
 }
 
-export const MatchingProcessTable = ({ userInfo }: MatchingProcessTable) => {
+export const MatchingProcessTable = ({
+  userInfo,
+  matchingProcesses,
+}: MatchingProcessTable) => {
+  if (!matchingProcesses) {
+    matchingProcesses = mockMatchingProcesses;
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -43,7 +51,7 @@ export const MatchingProcessTable = ({ userInfo }: MatchingProcessTable) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {mockMatchingProcesses.map((process) => (
+          {matchingProcesses.map(process => (
             <MatchingProcessTableRow
               key={process.id}
               process={process}
