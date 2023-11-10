@@ -1,10 +1,19 @@
-import { styled, TableCell, tableCellClasses, TableRow } from '@mui/material';
+import {
+  Checkbox,
+  styled,
+  TableCell,
+  tableCellClasses,
+  TableRow,
+} from '@mui/material';
 import {
   MatchingProcess,
   Proposed,
   UserInfoDTO,
 } from '../../../types/innerTypes';
 import { InterviewCell } from './InterviewCell';
+import { patchProposedRequest } from '../../../utils/mutationTools';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface MatchingProcessTableRow {
   process: MatchingProcess;
@@ -31,20 +40,46 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const displayProposed = (proposed: Proposed) => {
-  if (proposed) {
-    if (proposed.succeeded) {
-      return proposed.date.split('T')[0];
-    }
-    return 'Rejected';
-  }
-  return 'No';
-};
-
 export const MatchingProcessTableRow = ({
   process,
   userInfo,
 }: MatchingProcessTableRow) => {
+  const { getAccessTokenSilently } = useAuth0();
+  const queryClient = useQueryClient();
+
+  const proposedMutation = useMutation(patchProposedRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['matchingProcess']);
+    },
+  });
+
+  const succeededHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const result = e.target.checked;
+    if (result) {
+      proposedMutation.mutate({ result, process, getAccessTokenSilently });
+      // console.log('send success request');
+    } else {
+      console.log('send cancel success request');
+    }
+  };
+
+  const displayProposed = (proposed: Proposed) => {
+    if (proposed) {
+      if (proposed.succeeded) {
+        return proposed.date.split('T')[0];
+      }
+      return 'Rejected';
+    }
+    return (
+      <div>
+        Succeeded
+        <Checkbox color="success" onChange={e => succeededHandle(e)} />
+        Rejected
+        <Checkbox color="error" />
+      </div>
+    );
+  };
+
   return (
     <>
       <StyledTableRow key={process.id}>

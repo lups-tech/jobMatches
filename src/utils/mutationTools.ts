@@ -3,17 +3,21 @@ import axios from 'axios';
 import {
   AddCommentRequestBody,
   DeleteCommentRequestBody,
+  MatchingProcess,
   Skill,
 } from '../types/innerTypes';
 import { DevFormSchema } from '../types/validationTypes';
 import * as z from 'zod';
+import { v4 as uuidv4 } from 'uuid';
+
+const myUUID: string = uuidv4();
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
 export const handleAddSkill = async (
   newSkillName: string,
   skillType: string,
-  getAccessTokenSilently: any,
+  getAccessTokenSilently: any
 ) => {
   const accessToken = await getAccessTokenSilently();
   const response = await axios.post(
@@ -26,7 +30,7 @@ export const handleAddSkill = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    },
+    }
   );
 
   const skill: Skill = response.data;
@@ -35,7 +39,7 @@ export const handleAddSkill = async (
 
 export const editPassword = async (
   newPassword: string,
-  accessToken: string,
+  accessToken: string
 ) => {
   await axios.patch(
     `${backendServer}api/users/editpassword`,
@@ -44,7 +48,7 @@ export const editPassword = async (
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    },
+    }
   );
 };
 
@@ -66,7 +70,7 @@ export const sendAddCommentRequest = async ({
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    },
+    }
   );
 
   const comment: Comment = response.data;
@@ -84,7 +88,7 @@ export const sendDeleteCommentRequest = async ({
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    },
+    }
   );
 
   const comment: Comment = response.data;
@@ -133,4 +137,23 @@ export const postMatchingProcessRequest = async ({
     },
   });
   return res.data;
+};
+
+export const patchProposedRequest = async ({
+  result,
+  process,
+  getAccessTokenSilently,
+}: {
+  result: boolean;
+  process: MatchingProcess;
+  getAccessTokenSilently: any;
+}) => {
+  const accessToken = await getAccessTokenSilently();
+  const newProposed = { id: myUUID, date: new Date(), succeeded: result };
+  const data = { ...process, proposed: newProposed };
+  axios.patch(`${backendServer}api/matchingprocess`, data, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
 };

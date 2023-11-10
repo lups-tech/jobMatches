@@ -36,7 +36,7 @@ const JobMatchesJobPaper = ({
         const accessToken = await getAccessTokenSilently();
         return fetchUserInfo(accessToken, 'self');
       }
-      return { jobs: [] };
+      return {};
     },
   });
 
