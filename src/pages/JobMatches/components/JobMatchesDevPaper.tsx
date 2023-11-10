@@ -15,6 +15,8 @@ import {
   togglelikeRequest,
 } from '../../../utils/fetchingTools';
 
+const backendServer = import.meta.env.VITE_BE_SERVER;
+
 const JobMatchesDevPaper = ({
   dev,
   matches,
@@ -51,6 +53,17 @@ const JobMatchesDevPaper = ({
         data: { developerId: dev.id, jobId: existingJob.id },
         getAccessTokenSilently,
       });
+      await fetch(`${backendServer}api/userjob`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          userId: user?.sub ? user.sub : '',
+          jobId: existingJob.id,
+        }),
+      });
     } else {
       const createJobReq = {
         jobTechId: jobInfo.id,
@@ -69,6 +82,17 @@ const JobMatchesDevPaper = ({
       mutationStartProcess.mutate({
         data: { developerId: dev.id, jobId: newJob.id },
         getAccessTokenSilently,
+      });
+      await fetch(`${backendServer}api/userjob`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          userId: user?.sub ? user.sub : '',
+          jobId: newJob.id,
+        }),
       });
     }
 
