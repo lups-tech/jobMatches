@@ -10,25 +10,37 @@ import {
 } from '../../../utils/mutationTools';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Job } from '../../../types/jobTechApiTypes';
-import { checkIfAJobIsExisted } from '../../../utils/fetchingTools';
+import {
+  checkIfAJobIsExisted,
+  togglelikeRequest,
+} from '../../../utils/fetchingTools';
 
 const JobMatchesDevPaper = ({
   dev,
   matches,
   jobInfo,
+  matched,
 }: {
   dev: Developer;
   matches: Matches;
   jobInfo: Job;
+  matched: boolean;
 }) => {
   const queryClient = useQueryClient();
-  const { getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently, user } = useAuth0();
 
   const mutationStartProcess = useMutation(postMatchingProcessRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries(['matchingProcess']);
     },
   });
+
+  const mutationLikeDeveloper = useMutation(togglelikeRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userInfo']); // Invalidate and refetch the developers list
+    },
+  });
+
   const startProcessHandle = async () => {
     const accessToken = await getAccessTokenSilently();
 
@@ -47,7 +59,7 @@ const JobMatchesDevPaper = ({
         deadline: jobInfo.application_deadline,
         employer: jobInfo.employer.name,
         jobText: jobInfo.description.text,
-        SelectedSkillIds: matches.jobSkills.map((jobSkill) => jobSkill.id),
+        SelectedSkillIds: matches.jobSkills.map(jobSkill => jobSkill.id),
       };
       const newJob = (await postJobRequest({
         createJobReq,
@@ -59,6 +71,17 @@ const JobMatchesDevPaper = ({
         getAccessTokenSilently,
       });
     }
+
+    const requestBody = {
+      userId: user?.sub ? user.sub : '',
+      developerId: dev.id,
+    };
+    mutationLikeDeveloper.mutate({
+      requestMethod: 'PATCH',
+      requestBody,
+      endpointPath: 'api/userdeveloper',
+      getAccessTokenSilently: getAccessTokenSilently,
+    });
   };
 
   return (
@@ -72,10 +95,10 @@ const JobMatchesDevPaper = ({
         // Following logic is to color the dev card based on the first Programming Language they have
         backgroundColor: `${
           cardColorLogic[
-            dev.skills.filter((skill) => skill.type === 'Programming Language')
+            dev.skills.filter(skill => skill.type === 'Programming Language')
               .length > 0
               ? dev.skills.filter(
-                  (skill) => skill.type === 'Programming Language',
+                  skill => skill.type === 'Programming Language'
                 )[0].title
               : 'no_such_programming_skill'
           ]
@@ -92,16 +115,20 @@ const JobMatchesDevPaper = ({
           </Typography>
           <Stack spacing={1} direction="row">
             {dev.skills
-              .filter((skill) =>
-                matches.jobSkills.some((jobSkill) => jobSkill.id === skill.id),
+              .filter(skill =>
+                matches.jobSkills.some(jobSkill => jobSkill.id === skill.id)
               )
-              .map((skill) => (
+              .map(skill => (
                 <Chip label={skill.title} size="small" key={skill.id} />
               ))}
           </Stack>
         </div>
-        <Button className="h-[40px] w-[170px]" onClick={startProcessHandle}>
-          Start Process
+        <Button
+          className="h-[40px] w-[170px]"
+          onClick={startProcessHandle}
+          disabled={matched}
+        >
+          {matched ? 'In Process' : 'Start Process'}
         </Button>
       </div>
     </Paper>
