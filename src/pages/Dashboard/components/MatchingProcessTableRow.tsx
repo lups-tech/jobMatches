@@ -141,10 +141,11 @@ export const MatchingProcessTableRow = ({
                 <InterviewCell key={interview.id} interview={interview} />
               ))
             ) : (
-              <IconButton aria-label="Delete">
-                <AddCircleOutlineIcon
-                  onClick={() => addInterviewHandle(process)}
-                />
+              <IconButton
+                aria-label="Add interview"
+                onClick={() => addInterviewHandle(process)}
+              >
+                <AddCircleOutlineIcon />
               </IconButton>
             )}
           </div>
@@ -158,10 +159,11 @@ export const MatchingProcessTableRow = ({
           {process.placed ? 'Yes' : 'No'}
         </StyledTableCell>
         <StyledTableCell>
-          <IconButton aria-label="Delete">
-            <DeleteIcon
-              onClick={() => removeMatchingProcessHandle(process.id)}
-            />
+          <IconButton
+            aria-label="Delete"
+            onClick={() => removeMatchingProcessHandle(process.id)}
+          >
+            <DeleteIcon />
           </IconButton>
         </StyledTableCell>
       </StyledTableRow>

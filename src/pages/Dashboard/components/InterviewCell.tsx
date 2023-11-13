@@ -14,11 +14,11 @@ export const InterviewCell = ({ interview }: InterviewCellProps) => {
       <span>
         <CheckCircleIcon
           color="success"
-          sx={interview.passed ? undefined : { color: '#bbbbbb' }}
+          sx={interview.passed === true ? undefined : { color: '#bbbbbb' }}
         />
         <CancelIcon
           color="error"
-          sx={interview.passed ? { color: '#bbbbbb' } : undefined}
+          sx={interview.passed === false ? undefined : { color: '#bbbbbb' }}
         />
         <CalendarMonthIcon sx={{ color: '#bbbbbb' }} />
       </span>
