@@ -29,7 +29,7 @@ const JobMatchesDevPaper = ({
   matched: boolean;
 }) => {
   const queryClient = useQueryClient();
-  const { getAccessTokenSilently, user } = useAuth0();
+  const { getAccessTokenSilently, user, isAuthenticated } = useAuth0();
 
   const mutationStartProcess = useMutation(postMatchingProcessRequest, {
     onSuccess: () => {
@@ -147,13 +147,15 @@ const JobMatchesDevPaper = ({
               ))}
           </Stack>
         </div>
-        <Button
-          className="h-[40px] w-[170px]"
-          onClick={startProcessHandle}
-          disabled={matched}
-        >
-          {matched ? 'In Process' : 'Start Process'}
-        </Button>
+        {isAuthenticated && (
+          <Button
+            className="h-[40px] w-[170px]"
+            onClick={startProcessHandle}
+            disabled={matched}
+          >
+            {matched ? 'In Process' : 'Start Process'}
+          </Button>
+        )}
       </div>
     </Paper>
   );

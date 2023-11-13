@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, TextField, Typography } from '@mui/material';
 import { JobsChart } from './JobsChart';
 import { useQuery } from '@tanstack/react-query';
 import { ChartData, Dataset, Skill } from '../../../types/innerTypes';
@@ -15,19 +15,22 @@ export const DataVisualisation = () => {
   const oneMonthAgoDate = new Date(Date.now() - oneMonth)
     .toISOString()
     .replace(/T.*/, '');
-  const [searchQueries, setSearchQueries] = useState<string[]>([]);
+  const [searchQueries, setSearchQueries] = useState<string[]>([
+    'JavaScript',
+    'C#',
+  ]);
 
   useEffect(() => {
     if (searchQueries.length > 0) {
-      searchQueries.map((searchQuery) => {
+      searchQueries.map(searchQuery => {
         getDataBySearchAndDates(searchQuery, oneMonthAgoDate, todaysDate).then(
-          (response) => {
+          response => {
             const publicationDates = response.hits.map(
-              (job: { publication_date: string }) => job.publication_date,
+              (job: { publication_date: string }) => job.publication_date
             );
             const counts = updateCounts(publicationDates);
             updateChartData(searchQuery, counts);
-          },
+          }
         );
       });
     }
@@ -58,7 +61,7 @@ export const DataVisualisation = () => {
   const updateChartData = (searchKeyword: string, counts: number[]) => {
     setChartData((prevState: ChartData) => {
       const foundDataSet = prevState.datasets.find(
-        (dataset: Dataset) => dataset.label === searchKeyword,
+        (dataset: Dataset) => dataset.label === searchKeyword
       );
 
       if (foundDataSet) {
@@ -100,17 +103,20 @@ export const DataVisualisation = () => {
 
   return (
     <div className="max-w-[1000px] mx-auto my-5 flex flex-col flex-wrap gap-0.5 items-center justify-center">
+      <div className="mb-2 self-start">
+        <Typography variant="h5">Jobs Trends</Typography>
+      </div>
       <div className={`max-w-[1000px] flex flex-wrap`}>
         <Autocomplete
           className="w-96 mb-[-3rem]"
           multiple
-          options={skills.filter((s) => s.type === 'Programming Language')}
-          getOptionLabel={(option) => option.title}
-          renderInput={(params) => (
+          options={skills.filter(s => s.type === 'Programming Language')}
+          getOptionLabel={option => option.title}
+          renderInput={params => (
             <TextField {...params} label={`Search programming language`} />
           )}
           onChange={(_event, value) => {
-            const searchArray = value.map((s) => s.title);
+            const searchArray = value.map(s => s.title);
             setSearchQueries(searchArray);
           }}
         />
