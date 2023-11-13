@@ -83,11 +83,11 @@ export const Dashboard = () => {
   return (
     <div className="flex flex-col items-center mx-auto">
       <div className="max-w-[1000px] mx-auto my-5 flex flex-wrap gap-0.5 items-center">
-        <DataVisualisation />
         <MatchingProcessTable
           userInfo={userInfo}
           matchingProcesses={allMatchingProcesses}
         />
+        <DataVisualisation />
         <SavedDevsList developers={userInfo.developers} />
         <SavedJobsList jobs={userInfo.jobs} userId={userInfo.id} />
       </div>

@@ -41,10 +41,12 @@ const JobMatchesJobPaper = ({
   });
 
   useEffect(() => {
-    if (userInfo?.jobs.find(job => job.jobTechId === jobInfo.id)) {
-      setIsSaved(true);
-    } else {
-      setIsSaved(false);
+    if (userInfo?.jobs != undefined) {
+      if (userInfo?.jobs.find(job => job.jobTechId === jobInfo.id)) {
+        setIsSaved(true);
+      } else {
+        setIsSaved(false);
+      }
     }
   }, [userInfo]);
 

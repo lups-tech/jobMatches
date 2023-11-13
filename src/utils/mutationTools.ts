@@ -3,14 +3,13 @@ import axios from 'axios';
 import {
   AddCommentRequestBody,
   DeleteCommentRequestBody,
+  Interview,
   MatchingProcess,
   Skill,
 } from '../types/innerTypes';
 import { DevFormSchema } from '../types/validationTypes';
 import * as z from 'zod';
 import { v4 as uuidv4 } from 'uuid';
-
-const myUUID: string = uuidv4();
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
@@ -149,9 +148,50 @@ export const patchProposedRequest = async ({
   getAccessTokenSilently: any;
 }) => {
   const accessToken = await getAccessTokenSilently();
-  const newProposed = { id: myUUID, date: new Date(), succeeded: result };
+  const newProposed = { id: uuidv4(), date: new Date(), succeeded: result };
   const data = { ...process, proposed: newProposed };
-  axios.patch(`${backendServer}api/matchingprocess`, data, {
+  return axios.patch(`${backendServer}api/matchingprocess`, data, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
+export const patchInterviewRequest = async ({
+  interviewType,
+  process,
+  getAccessTokenSilently,
+}: {
+  interviewType: string;
+  process: MatchingProcess;
+  getAccessTokenSilently: any;
+}) => {
+  const accessToken = await getAccessTokenSilently();
+  const newInterview = {
+    id: uuidv4(),
+    date: new Date(),
+    interviewType,
+    passed: null,
+  };
+  const newInterviews = [...process.interviews, newInterview];
+  const data = { ...process, interviews: newInterviews, proposed: null };
+  console.log(data);
+  return axios.patch(`${backendServer}api/matchingprocess`, data, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
+export const deleteMatchingProcessRequest = async ({
+  processId,
+  getAccessTokenSilently,
+}: {
+  processId: string;
+  getAccessTokenSilently: any;
+}) => {
+  const accessToken = await getAccessTokenSilently();
+  return axios.delete(`${backendServer}api/matchingprocess/${processId}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
