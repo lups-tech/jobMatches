@@ -9,6 +9,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useThemeContext } from '../../theme';
+import { useNavigate } from 'react-router-dom';
 
 // import DataVisualisation from './DataVisualisation';
 
@@ -38,7 +39,7 @@ const Point: React.FC<PointProp> = ({ imgUrl, alt, header, text }) => {
 export const AboutUs = () => {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   const { darkMode } = useThemeContext();
-
+  const navigate = useNavigate();
   const userCheck = async () => {
     if (isAuthenticated) {
       const accessToken = await getAccessTokenSilently();
@@ -87,6 +88,7 @@ export const AboutUs = () => {
                   background: '#3A3C4E',
                   '&:hover': { background: '#E7EBFF', color: '#000000' },
                 }}
+                onClick={() => navigate('/jobs')}
               >
                 Match Your Talents
               </Button>
