@@ -172,9 +172,11 @@ export const patchInterviewRequest = async ({
     interviewType,
     passed: null,
   };
-  const newInterviews = [...process.interviews, newInterview];
-  const data = { ...process, interviews: newInterviews, proposed: null };
-  console.log(data);
+  const data = {
+    ...process,
+    interviews: [newInterview],
+    proposed: null,
+  };
   return axios.patch(`${backendServer}api/matchingprocess`, data, {
     headers: {
       Authorization: `Bearer ${accessToken}`,

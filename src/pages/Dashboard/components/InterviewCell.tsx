@@ -9,9 +9,9 @@ interface InterviewCellProps {
 
 export const InterviewCell = ({ interview }: InterviewCellProps) => {
   return (
-    <div className="flex justify-between">
+    <div className="flex flex-row justify-between">
       <p>{interview.interviewType}</p>
-      <span>
+      <span className="w-24">
         <CheckCircleIcon
           color="success"
           sx={interview.passed === true ? undefined : { color: '#bbbbbb' }}

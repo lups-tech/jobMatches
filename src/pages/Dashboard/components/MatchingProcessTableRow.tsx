@@ -12,16 +12,14 @@ import {
   Proposed,
   UserInfoDTO,
 } from '../../../types/innerTypes';
-import { InterviewCell } from './InterviewCell';
 import {
   patchProposedRequest,
   deleteMatchingProcessRequest,
-  patchInterviewRequest,
 } from '../../../utils/mutationTools';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import DeleteIcon from '@mui/icons-material/Delete';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { InterviewCells } from './InterviewCells';
 
 interface MatchingProcessTableRow {
   process: MatchingProcess;
@@ -68,11 +66,6 @@ export const MatchingProcessTableRow = ({
       },
     }
   );
-  const interviewMutation = useMutation(patchInterviewRequest, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['matchingProcess']);
-    },
-  });
 
   const proposedHandle = (result: boolean) => {
     proposedMutation.mutate({ result, process, getAccessTokenSilently });
@@ -80,14 +73,6 @@ export const MatchingProcessTableRow = ({
 
   const removeMatchingProcessHandle = (processId: string) => {
     deleteMatchingProcessMutation.mutate({ processId, getAccessTokenSilently });
-  };
-
-  const addInterviewHandle = (process: MatchingProcess) => {
-    interviewMutation.mutate({
-      interviewType: 'Personal',
-      process,
-      getAccessTokenSilently,
-    });
   };
 
   const displayProposed = (proposed: Proposed) => {
@@ -135,20 +120,7 @@ export const MatchingProcessTableRow = ({
           {displayProposed(process.proposed)}
         </StyledTableCell>
         <StyledTableCell align="right">
-          <div>
-            {process.interviews.length > 0 ? (
-              process.interviews.map(interview => (
-                <InterviewCell key={interview.id} interview={interview} />
-              ))
-            ) : (
-              <IconButton
-                aria-label="Add interview"
-                onClick={() => addInterviewHandle(process)}
-              >
-                <AddCircleOutlineIcon />
-              </IconButton>
-            )}
-          </div>
+          <InterviewCells process={process} />
         </StyledTableCell>
         <StyledTableCell align="right">
           {process.interviews.length > 0
