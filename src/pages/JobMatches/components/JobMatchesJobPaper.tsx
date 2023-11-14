@@ -59,7 +59,6 @@ const JobMatchesJobPaper = ({
   });
 
   const saveJobHandle = async () => {
-    const accessToken = await getAccessTokenSilently();
     if (matches) {
       const createJobReq = {
         jobTechId: jobInfo.id,
