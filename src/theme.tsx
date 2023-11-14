@@ -15,7 +15,7 @@ const lightTheme = createTheme({
       contrastText: '#ffffff',
     },
     // error: {
-
+    //   main: '#ff0000',
     // },
     // warning: {
 
@@ -24,7 +24,7 @@ const lightTheme = createTheme({
       main: '#ffffff',
     },
     // success: {
-
+    //   main: '#00ff00',
     // },
     mode: 'light',
     background: {
@@ -110,7 +110,7 @@ type ThemeContextType = {
 };
 
 const ThemeContext = React.createContext<ThemeContextType | undefined>(
-  undefined,
+  undefined
 );
 
 export const useThemeContext = () => {

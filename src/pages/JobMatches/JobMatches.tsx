@@ -109,7 +109,7 @@ export const JobMatches = () => {
                 matches={matches}
                 jobInfo={jobInfo}
                 matched={
-                  userInfo && allMatchingProcesses
+                  userInfo && allMatchingProcesses && isAuthenticated
                     ? ifMatched(
                         userInfo,
                         allMatchingProcesses,
