@@ -9,6 +9,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import { ChartData } from '../../../types/innerTypes';
 
 ChartJS.register(
   CategoryScale,
@@ -20,7 +21,7 @@ ChartJS.register(
   Legend,
 );
 
-export const JobsChart = ({ chartData }: any) => {
+export const JobsChart = ({ chartData }: {chartData: ChartData}) => {
   const options = {
     responsive: true,
     scales: {
