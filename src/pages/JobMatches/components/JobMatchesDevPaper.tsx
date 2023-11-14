@@ -130,13 +130,25 @@ const JobMatchesDevPaper = ({
       }}
       key={dev.id}
     >
-      <div className="flex justify-between">
-        <div>
-          <Typography variant="h5">{dev.name}</Typography>
-          <Typography variant="body1">
-            <EmailIcon fontSize="small" sx={{ marginRight: 1 }} />
-            {dev.email}
-          </Typography>
+      <div className="flex flex-col justify-between">
+        <div className="flex justify-between mb-4">
+          <div>
+            <Typography variant="h5" sx={{marginBottom: "0.2rem"}}>{dev.name}</Typography>
+            <Typography variant="body1">
+              <EmailIcon fontSize="small" sx={{ marginRight: 1 }} />
+              {dev.email}
+            </Typography>
+          </div>
+          {isAuthenticated && (
+          <Button
+            className="h-[40px] w-[170px]"
+            onClick={startProcessHandle}
+            disabled={matched}
+          >
+            {matched ? 'In Process' : 'Start Process'}
+          </Button>
+        )}
+        </div>
           <Stack spacing={1} direction="row">
             {dev.skills
               .filter(skill =>
@@ -146,16 +158,6 @@ const JobMatchesDevPaper = ({
                 <Chip label={skill.title} size="small" key={skill.id} />
               ))}
           </Stack>
-        </div>
-        {isAuthenticated && (
-          <Button
-            className="h-[40px] w-[170px]"
-            onClick={startProcessHandle}
-            disabled={matched}
-          >
-            {matched ? 'In Process' : 'Start Process'}
-          </Button>
-        )}
       </div>
     </Paper>
   );
