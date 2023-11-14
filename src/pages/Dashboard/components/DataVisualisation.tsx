@@ -10,7 +10,7 @@ import { fetchSkills } from '../../../utils/fetchingTools';
 import { labels, updateCounts } from '../../../utils/utilities';
 
 export const DataVisualisation = () => {
-  const [searchQueries, setSearchQueries] = useState<string[]>([]);
+  const [searchQueries, setSearchQueries] = useState<string[]>(["JavaScript"]);
   const { getAccessTokenSilently } = useAuth0();
   const todaysDate = new Date(Date.now()).toISOString().replace(/T.*/, '');
   const oneMonth = 2592000000;
@@ -36,20 +36,6 @@ export const DataVisualisation = () => {
     const accessToken = await getAccessTokenSilently();
     return fetchSkills(accessToken);
   });
-
-  useEffect(() => {
-      ["JavaScript"].map((searchQuery) => {
-        getDataBySearchAndDates(searchQuery, oneMonthAgoDate, todaysDate).then(
-          (response) => {
-            const publicationDates = response.hits.map(
-              (job: { publication_date: string }) => job.publication_date,
-            );
-            const counts = updateCounts(publicationDates);
-            updateChartData(searchQuery, counts);
-          },
-        );
-      });
-  }, []);
 
   useEffect(() => {
     if (searchQueries.length > 0) {
