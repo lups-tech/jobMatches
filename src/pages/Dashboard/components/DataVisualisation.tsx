@@ -10,12 +10,46 @@ import { fetchSkills } from '../../../utils/fetchingTools';
 import { labels, updateCounts } from '../../../utils/utilities';
 
 export const DataVisualisation = () => {
+  const [searchQueries, setSearchQueries] = useState<string[]>([]);
+  const { getAccessTokenSilently } = useAuth0();
   const todaysDate = new Date(Date.now()).toISOString().replace(/T.*/, '');
   const oneMonth = 2592000000;
   const oneMonthAgoDate = new Date(Date.now() - oneMonth)
     .toISOString()
     .replace(/T.*/, '');
-  const [searchQueries, setSearchQueries] = useState<string[]>([]);
+  const [chartData, setChartData] = useState<ChartData>({
+    labels,
+    datasets: [
+      {
+        label: '',
+        data: [],
+        borderColor: 'rgba(00,0,0,0)',
+        backgroundColor: 'rgba(00,0,0,0)',
+      },
+    ],
+  });
+  const {
+    isLoading: isSkillsLoading,
+    error: skillsError,
+    data: skills,
+  } = useQuery<Skill[], Error>(['skills'], async () => {
+    const accessToken = await getAccessTokenSilently();
+    return fetchSkills(accessToken);
+  });
+
+  useEffect(() => {
+      ["JavaScript"].map((searchQuery) => {
+        getDataBySearchAndDates(searchQuery, oneMonthAgoDate, todaysDate).then(
+          (response) => {
+            const publicationDates = response.hits.map(
+              (job: { publication_date: string }) => job.publication_date,
+            );
+            const counts = updateCounts(publicationDates);
+            updateChartData(searchQuery, counts);
+          },
+        );
+      });
+  }, []);
 
   useEffect(() => {
     if (searchQueries.length > 0) {
@@ -31,38 +65,32 @@ export const DataVisualisation = () => {
         );
       });
     }
+
+    setChartData({
+      labels,
+      datasets: [
+        {
+          label: '',
+          data: [],
+          borderColor: 'rgba(00,0,0,0)',
+          backgroundColor: 'rgba(00,0,0,0)',
+        },
+      ],
+    })
   }, [searchQueries]);
 
-  const { getAccessTokenSilently } = useAuth0();
-  const {
-    isLoading: isSkillsLoading,
-    error: skillsError,
-    data: skills,
-  } = useQuery<Skill[], Error>(['skills'], async () => {
-    const accessToken = await getAccessTokenSilently();
-    return fetchSkills(accessToken);
-  });
 
-  const [chartData, setChartData] = useState<any>({
-    labels,
-    datasets: [
-      {
-        label: '',
-        data: [],
-        borderColor: 'rgba(00,0,0,0)',
-        backgroundColor: 'rgba(00,0,0,0)',
-      },
-    ],
-  });
 
   const updateChartData = (searchKeyword: string, counts: number[]) => {
     setChartData((prevState: ChartData) => {
       const foundDataSet = prevState.datasets.find(
         (dataset: Dataset) => dataset.label === searchKeyword,
-      );
+      );    
 
       if (foundDataSet) {
-        const updatedDatasets = prevState.datasets.map((dataset: Dataset) => {
+        const updatedDatasets = prevState.datasets
+          .filter(dataset => searchQueries.includes(dataset.label))
+          .map((dataset: Dataset) => {
           if (dataset.label === searchKeyword) {
             return {
               ...dataset,
@@ -82,7 +110,7 @@ export const DataVisualisation = () => {
       return {
         ...prevState,
         datasets: [
-          ...prevState.datasets,
+          ...prevState.datasets.filter(dataset => searchQueries.includes(dataset.label)),
           {
             label: searchKeyword,
             data: counts,

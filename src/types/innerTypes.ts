@@ -78,7 +78,6 @@ export type ChartData = {
 };
 
 export type Dataset = {
-  id: number;
   label: string;
   data: number[];
   borderColor: string;
