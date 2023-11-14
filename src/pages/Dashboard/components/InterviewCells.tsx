@@ -17,7 +17,11 @@ export const InterviewCells = ({ process }: InterviewCellsProps) => {
       {process.interviews.length > 0 &&
         process.interviews.map(interview => (
           <div key={interview.id}>
-            <InterviewCell key={interview.id} interview={interview} />
+            <InterviewCell
+              key={interview.id}
+              interview={interview}
+              process={process}
+            />
           </div>
         ))}
       <div>

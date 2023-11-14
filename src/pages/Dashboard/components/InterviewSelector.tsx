@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { patchInterviewRequest } from '../../../utils/mutationTools';
+import { patchNewInterviewRequest } from '../../../utils/mutationTools';
 import { useAuth0 } from '@auth0/auth0-react';
 import { MatchingProcess } from '../../../types/innerTypes';
 
@@ -23,7 +23,7 @@ const InterviewSelector = ({
   const queryClient = useQueryClient();
   const { getAccessTokenSilently } = useAuth0();
 
-  const interviewMutation = useMutation(patchInterviewRequest, {
+  const interviewMutation = useMutation(patchNewInterviewRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries(['matchingProcess']);
     },

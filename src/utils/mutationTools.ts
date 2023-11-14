@@ -3,6 +3,7 @@ import axios from 'axios';
 import {
   AddCommentRequestBody,
   DeleteCommentRequestBody,
+  Interview,
   MatchingProcess,
   Skill,
 } from '../types/innerTypes';
@@ -156,7 +157,7 @@ export const patchProposedRequest = async ({
   });
 };
 
-export const patchInterviewRequest = async ({
+export const patchNewInterviewRequest = async ({
   interviewType,
   process,
   getAccessTokenSilently,
@@ -177,6 +178,39 @@ export const patchInterviewRequest = async ({
     interviews: [newInterview],
     proposed: null,
   };
+  return axios.patch(`${backendServer}api/matchingprocess`, data, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
+export const patchInterviewRequest = async ({
+  updatedInterview,
+  process,
+  getAccessTokenSilently,
+}: {
+  updatedInterview: Interview;
+  process: MatchingProcess;
+  getAccessTokenSilently: any;
+}) => {
+  const accessToken = await getAccessTokenSilently();
+
+  const updatedInterviews = process.interviews.map(interview => {
+    if (interview.id === updatedInterview.id) {
+      return updatedInterview;
+    } else {
+      return interview;
+    }
+  });
+
+  const data = {
+    ...process,
+    interviews: updatedInterviews,
+    proposed: null,
+  };
+
+  console.log(data);
   return axios.patch(`${backendServer}api/matchingprocess`, data, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
