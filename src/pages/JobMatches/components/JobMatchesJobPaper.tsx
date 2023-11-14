@@ -70,7 +70,7 @@ const JobMatchesJobPaper = ({
         jobText: jobInfo.description.text,
         SelectedSkillIds: matches.jobSkills.map(jobSkill => jobSkill.id),
       };
-      mutationLikeJob.mutate({ createJobReq, accessToken });
+      mutationLikeJob.mutate({ createJobReq, getAccessTokenSilently });
     }
   };
 
