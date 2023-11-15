@@ -173,16 +173,15 @@ export const patchNewInterviewRequest = async ({
     interviewType,
     passed: null,
   };
-  const data = {
-    ...process,
-    interviews: [newInterview],
-    proposed: null,
-  };
-  return axios.patch(`${backendServer}api/matchingprocess`, data, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+  return axios.patch(
+    `${backendServer}api/matchingprocess/interviews/${process.id}`,
+    newInterview,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
 };
 
 export const patchInterviewRequest = async ({
@@ -195,27 +194,15 @@ export const patchInterviewRequest = async ({
   getAccessTokenSilently: any;
 }) => {
   const accessToken = await getAccessTokenSilently();
-
-  const updatedInterviews = process.interviews.map(interview => {
-    if (interview.id === updatedInterview.id) {
-      return updatedInterview;
-    } else {
-      return interview;
+  return axios.patch(
+    `${backendServer}api/matchingprocess/interviews/${process.id}`,
+    updatedInterview,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
     }
-  });
-
-  const data = {
-    ...process,
-    interviews: updatedInterviews,
-    proposed: null,
-  };
-
-  console.log(data);
-  return axios.patch(`${backendServer}api/matchingprocess`, data, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+  );
 };
 
 export const deleteMatchingProcessRequest = async ({
@@ -231,4 +218,22 @@ export const deleteMatchingProcessRequest = async ({
       Authorization: `Bearer ${accessToken}`,
     },
   });
+};
+
+export const deleteInterviewRequest = async ({
+  interviewId,
+  getAccessTokenSilently,
+}: {
+  interviewId: string;
+  getAccessTokenSilently: any;
+}) => {
+  const accessToken = await getAccessTokenSilently();
+  return axios.delete(
+    `${backendServer}api/matchingprocess/interviews/${interviewId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
 };
