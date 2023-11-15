@@ -1,7 +1,7 @@
 import { Paper, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 
-const CallToAction = () => {
+export const CallToAction = () => {
   return (
     <Paper
           elevation={1}
@@ -24,5 +24,3 @@ const CallToAction = () => {
     </Paper>
   )
 }
-
-export default CallToAction

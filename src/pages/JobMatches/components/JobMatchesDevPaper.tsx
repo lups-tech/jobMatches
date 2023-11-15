@@ -17,7 +17,7 @@ import {
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
-const JobMatchesDevPaper = ({
+export const JobMatchesDevPaper = ({
   dev,
   matches,
   jobInfo,
@@ -162,5 +162,3 @@ const JobMatchesDevPaper = ({
     </Paper>
   );
 };
-
-export default JobMatchesDevPaper;

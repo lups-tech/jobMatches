@@ -18,7 +18,10 @@ import { FormControl } from '@mui/base';
 import * as z from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import axios from 'axios';
-import ChangePasswordForm from './components/ChangePasswordForm';
+import { ChangePasswordForm, AdminPanel } from './components';
+import { useQuery } from '@tanstack/react-query';
+import { UserInfoDTO } from '../../types/innerTypes';
+import { fetchUserInfo } from '../../utils/fetchingTools';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
@@ -29,7 +32,7 @@ const UserSchema = z.object({
 
 export const UserProfile: React.FC = () => {
   const {
-    user: userInfo,
+    user: Auth0userInfo,
     isLoading: isUserLoading,
     isAuthenticated,
     getAccessTokenSilently,
@@ -41,8 +44,8 @@ export const UserProfile: React.FC = () => {
   const [passwordSuccess, setPasswordSuccess] = useState<boolean>(false);
   const [passwordError, setPasswordError] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState({
-    name: userInfo?.name,
-    email: userInfo?.email,
+    name: Auth0userInfo?.name,
+    email: Auth0userInfo?.email,
   });
 
   const { control, handleSubmit } = useForm<z.infer<typeof UserSchema>>({
@@ -50,8 +53,20 @@ export const UserProfile: React.FC = () => {
     reValidateMode: 'onBlur',
     resolver: zodResolver(UserSchema),
     defaultValues: {
-      name: userInfo?.name,
-      email: userInfo?.email,
+      name: Auth0userInfo?.name,
+      email: Auth0userInfo?.email,
+    },
+  });
+  
+  const {
+    isLoading: isUserInfoLoading,
+    error: isUserInfoError,
+    data: userInfo,
+  } = useQuery<UserInfoDTO, Error>({
+    queryKey: ['userInfo'],
+    queryFn: async () => {
+        const accessToken = await getAccessTokenSilently();
+        return fetchUserInfo(accessToken, 'self');
     },
   });
 
@@ -85,11 +100,19 @@ export const UserProfile: React.FC = () => {
     setIsEditing(false);
   };
 
-  console.log(userInfo);
-  if (isUserLoading) {
+  if (isUserLoading || isUserInfoLoading) {
     return (
       <div className="flex justify-center mt-16">
         <CircularProgress />
+      </div>
+    );
+  }
+
+  if (isUserInfoError) {
+    console.log('❗️error: ', isUserInfoError);
+    return (
+      <div className="flex justify-center mt-16">
+        An error has occurred, check console for more info
       </div>
     );
   }
@@ -110,7 +133,7 @@ export const UserProfile: React.FC = () => {
             </Tooltip>
           )}
           <div className="flex w-full justify-center">
-            {userInfo?.picture === undefined ? (
+            {Auth0userInfo?.picture === undefined ? (
               <Avatar
                 sx={{
                   width: 56,
@@ -124,7 +147,7 @@ export const UserProfile: React.FC = () => {
             ) : (
               <Avatar
                 alt="Profie pic"
-                src={userInfo.picture}
+                src={Auth0userInfo.picture}
                 sx={{
                   width: 90,
                   height: 90,
@@ -223,6 +246,7 @@ export const UserProfile: React.FC = () => {
               </Button>
             </div>
           )}
+        {userInfo.isAdmin && <AdminPanel name={currentUser.name ?? ''} getAccessTokenSilently={getAccessTokenSilently} />}
         </div>
         <Snackbar
           open={sendSuccess}

@@ -12,9 +12,8 @@ import {
 } from '../../utils/fetchingTools';
 import { findMatchingSkills, sortMockDevelopers } from '../../utils/utilities';
 import JobMatchesJobPaper from './components/JobMatchesJobPaper';
-import JobMatchesDevPaper from './components/JobMatchesDevPaper';
+import {JobMatchesDevPaper, CallToAction} from './components';
 import { MatchingProcess, UserInfoDTO } from '../../types/innerTypes';
-import CallToAction from './components/CallToAction';
 
 type LocationState = {
   state: Job;
