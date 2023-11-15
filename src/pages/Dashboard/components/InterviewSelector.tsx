@@ -32,11 +32,9 @@ const InterviewSelector = ({
   const handleChange = (event: SelectChangeEvent) => {
     const localInterviewType = event.target.value;
     setLocalInterviewTypeState(localInterviewType);
-    console.log('value: ', localInterviewType);
     if (localInterviewType === 'CANCEL') {
       setIsAdding(false);
     } else if (localInterviewType !== '') {
-      console.log('sending request with: ', localInterviewType);
       interviewMutation.mutate({
         interviewType: localInterviewType,
         process,
@@ -48,7 +46,7 @@ const InterviewSelector = ({
 
   return (
     <div>
-      <FormControl variant="standard" sx={{ m: 1, minWidth: 80 }}>
+      <FormControl variant="standard" sx={{ minWidth: 120 }}>
         <Select
           labelId="demo-simple-select-standard-label"
           id="demo-simple-select-standard"

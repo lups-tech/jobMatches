@@ -1,6 +1,6 @@
 import { InterviewCell } from './InterviewCell';
 import { MatchingProcess } from '../../../types/innerTypes';
-import { IconButton } from '@mui/material';
+import { Typography } from '@mui/material';
 import InterviewSelector from './InterviewSelector';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { useState } from 'react';
@@ -26,12 +26,13 @@ export const InterviewCells = ({ process }: InterviewCellsProps) => {
         ))}
       <div>
         {!isAdding && (
-          <IconButton
-            aria-label="Add interview"
-            onClick={() => setIsAdding(true)}
-          >
-            <AddCircleOutlineIcon />
-          </IconButton>
+          <div className="flex justify-end items-center">
+            <Typography variant="body2">Add Interview</Typography>
+            <AddCircleOutlineIcon
+              onClick={() => setIsAdding(true)}
+              sx={{ cursor: 'pointer' }}
+            />
+          </div>
         )}
         {isAdding && (
           <InterviewSelector setIsAdding={setIsAdding} process={process} />

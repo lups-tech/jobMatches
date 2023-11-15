@@ -69,20 +69,28 @@ export const InterviewCell = ({ interview, process }: InterviewCellProps) => {
       <span className="w-24">
         <CheckCircleIcon
           color="success"
-          sx={interview.passed === true ? undefined : { color: '#bbbbbb' }}
+          sx={
+            interview.passed === true
+              ? undefined
+              : { color: '#bbbbbb', cursor: 'pointer' }
+          }
           onClick={() => interviewSuccessedHandle(true)}
         />
         <CancelIcon
           color="error"
-          sx={interview.passed === false ? undefined : { color: '#bbbbbb' }}
+          sx={
+            interview.passed === false
+              ? undefined
+              : { color: '#bbbbbb', cursor: 'pointer' }
+          }
           onClick={() => interviewSuccessedHandle(false)}
         />
         <CalendarMonthIcon
-          sx={{ color: '#bbbbbb' }}
+          sx={{ color: '#bbbbbb', cursor: 'pointer' }}
           onClick={() => setOpenDatePicker(true)}
         />
         <DeleteIcon
-          sx={{ color: '#bbbbbb' }}
+          sx={{ color: '#bbbbbb', cursor: 'pointer' }}
           onClick={() => deleteInterviewHandle(interview.id)}
         />
         <Modal open={openDatePicker} onClose={handleClose}>
@@ -90,6 +98,7 @@ export const InterviewCell = ({ interview, process }: InterviewCellProps) => {
             <DateCalendar
               value={interviewDate}
               onChange={newValue => setInterviewDate(newValue)}
+              sx={{ cursor: 'pointer' }}
             />
             <Button className="mx-auto" onClick={updateInterviewDateHandle}>
               Update interview date
