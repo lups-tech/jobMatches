@@ -54,4 +54,12 @@ export const passwordSchema = z
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: 'Please ensure passwords match',
     path: ['confirmPassword'],
-  });
+  }
+);
+
+export const AddUserSchema = z.object({
+    email: z
+    .string()
+    .nonempty('Please specify an email')
+    .email('Please specify a valid email'),
+});
