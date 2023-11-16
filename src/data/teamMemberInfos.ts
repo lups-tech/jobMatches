@@ -12,14 +12,14 @@ export const teamMemberInfos: TeamMemberInfo[] = [
   {
     imgUrl: 'https://avatars.githubusercontent.com/u/120639277?v=4',
     memberName: 'Panisara B. Dachin',
-    memberDescription: 'Undefined',
+    memberDescription: 'A frontend whizz, now working for H&M',
     githubLink: 'https://github.com/panisara-bd',
     linkedinLink: 'https://www.linkedin.com/in/panisara-bd/',
   },
   {
     imgUrl: 'https://avatars.githubusercontent.com/u/90217066?v=4',
     memberName: 'Luca Martinelli',
-    memberDescription: 'Undefined',
+    memberDescription: 'An all-around talent with a thirst for learning',
     githubLink: 'https://github.com/Luega',
     linkedinLink: 'https://www.linkedin.com/in/martinelliluca/',
   },
@@ -40,7 +40,7 @@ export const teamMemberInfos: TeamMemberInfo[] = [
   {
     imgUrl: 'https://avatars.githubusercontent.com/u/113531006?v=4',
     memberName: 'Sonja Kitanoska',
-    memberDescription: 'Undefined',
+    memberDescription: 'Always there to find the bug, fix the code and lift spirits',
     githubLink: 'https://github.com/Sonja-Kitanoska',
     linkedinLink: 'https://www.linkedin.com/in/sonja-kitanoska-986ba8a8/',
   },
@@ -55,14 +55,14 @@ export const teamMemberInfos: TeamMemberInfo[] = [
   {
     imgUrl: 'https://avatars.githubusercontent.com/u/116962905?v=4',
     memberName: 'Luis Barri',
-    memberDescription: 'Undefined',
+    memberDescription: 'A talented coder with an eye for design, now working at Seriline',
     githubLink: 'https://github.com/luisw90',
     linkedinLink: 'https://www.linkedin.com/in/luis-barri-a1a393ab/',
   },
   {
     imgUrl: illu_member_profile,
     memberName: 'Join Us',
-    memberDescription: 'Become part of the member of our aswesome team',
+    memberDescription: 'Become part of the member of our awesome team',
     githubLink: 'https://github.com/lups-tech',
     linkedinLink: '',
   },
