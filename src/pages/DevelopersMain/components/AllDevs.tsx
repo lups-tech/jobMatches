@@ -88,7 +88,7 @@ const AllDevs = ({
 
   return (
     <div className="flex justify-center">
-      <div className="max-w-[800px] mx-10">
+      <div className="w-[300px] md:w-[600px] mx-10">
         <DevFilters setSearchFilter={setSearchFilter} skills={skills} />
         <div className="jobcards">
           {displayedDevelopers &&

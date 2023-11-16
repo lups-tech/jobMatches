@@ -1,6 +1,6 @@
 import { AppBar, IconButton, Menu, MenuItem, Toolbar } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import CodeIcon from '@mui/icons-material/Code';
+import Groups2Icon from '@mui/icons-material/Groups2';
 import WorkIcon from '@mui/icons-material/Work';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useLocation, Link } from 'react-router-dom';
@@ -93,7 +93,7 @@ export const MobileNavbar = () => {
                         }
                         style={{ color: '#ffffff' }}
                       >
-                        <CodeIcon /> Developers
+                        <Groups2Icon /> Developers
                       </Link>
                     </MenuItem>
                     <MenuItem onClick={handleClose}>

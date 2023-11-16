@@ -118,7 +118,7 @@ export const SkillForm = () => {
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col items-center gap-4 mx-auto min-w-fit max-w-md px-4"
         >
-          <Typography variant="h4" className="mb-10 md:pb-12">
+          <Typography variant="h5" sx={{marginBlock: "1.5rem"}}>
             Add Skills to {developerInfo.name}
           </Typography>
           <FormControl className="flex flex-col mb-2 self-start w-full">
