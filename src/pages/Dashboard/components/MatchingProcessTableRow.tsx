@@ -20,6 +20,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { InterviewCells } from './InterviewCells';
+import ContractSelector from './ContractSelector';
 
 interface MatchingProcessTableRow {
   process: MatchingProcess;
@@ -123,9 +124,7 @@ export const MatchingProcessTableRow = ({
           <InterviewCells process={process} />
         </StyledTableCell>
         <StyledTableCell align="right">
-          {process.interviews.length > 0
-            ? process.contracts.length
-            : 'No contracts yet'}
+          <ContractSelector process={process} />
         </StyledTableCell>
         <StyledTableCell align="right">
           {process.placed ? 'Yes' : 'No'}
