@@ -150,7 +150,28 @@ export const patchProposedRequest = async ({
 }) => {
   const accessToken = await getAccessTokenSilently();
   const newProposed = { id: uuidv4(), date: new Date(), succeeded: result };
-  const data = { ...process, proposed: newProposed };
+  return axios.patch(
+    `${backendServer}api/matchingprocess/${process.id}`,
+    newProposed,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+};
+
+export const patchPlacedRequest = async ({
+  result,
+  process,
+  getAccessTokenSilently,
+}: {
+  result: boolean;
+  process: MatchingProcess;
+  getAccessTokenSilently: any;
+}) => {
+  const accessToken = await getAccessTokenSilently();
+  const data = { id: process.id, placed: result, resultDate: new Date() };
   return axios.patch(`${backendServer}api/matchingprocess`, data, {
     headers: {
       Authorization: `Bearer ${accessToken}`,

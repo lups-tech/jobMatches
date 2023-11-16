@@ -13,6 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { InterviewCells } from './InterviewCells';
 import ContractSelector from './ContractSelector';
 import { ProposedCell } from './ProposedCell';
+import { PlacedCell } from './PlacedCell';
 
 interface MatchingProcessTableRow {
   process: MatchingProcess;
@@ -85,7 +86,8 @@ export const MatchingProcessTableRow = ({
           <ContractSelector process={process} />
         </StyledTableCell>
         <StyledTableCell align="right">
-          {process.placed ? 'Yes' : 'No'}
+          {/* {process.placed ? 'Yes' : 'No'} */}
+          <PlacedCell process={process} />
         </StyledTableCell>
         <StyledTableCell>
           <IconButton
