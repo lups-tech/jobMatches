@@ -9,7 +9,7 @@ export const CallToAction = () => {
             padding: 2,
             marginBottom: 2,
             borderRadius: 6,
-            // Following logic is to color the dev card based on the first Programming Language they have
+            width: 440,
             backgroundColor: 'white',
           }}
         >
