@@ -7,6 +7,7 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import {
+  deleteContractRequest,
   patchContractRequest,
   patchNewContractRequest,
 } from '../../../utils/mutationTools';
@@ -36,27 +37,41 @@ const ContractSelector = ({ process }: ContractSelectorProps) => {
     },
   });
 
+  const deleteContractMutation = useMutation(deleteContractRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['matchingProcess']);
+    },
+  });
+
   const handleChange = (event: SelectChangeEvent) => {
     const localContractType = event.target.value;
     setLocalContractTypeState(localContractType);
-    if (process.contracts[0]) {
-      const updatedContract = {
-        ...process.contracts[0],
-        contractStage: localContractType,
-      };
-      console.log('updating contract stage: ', updatedContract);
-      contractMutation.mutate({
-        updatedContract,
-        process,
+    if (localContractType === 'CANCEL') {
+      console.log('deleting contract: ', process.contracts[0]);
+      deleteContractMutation.mutate({
+        contractId: process.contracts[0].id,
         getAccessTokenSilently,
       });
     } else {
-      console.log('creating new contract stage', localContractType);
-      newContractMutation.mutate({
-        contractStage: localContractType,
-        process,
-        getAccessTokenSilently,
-      });
+      if (process.contracts[0]) {
+        const updatedContract = {
+          ...process.contracts[0],
+          contractStage: localContractType,
+        };
+        console.log('updating contract stage: ', updatedContract);
+        contractMutation.mutate({
+          updatedContract,
+          process,
+          getAccessTokenSilently,
+        });
+      } else {
+        console.log('creating new contract stage', localContractType);
+        newContractMutation.mutate({
+          contractStage: localContractType,
+          process,
+          getAccessTokenSilently,
+        });
+      }
     }
   };
 

@@ -24,20 +24,22 @@ export const InterviewCells = ({ process }: InterviewCellsProps) => {
             />
           </div>
         ))}
-      <div>
-        {!isAdding && (
-          <div className="flex justify-end items-center">
-            <Typography variant="body2">Add Interview</Typography>
-            <AddCircleOutlineIcon
-              onClick={() => setIsAdding(true)}
-              sx={{ cursor: 'pointer' }}
-            />
-          </div>
-        )}
-        {isAdding && (
-          <InterviewSelector setIsAdding={setIsAdding} process={process} />
-        )}
-      </div>
+      {process.contracts.length === 0 && (
+        <div>
+          {!isAdding && (
+            <div className="flex justify-end items-center">
+              <Typography variant="body2">Add Interview</Typography>
+              <AddCircleOutlineIcon
+                onClick={() => setIsAdding(true)}
+                sx={{ cursor: 'pointer' }}
+              />
+            </div>
+          )}
+          {isAdding && (
+            <InterviewSelector setIsAdding={setIsAdding} process={process} />
+          )}
+        </div>
+      )}
     </div>
   );
 };
