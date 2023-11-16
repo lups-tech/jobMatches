@@ -2,7 +2,6 @@
 import axios from 'axios';
 import {
   AddCommentRequestBody,
-  Contract,
   DeleteCommentRequestBody,
   Interview,
   MatchingProcess,
@@ -231,67 +230,6 @@ export const deleteInterviewRequest = async ({
   const accessToken = await getAccessTokenSilently();
   return axios.delete(
     `${backendServer}api/matchingprocess/interviews/${interviewId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
-};
-
-export const patchNewContractRequest = async ({
-  contractStage,
-  process,
-  getAccessTokenSilently,
-}: {
-  contractStage: string;
-  process: MatchingProcess;
-  getAccessTokenSilently: any;
-}) => {
-  const accessToken = await getAccessTokenSilently();
-  const newContract = { id: uuidv4(), date: new Date(), contractStage };
-  return axios.patch(
-    `${backendServer}api/matchingprocess/contracts/${process.id}`,
-    newContract,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
-};
-
-export const patchContractRequest = async ({
-  updatedContract,
-  process,
-  getAccessTokenSilently,
-}: {
-  updatedContract: Contract;
-  process: MatchingProcess;
-  getAccessTokenSilently: any;
-}) => {
-  const accessToken = await getAccessTokenSilently();
-  return axios.patch(
-    `${backendServer}api/matchingprocess/contracts/${process.id}`,
-    updatedContract,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
-};
-
-export const deleteContractRequest = async ({
-  contractId,
-  getAccessTokenSilently,
-}: {
-  contractId: string;
-  getAccessTokenSilently: any;
-}) => {
-  const accessToken = await getAccessTokenSilently();
-  return axios.delete(
-    `${backendServer}api/matchingprocess/contracts/${contractId}`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
