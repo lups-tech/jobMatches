@@ -1,4 +1,4 @@
-import { Paper, Snackbar, Typography } from "@mui/material";
+import { Divider, Paper, Snackbar } from "@mui/material";
 import { useState } from "react";
 import { AddUserForm } from "./AddUserForm";
 import UpgradeUserForm from "./UpgradeUserForm";
@@ -10,9 +10,9 @@ export const AdminPanel = ({ name, getAccessTokenSilently } : {name: string, get
    
     return (
         <>
-            <Typography>Admin Options</Typography>
+            <Divider sx={{marginTop: '2rem'}}>Organization Options</Divider>
             <div className="mt-6 flex-col gap-2">
-                <Paper sx={{padding : '2rem', marginBlock: '1rem'}}>
+                <Paper sx={{padding : '2rem', marginBottom: '1rem', borderRadius: 6,}}>
                     <AddUserForm 
                         name={name} 
                         getAccessTokenSilently={getAccessTokenSilently} 
@@ -20,7 +20,7 @@ export const AdminPanel = ({ name, getAccessTokenSilently } : {name: string, get
                         setSendError={setSendError} 
                     />
                 </Paper>
-                <Paper sx={{padding : '2rem', marginBlock: '1rem'}}>
+                <Paper sx={{padding : '2rem', marginBlock: '1rem', borderRadius: 6,}}>
                     <UpgradeUserForm  
                         getAccessTokenSilently={getAccessTokenSilently} 
                         setSendSuccess={setUpgradeSuccess} 

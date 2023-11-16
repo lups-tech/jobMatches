@@ -69,7 +69,7 @@ const UpgradeUserForm = ({ getAccessTokenSilently, setSendSuccess, setSendError 
             <Divider sx={{marginBottom: "1rem"}}>Upgrade Existing User to Admin</Divider>
             <FormControl>
                 <Autocomplete
-                    className=""
+                    sx={{borderRadius: '24px'}}
                     id="Auth0Sales"
                     options={SalesInfo}
                     renderInput={(params) => (

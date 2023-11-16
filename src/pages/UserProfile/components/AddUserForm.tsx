@@ -50,6 +50,7 @@ export const AddUserForm = ({ name, getAccessTokenSilently, setSendSuccess, setS
             }) => (
                 <FormControl>
                 <TextField
+                    sx={{borderRadius: '24px'}}
                     name="email"
                     label="Email"
                     variant="outlined"
