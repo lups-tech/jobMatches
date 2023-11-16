@@ -129,6 +129,7 @@ export const JobMatches = () => {
                 borderRadius: 6,
                 // Following logic is to color the dev card based on the first Programming Language they have
                 backgroundColor: 'white',
+                width: 440,
               }}
             >
               <Typography variant="h5">No good matches</Typography>
