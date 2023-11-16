@@ -42,7 +42,7 @@ const SavedJobsList = ({
 
   return (
     <div className="w-[415px] mx-5">
-      <Typography variant="h5">Saved Jobs</Typography>
+      <Typography variant="h5" sx={{marginLeft: '1.5rem'}}>Saved Jobs</Typography>
       <div className="w-full h-[600px] mx-auto overflow-hidden hover:overflow-y-auto">
         <div className="w-[400px]">
           {jobs &&
