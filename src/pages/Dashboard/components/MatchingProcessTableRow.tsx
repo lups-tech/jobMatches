@@ -1,26 +1,18 @@
 import {
-  Checkbox,
   IconButton,
   styled,
   TableCell,
   tableCellClasses,
   TableRow,
-  Typography,
 } from '@mui/material';
-import {
-  MatchingProcess,
-  Proposed,
-  UserInfoDTO,
-} from '../../../types/innerTypes';
-import {
-  patchProposedRequest,
-  deleteMatchingProcessRequest,
-} from '../../../utils/mutationTools';
+import { MatchingProcess, UserInfoDTO } from '../../../types/innerTypes';
+import { deleteMatchingProcessRequest } from '../../../utils/mutationTools';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { InterviewCells } from './InterviewCells';
 import ContractSelector from './ContractSelector';
+import { ProposedCell } from './ProposedCell';
 
 interface MatchingProcessTableRow {
   process: MatchingProcess;
@@ -54,11 +46,6 @@ export const MatchingProcessTableRow = ({
   const { getAccessTokenSilently } = useAuth0();
   const queryClient = useQueryClient();
 
-  const proposedMutation = useMutation(patchProposedRequest, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['matchingProcess']);
-    },
-  });
   const deleteMatchingProcessMutation = useMutation(
     deleteMatchingProcessRequest,
     {
@@ -68,37 +55,8 @@ export const MatchingProcessTableRow = ({
     }
   );
 
-  const proposedHandle = (result: boolean) => {
-    proposedMutation.mutate({ result, process, getAccessTokenSilently });
-  };
-
   const removeMatchingProcessHandle = (processId: string) => {
     deleteMatchingProcessMutation.mutate({ processId, getAccessTokenSilently });
-  };
-
-  const displayProposed = (proposed: Proposed) => {
-    if (proposed) {
-      return (
-        <Typography
-          variant="body1"
-          sx={
-            proposed.succeeded
-              ? { color: '#8baf73', fontWeight: 'bold' }
-              : { color: '#c77071', fontWeight: 'bold' }
-          }
-        >
-          {proposed.date.split('T')[0]}
-        </Typography>
-      );
-    }
-    return (
-      <div>
-        Succeeded
-        <Checkbox color="success" onChange={() => proposedHandle(true)} />
-        Rejected
-        <Checkbox color="error" onChange={() => proposedHandle(false)} />
-      </div>
-    );
   };
 
   return (
@@ -118,7 +76,7 @@ export const MatchingProcessTableRow = ({
           {userInfo.jobs.find(job => job.id === process.jobId)?.title}
         </StyledTableCell>
         <StyledTableCell align="right">
-          {displayProposed(process.proposed)}
+          <ProposedCell process={process} />
         </StyledTableCell>
         <StyledTableCell align="right">
           <InterviewCells process={process} />
