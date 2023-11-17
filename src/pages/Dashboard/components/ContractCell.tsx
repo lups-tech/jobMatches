@@ -10,6 +10,7 @@ import {
   deleteContractRequest,
   patchContractRequest,
   patchNewContractRequest,
+  patchPlacedRequest,
 } from '../../../utils/mutationTools';
 import { useAuth0 } from '@auth0/auth0-react';
 import { MatchingProcess } from '../../../types/innerTypes';
@@ -18,7 +19,7 @@ interface ContractSelectorProps {
   process: MatchingProcess;
 }
 
-const ContractSelector = ({ process }: ContractSelectorProps) => {
+export const ContractCell = ({ process }: ContractSelectorProps) => {
   const [localContractTypeState, setLocalContractTypeState] = useState(
     process.contracts[0] ? process.contracts[0].contractStage : ''
   );
@@ -43,11 +44,16 @@ const ContractSelector = ({ process }: ContractSelectorProps) => {
     },
   });
 
+  const placedMutation = useMutation(patchPlacedRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['matchingProcess']);
+    },
+  });
+
   const handleChange = (event: SelectChangeEvent) => {
     const localContractType = event.target.value;
     setLocalContractTypeState(localContractType);
     if (localContractType === 'CANCEL') {
-      console.log('deleting contract: ', process.contracts[0]);
       deleteContractMutation.mutate({
         contractId: process.contracts[0].id,
         getAccessTokenSilently,
@@ -64,6 +70,29 @@ const ContractSelector = ({ process }: ContractSelectorProps) => {
           process,
           getAccessTokenSilently,
         });
+        if (localContractType === 'Signed') {
+          // if stage is signed, patch a successed request
+          placedMutation.mutate({
+            result: true,
+            process,
+            getAccessTokenSilently,
+          });
+        } else if (localContractType === 'Failed') {
+          // if stage is failed, patch a failed request
+          placedMutation.mutate({
+            result: false,
+            process,
+            getAccessTokenSilently,
+          });
+        } else if (process.resultDate) {
+          // otherwise, reset placed state
+          placedMutation.mutate({
+            result: null,
+            process,
+            resetDate: true,
+            getAccessTokenSilently,
+          });
+        }
       } else {
         console.log('creating new contract stage', localContractType);
         newContractMutation.mutate({
@@ -71,6 +100,20 @@ const ContractSelector = ({ process }: ContractSelectorProps) => {
           process,
           getAccessTokenSilently,
         });
+        // if stage is signed, patch a successed request
+        if (localContractType === 'Signed') {
+          placedMutation.mutate({
+            result: true,
+            process,
+            getAccessTokenSilently,
+          });
+        } else if (localContractType === 'Failed') {
+          placedMutation.mutate({
+            result: false,
+            process,
+            getAccessTokenSilently,
+          });
+        }
       }
     }
   };
@@ -97,5 +140,3 @@ const ContractSelector = ({ process }: ContractSelectorProps) => {
     </div>
   );
 };
-
-export default ContractSelector;

@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   deleteInterviewRequest,
   patchInterviewRequest,
+  patchPlacedRequest,
 } from '../../../utils/mutationTools';
 import { useAuth0 } from '@auth0/auth0-react';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
@@ -38,15 +39,38 @@ export const InterviewCell = ({ interview, process }: InterviewCellProps) => {
     },
   });
 
+  const placedMutation = useMutation(patchPlacedRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['matchingProcess']);
+    },
+  });
+
   const handleClose = () => setOpenDatePicker(false);
 
-  const interviewSuccessedHandle = (interviewResult: boolean) => {
+  const interviewUpdateHandle = (interviewResult: boolean) => {
     const updatedInterview = { ...interview, passed: interviewResult };
     interviewMutation.mutate({
       updatedInterview,
       process,
       getAccessTokenSilently,
     });
+    // add placed state
+    if (!interviewResult) {
+      placedMutation.mutate({
+        result: false,
+        process,
+        getAccessTokenSilently,
+      });
+    }
+    // remove the placed state
+    if (interviewResult && process.placed === false) {
+      placedMutation.mutate({
+        result: null,
+        process,
+        resetDate: true,
+        getAccessTokenSilently,
+      });
+    }
   };
 
   const updateInterviewDateHandle = () => {
@@ -57,6 +81,7 @@ export const InterviewCell = ({ interview, process }: InterviewCellProps) => {
       process,
       getAccessTokenSilently,
     });
+    setOpenDatePicker(false);
   };
 
   const deleteInterviewHandle = (interviewId: string) => {
@@ -74,7 +99,7 @@ export const InterviewCell = ({ interview, process }: InterviewCellProps) => {
               ? undefined
               : { color: '#bbbbbb', cursor: 'pointer' }
           }
-          onClick={() => interviewSuccessedHandle(true)}
+          onClick={() => interviewUpdateHandle(true)}
         />
         <CancelIcon
           color="error"
@@ -83,7 +108,7 @@ export const InterviewCell = ({ interview, process }: InterviewCellProps) => {
               ? undefined
               : { color: '#bbbbbb', cursor: 'pointer' }
           }
-          onClick={() => interviewSuccessedHandle(false)}
+          onClick={() => interviewUpdateHandle(false)}
         />
         <CalendarMonthIcon
           sx={{ color: '#bbbbbb', cursor: 'pointer' }}
