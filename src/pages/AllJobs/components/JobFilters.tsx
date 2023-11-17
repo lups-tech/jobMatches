@@ -83,7 +83,9 @@ const JobFilters = ({
                 borderRadius: '24px',
               },
             }}
-            options={skills.map((skill) => skill.title)}
+            options={skills
+                .filter(skill => skill.type !== 'Programming Language')
+                .map((skill) => skill.title)}
             renderInput={(params) => (
               <TextField {...params} label="Search skills" />
             )}
