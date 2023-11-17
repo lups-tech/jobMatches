@@ -15,6 +15,8 @@ import './index.css';
 import { AuthenticationGuard } from './components/AuthenticationGuard.tsx';
 import GlobalThemeOverride from './theme.tsx';
 import { CssBaseline } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const router = createBrowserRouter([
   {
@@ -53,11 +55,13 @@ const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <GlobalThemeOverride>
-      <CssBaseline />
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-    </GlobalThemeOverride>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <GlobalThemeOverride>
+        <CssBaseline />
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </GlobalThemeOverride>
+    </LocalizationProvider>
   </React.StrictMode>
 );

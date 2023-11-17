@@ -1,27 +1,19 @@
 import {
-  Checkbox,
   IconButton,
   styled,
   TableCell,
   tableCellClasses,
   TableRow,
-  Typography,
 } from '@mui/material';
-import {
-  MatchingProcess,
-  Proposed,
-  UserInfoDTO,
-} from '../../../types/innerTypes';
-import { InterviewCell } from './InterviewCell';
-import {
-  patchProposedRequest,
-  deleteMatchingProcessRequest,
-  patchInterviewRequest,
-} from '../../../utils/mutationTools';
+import { MatchingProcess, UserInfoDTO } from '../../../types/innerTypes';
+import { deleteMatchingProcessRequest } from '../../../utils/mutationTools';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import DeleteIcon from '@mui/icons-material/Delete';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { InterviewCells } from './InterviewCells';
+import ContractSelector from './ContractSelector';
+import { ProposedCell } from './ProposedCell';
+import { PlacedCell } from './PlacedCell';
 
 interface MatchingProcessTableRow {
   process: MatchingProcess;
@@ -55,11 +47,6 @@ export const MatchingProcessTableRow = ({
   const { getAccessTokenSilently } = useAuth0();
   const queryClient = useQueryClient();
 
-  const proposedMutation = useMutation(patchProposedRequest, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['matchingProcess']);
-    },
-  });
   const deleteMatchingProcessMutation = useMutation(
     deleteMatchingProcessRequest,
     {
@@ -68,51 +55,9 @@ export const MatchingProcessTableRow = ({
       },
     }
   );
-  const interviewMutation = useMutation(patchInterviewRequest, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['matchingProcess']);
-    },
-  });
-
-  const proposedHandle = (result: boolean) => {
-    proposedMutation.mutate({ result, process, getAccessTokenSilently });
-  };
 
   const removeMatchingProcessHandle = (processId: string) => {
     deleteMatchingProcessMutation.mutate({ processId, getAccessTokenSilently });
-  };
-
-  const addInterviewHandle = (process: MatchingProcess) => {
-    interviewMutation.mutate({
-      interviewType: 'Personal',
-      process,
-      getAccessTokenSilently,
-    });
-  };
-
-  const displayProposed = (proposed: Proposed) => {
-    if (proposed) {
-      return (
-        <Typography
-          variant="body1"
-          sx={
-            proposed.succeeded
-              ? { color: '#8baf73', fontWeight: 'bold' }
-              : { color: '#c77071', fontWeight: 'bold' }
-          }
-        >
-          {proposed.date.split('T')[0]}
-        </Typography>
-      );
-    }
-    return (
-      <div>
-        Succeeded
-        <Checkbox color="success" onChange={() => proposedHandle(true)} />
-        Rejected
-        <Checkbox color="error" onChange={() => proposedHandle(false)} />
-      </div>
-    );
   };
 
   return (
@@ -132,31 +77,17 @@ export const MatchingProcessTableRow = ({
           {userInfo.jobs.find(job => job.id === process.jobId)?.title}
         </StyledTableCell>
         <StyledTableCell align="right">
-          {displayProposed(process.proposed)}
+          <ProposedCell process={process} />
         </StyledTableCell>
         <StyledTableCell align="right">
-          <div>
-            {process.interviews.length > 0 ? (
-              process.interviews.map(interview => (
-                <InterviewCell key={interview.id} interview={interview} />
-              ))
-            ) : (
-              <IconButton
-                aria-label="Add interview"
-                onClick={() => addInterviewHandle(process)}
-              >
-                <AddCircleOutlineIcon />
-              </IconButton>
-            )}
-          </div>
+          <InterviewCells process={process} />
         </StyledTableCell>
         <StyledTableCell align="right">
-          {process.interviews.length > 0
-            ? process.contracts.length
-            : 'No contracts yet'}
+          <ContractSelector process={process} />
         </StyledTableCell>
         <StyledTableCell align="right">
-          {process.placed ? 'Yes' : 'No'}
+          {/* {process.placed ? 'Yes' : 'No'} */}
+          <PlacedCell process={process} />
         </StyledTableCell>
         <StyledTableCell>
           <IconButton
