@@ -128,6 +128,7 @@ export const UserProfile: React.FC = () => {
                 sx={{
                   alignSelf: 'end',
                   marginTop: '1rem',
+                  cursor: 'pointer'
                 }}
               />
             </Tooltip>
@@ -227,7 +228,7 @@ export const UserProfile: React.FC = () => {
               />
             </>
           ) : (
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-5 items">
               <Typography
                 variant="h4"
                 sx={{ alignSelf: 'center' }}
