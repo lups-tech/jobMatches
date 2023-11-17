@@ -88,8 +88,10 @@ export const Dashboard = () => {
           matchingProcesses={allMatchingProcesses}
         />
         <DataVisualisation />
-        <SavedDevsList developers={userInfo.developers} />
-        <SavedJobsList jobs={userInfo.jobs} userId={userInfo.id} />
+        <div className='flex justify-around mx-auto'>
+          <SavedDevsList developers={userInfo.developers} />
+          <SavedJobsList jobs={userInfo.jobs} userId={userInfo.id} />
+        </div>
       </div>
     </div>
   );

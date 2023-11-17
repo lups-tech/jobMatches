@@ -128,6 +128,7 @@ export const UserProfile: React.FC = () => {
                 sx={{
                   alignSelf: 'end',
                   marginTop: '1rem',
+                  cursor: 'pointer'
                 }}
               />
             </Tooltip>
