@@ -102,7 +102,9 @@ export const JobMatches = () => {
         <Typography variant="h2">Best Matches</Typography>
         <div className="h-[600px] w-[460px] mx-auto mt-6 overflow-hidden hover:overflow-y-auto">
           {matches.developers.length > 0 ? (
-            matches.developers.map(dev => (
+            matches.developers
+              .filter(dev => dev.skillMatch > 1)
+              .map(dev => (
               <JobMatchesDevPaper
                 key={dev.id}
                 dev={dev}
