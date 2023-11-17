@@ -228,7 +228,7 @@ export const UserProfile: React.FC = () => {
               />
             </>
           ) : (
-            <div className="flex flex-col gap-5 items">
+            <div className="flex flex-col gap-5">
               <Typography
                 variant="h4"
                 sx={{ alignSelf: 'center' }}
