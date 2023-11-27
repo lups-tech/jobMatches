@@ -64,7 +64,7 @@ export const ContractCell = ({ process }: ContractSelectorProps) => {
           ...process.contracts[0],
           contractStage: localContractType,
         };
-        console.log('updating contract stage: ', updatedContract);
+        // console.log('updating contract stage: ', updatedContract);
         contractMutation.mutate({
           updatedContract,
           process,
@@ -94,7 +94,7 @@ export const ContractCell = ({ process }: ContractSelectorProps) => {
           });
         }
       } else {
-        console.log('creating new contract stage', localContractType);
+        // console.log('creating new contract stage', localContractType);
         newContractMutation.mutate({
           contractStage: localContractType,
           process,

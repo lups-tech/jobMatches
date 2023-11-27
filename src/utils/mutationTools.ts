@@ -178,7 +178,7 @@ export const patchPlacedRequest = async ({
     placed: result,
     resultDate: resetDate ? null : new Date(),
   };
-  console.log('!!!', data);
+  // console.log('!!!', data);
   return axios.patch(`${backendServer}api/matchingprocess`, data, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
