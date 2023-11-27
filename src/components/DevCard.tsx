@@ -15,7 +15,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import EmailIcon from '@mui/icons-material/Email';
 import { Developer } from '../types/innerTypes';
-import { cardColorLogic } from '../data/programmingLanguageColors';
+import { avatarColorLogic, cardColorLogic } from '../data/programmingLanguageColors';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { togglelikeRequest } from '../utils/fetchingTools';
@@ -85,10 +85,9 @@ export const DevCard = ({
         <Grid item xs={2}>
           {/* should change the src to a condition that if the user has his/her profile picture, if leave src empty, avatar component will show the character of user name */}
           <Avatar
-            alt={developer.name}
-            src={`https://i.pravatar.cc/300?img=${developer.id.slice(0, 1)}`}
-            sx={{ width: 72, height: 72 }}
-          />
+            alt={`${developer.name.split(" ").map((n)=>n[0]).join(".")}`}
+            sx={{ width: 72, height: 72, backgroundColor: avatarColorLogic[groupedSkills['Programming Language'][0]] }}
+          >{`${developer.name.split(" ").map((n)=>n[0]).join("")}`}</Avatar>
         </Grid>
         <Grid item xs={10}>
           <CardContent
