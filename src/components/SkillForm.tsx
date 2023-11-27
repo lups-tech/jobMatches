@@ -104,10 +104,21 @@ export const SkillForm = () => {
   const skillTypes = Array.from(new Set(skills.map((skill) => skill.type)));
 
   const onSubmit = async (formValues: FormValues) => {
+    const skillConverter = (selectedSkills : string[]) => {
+      return selectedSkills
+        .map(skillName => skills
+            .find(skill => skill.title === skillName)?.id)
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const selectedSkills: any[] = [...Object.values(formValues.selectedSkillIds)[0], 
+    ...skillConverter(Object.values(formValues.selectedSkillIds)[1]),
+    ...skillConverter(Object.values(formValues.selectedSkillIds)[2]),
+    ...skillConverter(Object.values(formValues.selectedSkillIds)[3]),
+  ]
     setLoadingState(true);
     mutation.mutate({
       developerId: developerInfo.id,
-      selectedSkillIds: Object.values(formValues.selectedSkillIds).flat(),
+      selectedSkillIds: selectedSkills,
     });
   };
 
