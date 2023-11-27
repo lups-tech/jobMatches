@@ -149,7 +149,7 @@ export const JobMatchesDevPaper = ({
           </Button>
         )}
         </div>
-          <Stack spacing={1} direction="row">
+          <Stack spacing={1} direction="row" className='overflow-x-scroll'>
             {dev.skills
               .filter(skill =>
                 matches.jobSkills.some(jobSkill => jobSkill.id === skill.id)

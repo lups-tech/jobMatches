@@ -107,7 +107,7 @@ export const DevCard = ({
                 </Typography>
               )}
               {groupedSkills['Technical Skills'] && (
-                <span className="font-bold flex">
+                <span className="font-bold flex overflow-x-scroll">
                   {groupedSkills['Technical Skills'].map((skill, index) => {
                     const chipWidth = skill.length * 8 + 20;
                     return (
