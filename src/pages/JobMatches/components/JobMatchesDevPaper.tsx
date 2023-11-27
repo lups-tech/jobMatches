@@ -137,7 +137,7 @@ const JobMatchesDevPaper = ({
             <EmailIcon fontSize="small" sx={{ marginRight: 1 }} />
             {dev.email}
           </Typography>
-          <Stack spacing={1} direction="row">
+          <Stack spacing={1} direction="row" className='overflow-x-scroll'>
             {dev.skills
               .filter(skill =>
                 matches.jobSkills.some(jobSkill => jobSkill.id === skill.id)
