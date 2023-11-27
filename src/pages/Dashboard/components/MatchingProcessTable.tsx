@@ -8,6 +8,7 @@ import {
   TableCell,
   styled,
   tableCellClasses,
+  Typography,
 } from '@mui/material';
 import { mockMatchingProcesses } from '../../../data/mockMatchingProcesses';
 import { MatchingProcess, UserInfoDTO } from '../../../types/innerTypes';
@@ -37,29 +38,35 @@ export const MatchingProcessTable = ({
   }
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>Developer</StyledTableCell>
-            <StyledTableCell>Employer</StyledTableCell>
-            <StyledTableCell>Position</StyledTableCell>
-            <StyledTableCell align="right">Proposed</StyledTableCell>
-            <StyledTableCell align="right">Interviews</StyledTableCell>
-            <StyledTableCell align="right">Contracts</StyledTableCell>
-            <StyledTableCell align="right">Placed</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {matchingProcesses.map(process => (
-            <MatchingProcessTableRow
-              key={process.id}
-              process={process}
-              userInfo={userInfo}
-            />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <div className="mt-6 mb-10">
+      <div className="mb-2">
+        <Typography variant="h5">Matching Process Management</Typography>
+      </div>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 700 }} aria-label="matching process table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>Developer</StyledTableCell>
+              <StyledTableCell>Employer</StyledTableCell>
+              <StyledTableCell>Position</StyledTableCell>
+              <StyledTableCell align="right">Proposed</StyledTableCell>
+              <StyledTableCell align="right">Interviews</StyledTableCell>
+              <StyledTableCell align="right">Contracts</StyledTableCell>
+              <StyledTableCell align="right">Placed</StyledTableCell>
+              <StyledTableCell align="right">Remove</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {matchingProcesses.map(process => (
+              <MatchingProcessTableRow
+                key={process.id}
+                process={process}
+                userInfo={userInfo}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 };

@@ -1,19 +1,19 @@
 import {
-  Checkbox,
+  IconButton,
   styled,
   TableCell,
   tableCellClasses,
   TableRow,
 } from '@mui/material';
-import {
-  MatchingProcess,
-  Proposed,
-  UserInfoDTO,
-} from '../../../types/innerTypes';
-import { InterviewCell } from './InterviewCell';
-import { patchProposedRequest } from '../../../utils/mutationTools';
+import { MatchingProcess, UserInfoDTO } from '../../../types/innerTypes';
+import { deleteMatchingProcessRequest } from '../../../utils/mutationTools';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { InterviewCells } from './InterviewCells';
+import { ContractCell } from './ContractCell';
+import { ProposedCell } from './ProposedCell';
+import { PlacedCell } from './PlacedCell';
 
 interface MatchingProcessTableRow {
   process: MatchingProcess;
@@ -47,37 +47,17 @@ export const MatchingProcessTableRow = ({
   const { getAccessTokenSilently } = useAuth0();
   const queryClient = useQueryClient();
 
-  const proposedMutation = useMutation(patchProposedRequest, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['matchingProcess']);
-    },
-  });
-
-  const succeededHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const result = e.target.checked;
-    if (result) {
-      proposedMutation.mutate({ result, process, getAccessTokenSilently });
-      // console.log('send success request');
-    } else {
-      console.log('send cancel success request');
+  const deleteMatchingProcessMutation = useMutation(
+    deleteMatchingProcessRequest,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['matchingProcess']);
+      },
     }
-  };
+  );
 
-  const displayProposed = (proposed: Proposed) => {
-    if (proposed) {
-      if (proposed.succeeded) {
-        return proposed.date.split('T')[0];
-      }
-      return 'Rejected';
-    }
-    return (
-      <div>
-        Succeeded
-        <Checkbox color="success" onChange={e => succeededHandle(e)} />
-        Rejected
-        <Checkbox color="error" />
-      </div>
-    );
+  const removeMatchingProcessHandle = (processId: string) => {
+    deleteMatchingProcessMutation.mutate({ processId, getAccessTokenSilently });
   };
 
   return (
@@ -97,24 +77,24 @@ export const MatchingProcessTableRow = ({
           {userInfo.jobs.find(job => job.id === process.jobId)?.title}
         </StyledTableCell>
         <StyledTableCell align="right">
-          {displayProposed(process.proposed)}
+          <ProposedCell process={process} />
         </StyledTableCell>
         <StyledTableCell align="right">
-          <div>
-            {process.interviews.length > 0
-              ? process.interviews.map(interview => (
-                  <InterviewCell key={interview.id} interview={interview} />
-                ))
-              : 'No interview yet'}
-          </div>
+          <InterviewCells process={process} />
         </StyledTableCell>
         <StyledTableCell align="right">
-          {process.interviews.length > 0
-            ? process.contracts.length
-            : 'No Contracts yet'}
+          <ContractCell process={process} />
         </StyledTableCell>
         <StyledTableCell align="right">
-          {process.placed ? 'Yes' : 'No'}
+          <PlacedCell process={process} />
+        </StyledTableCell>
+        <StyledTableCell>
+          <IconButton
+            aria-label="Delete"
+            onClick={() => removeMatchingProcessHandle(process.id)}
+          >
+            <DeleteIcon />
+          </IconButton>
         </StyledTableCell>
       </StyledTableRow>
     </>

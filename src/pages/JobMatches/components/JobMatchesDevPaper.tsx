@@ -17,7 +17,7 @@ import {
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
-const JobMatchesDevPaper = ({
+export const JobMatchesDevPaper = ({
   dev,
   matches,
   jobInfo,
@@ -29,7 +29,7 @@ const JobMatchesDevPaper = ({
   matched: boolean;
 }) => {
   const queryClient = useQueryClient();
-  const { getAccessTokenSilently, user } = useAuth0();
+  const { getAccessTokenSilently, user, isAuthenticated } = useAuth0();
 
   const mutationStartProcess = useMutation(postMatchingProcessRequest, {
     onSuccess: () => {
@@ -130,14 +130,26 @@ const JobMatchesDevPaper = ({
       }}
       key={dev.id}
     >
-      <div className="flex justify-between">
-        <div>
-          <Typography variant="h5">{dev.name}</Typography>
-          <Typography variant="body1">
-            <EmailIcon fontSize="small" sx={{ marginRight: 1 }} />
-            {dev.email}
-          </Typography>
-          <Stack spacing={1} direction="row" className='overflow-x-scroll'>
+      <div className="flex flex-col justify-between">
+        <div className="flex justify-between mb-4">
+          <div>
+            <Typography variant="h5" sx={{marginBottom: "0.2rem"}}>{dev.name}</Typography>
+            <Typography variant="body1">
+              <EmailIcon fontSize="small" sx={{ marginRight: 1 }} />
+              {dev.email}
+            </Typography>
+          </div>
+          {isAuthenticated && (
+          <Button
+            className="h-[40px] w-[170px]"
+            onClick={startProcessHandle}
+            disabled={matched}
+          >
+            {matched ? 'In Process' : 'Start Process'}
+          </Button>
+        )}
+        </div>
+          <Stack spacing={1} direction="row">
             {dev.skills
               .filter(skill =>
                 matches.jobSkills.some(jobSkill => jobSkill.id === skill.id)
@@ -146,17 +158,7 @@ const JobMatchesDevPaper = ({
                 <Chip label={skill.title} size="small" key={skill.id} />
               ))}
           </Stack>
-        </div>
-        <Button
-          className="h-[40px] w-[170px]"
-          onClick={startProcessHandle}
-          disabled={matched}
-        >
-          {matched ? 'In Process' : 'Start Process'}
-        </Button>
       </div>
     </Paper>
   );
 };
-
-export default JobMatchesDevPaper;

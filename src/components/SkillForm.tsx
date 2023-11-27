@@ -104,10 +104,21 @@ export const SkillForm = () => {
   const skillTypes = Array.from(new Set(skills.map((skill) => skill.type)));
 
   const onSubmit = async (formValues: FormValues) => {
+    const skillConverter = (selectedSkills : string[]) => {
+      return selectedSkills
+        .map(skillName => skills
+            .find(skill => skill.title === skillName)?.id)
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const selectedSkills: any[] = [...Object.values(formValues.selectedSkillIds)[0], 
+    ...skillConverter(Object.values(formValues.selectedSkillIds)[1]),
+    ...skillConverter(Object.values(formValues.selectedSkillIds)[2]),
+    ...skillConverter(Object.values(formValues.selectedSkillIds)[3]),
+  ]
     setLoadingState(true);
     mutation.mutate({
       developerId: developerInfo.id,
-      selectedSkillIds: Object.values(formValues.selectedSkillIds).flat(),
+      selectedSkillIds: selectedSkills,
     });
   };
 
@@ -118,7 +129,7 @@ export const SkillForm = () => {
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col items-center gap-4 mx-auto min-w-fit max-w-md px-4"
         >
-          <Typography variant="h4" className="mb-10 md:pb-12">
+          <Typography variant="h5" sx={{marginBlock: "1.5rem"}}>
             Add Skills to {developerInfo.name}
           </Typography>
           <FormControl className="flex flex-col mb-2 self-start w-full">

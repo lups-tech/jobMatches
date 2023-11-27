@@ -8,7 +8,7 @@ import { Dispatch } from 'react';
 import { passwordSchema } from '../../../types/validationTypes';
 import { editPassword } from '../../../utils/mutationTools';
 
-const ChangePasswordForm = ({
+export const ChangePasswordForm = ({
   success,
   passwordError,
 }: {
@@ -105,5 +105,3 @@ const ChangePasswordForm = ({
     </form>
   );
 };
-
-export default ChangePasswordForm;

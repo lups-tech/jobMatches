@@ -9,8 +9,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useThemeContext } from '../../theme';
-
-// import DataVisualisation from './DataVisualisation';
+import { useNavigate } from 'react-router-dom';
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
@@ -38,7 +37,7 @@ const Point: React.FC<PointProp> = ({ imgUrl, alt, header, text }) => {
 export const AboutUs = () => {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   const { darkMode } = useThemeContext();
-
+  const navigate = useNavigate();
   const userCheck = async () => {
     if (isAuthenticated) {
       const accessToken = await getAccessTokenSilently();
@@ -87,6 +86,7 @@ export const AboutUs = () => {
                   background: '#3A3C4E',
                   '&:hover': { background: '#E7EBFF', color: '#000000' },
                 }}
+                onClick={() => navigate('/jobs')}
               >
                 Match Your Talents
               </Button>
@@ -139,7 +139,7 @@ export const AboutUs = () => {
               C#/.Net Core and is connected to a project hosted on Supabase. The
               project is therefore based on a PostgreSQL database. Jobs data is
               from{' '}
-              <Link href="https://jobtechdev.se/sv">JobTech Development</Link>{' '}
+              <Link href="https://jobtechdev.se/sv">JobTech Development.</Link>{' '}
               Illustrations for this page are from{' '}
               <Link href="https://undraw.co/">undraw</Link>.
             </p>
@@ -154,7 +154,7 @@ export const AboutUs = () => {
           </div>
           <div className="col-span-2">
             <p>
-              Our project boasts an exceptional team of seven full-stack
+              Our project has included an exceptional team of eight full-stack
               developers, each of whom is a graduate of SALT and actively
               engaged in a postgraduate program. Their diverse skill sets, honed
               through intensive training, contribute to our project's success,

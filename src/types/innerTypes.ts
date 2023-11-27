@@ -70,6 +70,7 @@ export type UserInfoDTO = {
   id: string;
   jobs: JobDTO[];
   developers: Developer[];
+  isAdmin: boolean;
 };
 
 export type ChartData = {
@@ -78,7 +79,6 @@ export type ChartData = {
 };
 
 export type Dataset = {
-  id: number;
   label: string;
   data: number[];
   borderColor: string;
@@ -137,4 +137,10 @@ export type MatchingProcess = {
   developerId: string;
   jobId: string;
   userId: string;
+};
+
+export type Auth0User = {
+  auth0Id: string,
+  email: string,
+  name: string,
 };

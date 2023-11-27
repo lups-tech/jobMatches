@@ -41,10 +41,12 @@ const JobMatchesJobPaper = ({
   });
 
   useEffect(() => {
-    if (userInfo?.jobs.find(job => job.jobTechId === jobInfo.id)) {
-      setIsSaved(true);
-    } else {
-      setIsSaved(false);
+    if (userInfo?.jobs != undefined) {
+      if (userInfo?.jobs.find(job => job.jobTechId === jobInfo.id)) {
+        setIsSaved(true);
+      } else {
+        setIsSaved(false);
+      }
     }
   }, [userInfo]);
 
@@ -57,7 +59,6 @@ const JobMatchesJobPaper = ({
   });
 
   const saveJobHandle = async () => {
-    const accessToken = await getAccessTokenSilently();
     if (matches) {
       const createJobReq = {
         jobTechId: jobInfo.id,
@@ -68,7 +69,7 @@ const JobMatchesJobPaper = ({
         jobText: jobInfo.description.text,
         SelectedSkillIds: matches.jobSkills.map(jobSkill => jobSkill.id),
       };
-      mutationLikeJob.mutate({ createJobReq, accessToken });
+      mutationLikeJob.mutate({ createJobReq, getAccessTokenSilently });
     }
   };
 

@@ -12,7 +12,7 @@ import {
 } from '../../utils/fetchingTools';
 import { findMatchingSkills, sortMockDevelopers } from '../../utils/utilities';
 import JobMatchesJobPaper from './components/JobMatchesJobPaper';
-import JobMatchesDevPaper from './components/JobMatchesDevPaper';
+import {JobMatchesDevPaper, CallToAction} from './components';
 import { MatchingProcess, UserInfoDTO } from '../../types/innerTypes';
 
 type LocationState = {
@@ -102,14 +102,16 @@ export const JobMatches = () => {
         <Typography variant="h2">Best Matches</Typography>
         <div className="h-[600px] w-[460px] mx-auto mt-6 overflow-hidden hover:overflow-y-auto">
           {matches.developers.length > 0 ? (
-            matches.developers.map(dev => (
+            matches.developers
+              .filter(dev => dev.skillMatch > 1)
+              .map(dev => (
               <JobMatchesDevPaper
                 key={dev.id}
                 dev={dev}
                 matches={matches}
                 jobInfo={jobInfo}
                 matched={
-                  userInfo && allMatchingProcesses
+                  userInfo && allMatchingProcesses && isAuthenticated
                     ? ifMatched(
                         userInfo,
                         allMatchingProcesses,
@@ -129,11 +131,13 @@ export const JobMatches = () => {
                 borderRadius: 6,
                 // Following logic is to color the dev card based on the first Programming Language they have
                 backgroundColor: 'white',
+                width: 440,
               }}
             >
               <Typography variant="h5">No good matches</Typography>
             </Paper>
           )}
+          {!isAuthenticated && <CallToAction/>}
         </div>
       </div>
     </div>

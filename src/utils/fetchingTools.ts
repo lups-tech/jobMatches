@@ -13,6 +13,13 @@ export const fetchUserInfo = async (accessToken: string, userId: string) => {
   return res.data;
 };
 
+export const fetchAuth0Users =async (accessToken: string) => {
+  const res = await axios.get(`${backendServer}api/auth0sales`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return res.data;
+};
+
 type ToggleLikeRequestArgs = {
   requestMethod: string;
   requestBody: {
@@ -113,3 +120,32 @@ export const getAllJobs = async (accessToken: string) => {
   });
   return res.data;
 };
+
+export const InviteUser = async (inviteEmail: string, SenderName: string, accessToken: string) => {
+  const body = {
+    email : inviteEmail,
+    role : "Sales",
+    name : SenderName,
+}
+  await axios.post(`${backendServer}api/users/register`, 
+            body, {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+  );
+}
+
+export const UpgradeUser = async (userToUpgradeId: string, accessToken: string) => {
+  const body = {
+    userId : userToUpgradeId,
+    role : "Admin",
+  }
+  await axios.patch(`${backendServer}api/users/upgrade`, 
+            body, {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+  );
+}

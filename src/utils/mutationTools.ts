@@ -2,15 +2,15 @@
 import axios from 'axios';
 import {
   AddCommentRequestBody,
+  Contract,
   DeleteCommentRequestBody,
+  Interview,
   MatchingProcess,
   Skill,
 } from '../types/innerTypes';
 import { DevFormSchema } from '../types/validationTypes';
 import * as z from 'zod';
 import { v4 as uuidv4 } from 'uuid';
-
-const myUUID: string = uuidv4();
 
 const backendServer = import.meta.env.VITE_BE_SERVER;
 
@@ -149,11 +149,181 @@ export const patchProposedRequest = async ({
   getAccessTokenSilently: any;
 }) => {
   const accessToken = await getAccessTokenSilently();
-  const newProposed = { id: myUUID, date: new Date(), succeeded: result };
-  const data = { ...process, proposed: newProposed };
-  axios.patch(`${backendServer}api/matchingprocess`, data, {
+  const newProposed = { id: uuidv4(), date: new Date(), succeeded: result };
+  return axios.patch(
+    `${backendServer}api/matchingprocess/proposals/${process.id}`,
+    newProposed,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+};
+
+export const patchPlacedRequest = async ({
+  result,
+  process,
+  resetDate = false,
+  getAccessTokenSilently,
+}: {
+  result: boolean | null;
+  process: MatchingProcess;
+  resetDate?: boolean;
+  getAccessTokenSilently: any;
+}) => {
+  const accessToken = await getAccessTokenSilently();
+  const data = {
+    id: process.id,
+    placed: result,
+    resultDate: resetDate ? null : new Date(),
+  };
+  console.log('!!!', data);
+  return axios.patch(`${backendServer}api/matchingprocess`, data, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
   });
+};
+
+export const patchNewInterviewRequest = async ({
+  interviewType,
+  process,
+  getAccessTokenSilently,
+}: {
+  interviewType: string;
+  process: MatchingProcess;
+  getAccessTokenSilently: any;
+}) => {
+  const accessToken = await getAccessTokenSilently();
+  const newInterview = {
+    id: uuidv4(),
+    date: new Date(),
+    interviewType,
+    passed: null,
+  };
+  return axios.patch(
+    `${backendServer}api/matchingprocess/interviews/${process.id}`,
+    newInterview,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+};
+
+export const patchInterviewRequest = async ({
+  updatedInterview,
+  process,
+  getAccessTokenSilently,
+}: {
+  updatedInterview: Interview;
+  process: MatchingProcess;
+  getAccessTokenSilently: any;
+}) => {
+  const accessToken = await getAccessTokenSilently();
+  return axios.patch(
+    `${backendServer}api/matchingprocess/interviews/${process.id}`,
+    updatedInterview,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+};
+
+export const deleteMatchingProcessRequest = async ({
+  processId,
+  getAccessTokenSilently,
+}: {
+  processId: string;
+  getAccessTokenSilently: any;
+}) => {
+  const accessToken = await getAccessTokenSilently();
+  return axios.delete(`${backendServer}api/matchingprocess/${processId}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
+export const deleteInterviewRequest = async ({
+  interviewId,
+  getAccessTokenSilently,
+}: {
+  interviewId: string;
+  getAccessTokenSilently: any;
+}) => {
+  const accessToken = await getAccessTokenSilently();
+  return axios.delete(
+    `${backendServer}api/matchingprocess/interviews/${interviewId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+};
+
+export const patchNewContractRequest = async ({
+  contractStage,
+  process,
+  getAccessTokenSilently,
+}: {
+  contractStage: string;
+  process: MatchingProcess;
+  getAccessTokenSilently: any;
+}) => {
+  const accessToken = await getAccessTokenSilently();
+  const newContract = { id: uuidv4(), date: new Date(), contractStage };
+  return axios.patch(
+    `${backendServer}api/matchingprocess/contracts/${process.id}`,
+    newContract,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+};
+
+export const patchContractRequest = async ({
+  updatedContract,
+  process,
+  getAccessTokenSilently,
+}: {
+  updatedContract: Contract;
+  process: MatchingProcess;
+  getAccessTokenSilently: any;
+}) => {
+  const accessToken = await getAccessTokenSilently();
+  return axios.patch(
+    `${backendServer}api/matchingprocess/contracts/${process.id}`,
+    updatedContract,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+};
+
+export const deleteContractRequest = async ({
+  contractId,
+  getAccessTokenSilently,
+}: {
+  contractId: string;
+  getAccessTokenSilently: any;
+}) => {
+  const accessToken = await getAccessTokenSilently();
+  return axios.delete(
+    `${backendServer}api/matchingprocess/contracts/${contractId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
 };

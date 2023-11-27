@@ -61,21 +61,11 @@ export const ComboBox = ({
                 !filteredSkills.some((skill) => skill.title === skillTitle),
             );
 
-            const newSkills = await skillsToCreate.map((skillTitle) => {
-              handleAddSkill(skillTitle, skillType, getAccessTokenSilently);
-            });
-
-            onChange(
-              value.map(
-                (skillTitle) =>
-                  [...filteredSkills, ...newSkills].find((skill) => {
-                    if (skill) {
-                      return skill.title === skillTitle;
-                    }
-                  })?.id,
-              ),
+            await Promise.all(
+              skillsToCreate.map((skillTitle) => handleAddSkill(skillTitle, skillType, getAccessTokenSilently))
             );
 
+            onChange(value);
             refetchSkills();
           }}
         />
