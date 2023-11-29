@@ -51,7 +51,7 @@ const AllDevs = ({
     if (orderedDevelopers) {
       setDisplayedDevelopers(orderedDevelopers);
       setNumberOfPages(
-        Math.floor(orderedDevelopers?.length ?? 0 / pageSize) + 1,
+        Math.floor(orderedDevelopers.length/ pageSize) + 1,
       );
       setCurrentPage(0);
     }
@@ -73,7 +73,7 @@ const AllDevs = ({
     );
 
     setDisplayedDevelopers(slicedDevelopers);
-    setNumberOfPages(Math.floor(filteredDevelopers.length / pageSize));
+    setNumberOfPages(Math.floor(filteredDevelopers.length / pageSize)+ 1);
     setCurrentPage(currentPage);
   }, [searchFilter, orderedDevelopers, currentPage]);
 

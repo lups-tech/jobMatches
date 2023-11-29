@@ -97,9 +97,9 @@ export const AllJobs = () => {
                 .map((jobOfUser) => jobOfUser.jobTechId)
                 .includes(job.id);
               // A BUG TO BE DEBUGGED
-              if (isLikedJob) {
-                console.log('job is liked: ', job.headline);
-              }
+              // if (isLikedJob) {
+              //   console.log('job is liked: ', job.headline);
+              // }
               const databaseId = () => {
                 if (isLikedJob) {
                   const selectedJob = userInfo.jobs.find(
