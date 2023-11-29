@@ -54,7 +54,9 @@ export const MatchingProcessTable = ({
               </StyledTableCell>
               <StyledTableCell align="right">Interviews</StyledTableCell>
               <StyledTableCell align="right">Contracts</StyledTableCell>
-              <StyledTableCell align="right">Placed</StyledTableCell>
+              <StyledTableCell align="right" sx={{ minWidth: 120 }}>
+                Placed
+              </StyledTableCell>
               <StyledTableCell align="right">Remove</StyledTableCell>
             </TableRow>
           </TableHead>
