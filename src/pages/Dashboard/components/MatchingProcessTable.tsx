@@ -49,7 +49,9 @@ export const MatchingProcessTable = ({
               <StyledTableCell>Developer</StyledTableCell>
               <StyledTableCell>Employer</StyledTableCell>
               <StyledTableCell>Position</StyledTableCell>
-              <StyledTableCell align="right">Proposed</StyledTableCell>
+              <StyledTableCell align="right" sx={{ minWidth: 120 }}>
+                Proposed
+              </StyledTableCell>
               <StyledTableCell align="right">Interviews</StyledTableCell>
               <StyledTableCell align="right">Contracts</StyledTableCell>
               <StyledTableCell align="right">Placed</StyledTableCell>

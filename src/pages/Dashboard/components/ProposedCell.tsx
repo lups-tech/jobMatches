@@ -60,9 +60,9 @@ export const ProposedCell = ({ process }: ProposedCellProps) => {
   }
   return (
     <div>
-      Succeeded
+      Pass
       <Checkbox color="success" onChange={() => proposedHandle(true)} />
-      Rejected
+      Fail
       <Checkbox color="error" onChange={() => proposedHandle(false)} />
     </div>
   );
