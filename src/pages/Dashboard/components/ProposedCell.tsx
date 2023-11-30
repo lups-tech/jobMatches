@@ -59,11 +59,15 @@ export const ProposedCell = ({ process }: ProposedCellProps) => {
     );
   }
   return (
-    <div>
-      Pass
-      <Checkbox color="success" onChange={() => proposedHandle(true)} />
-      Fail
-      <Checkbox color="error" onChange={() => proposedHandle(false)} />
+    <div className="flex flex-col">
+      <div>
+        Pass
+        <Checkbox color="success" onChange={() => proposedHandle(true)} />
+      </div>
+      <div>
+        Fail
+        <Checkbox color="error" onChange={() => proposedHandle(false)} />
+      </div>
     </div>
   );
 };
