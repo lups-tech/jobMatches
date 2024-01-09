@@ -17,11 +17,11 @@ As noted above, Auth0 is used for authorization and a corresponding Auth0 M2M ap
 ### Variables
 The following environment variables should be added in a .env file in the root of the project:
 
-VITE_BE_SERVER = the address of the backend server being called (usually a localhost port in development)
-VITE_REACT_APP_AUTH0_DOMAIN = the domain assigned to the Auth0 account that created the applications (starting with ```https://``` and ending ```.com```)
-VITE_REACT_APP_AUTH0_CLIENT_ID = The client id assigned to the M2M application set up in Auth0
-VITE_REACT_APP_AUTH0_CALLBACK_URL = The callback URL you assign for Auth0, ie. the url that the user is returned to after logging in. This should be matched in the allowed callback url address in the Auth0 dashboard for this user.
-VITE_REACT_APP_AUTH0_AUDIENCE = the audience assigned to the Auth0 API for the backend project. Usually as a url address, but not required.
+- VITE_BE_SERVER = the address of the backend server being called (usually a localhost port in development)
+- VITE_REACT_APP_AUTH0_DOMAIN = the domain assigned to the Auth0 account that created the applications (starting with ```https://``` and ending ```.com```)
+- VITE_REACT_APP_AUTH0_CLIENT_ID = The client id assigned to the M2M application set up in Auth0
+- VITE_REACT_APP_AUTH0_CALLBACK_URL = The callback URL you assign for Auth0, ie. the url that the user is returned to after logging in. This should be matched in the allowed callback url address in the Auth0 dashboard for this user.
+- VITE_REACT_APP_AUTH0_AUDIENCE = the audience assigned to the Auth0 API for the backend project. Usually as a url address, but not required.
 
 ### Final Steps
 Once the above set up has been done, the project can be ran in development mode with:
